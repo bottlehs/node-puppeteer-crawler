@@ -15,7 +15,7 @@ export class RootPage implements OnInit {
       location: 'no',
       toolbar: 'no'
     };
-    this.iab.create('https://suaurl', '_self', options);
+    this.iab.create('https://naver.com', '_self', options);
   }
 
 
