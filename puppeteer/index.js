@@ -8,7 +8,9 @@ dotenv.config();
   /**
    * 웹 브라우저를 실행 한다.
    */
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    // headless: false
+  });
 
   /**
    * 웹 브라우저 페이지를 생성한다.
@@ -18,69 +20,58 @@ dotenv.config();
   /**
    * 네이버 아이디,비밀번호 계정 셋팅
    */
-  const shop_name = process.env.SHOP_NAME;
-  const shop_birthday = process.env.SHOP_BIRTHDAY;
-  const shop_hp = process.env.SHOP_HP;
-  console.log(process.env.NODE_ENV)
-  console.log(shop_name);
-
+  const naver_query = process.env.NAVER_QUERY;
 
   /**
-   * 쇼핑엔티(로그인전) 비회원구매
+   * 네이버(로그인전) 메인 화면으로 이동
    */  
-  await page.goto("https://www.shoppingntmall.com/member/nm-order/auth");
-
-  /**
-   * 쇼핑엔티(로그인전) 비회원구매 스크립캡처
-   */
-  await page.screenshot({ path: "shoppingntmall_1.png", fullPage: true });  
-
-  https://www.shoppingntmall.com/member/nm-order/auth
-  /**
-   * 쇼핑엔티 이름, 생년월일, 전화번호 input 을 찾아 입력
-   */
-  await page.evaluate(
-    (name, birthday, hp) => {
-      document.querySelector("#name").value = name;
-      document.querySelector("#birthday").value = birthday;
-      document.querySelector("#hp").value = hp;      
-
-      document.querySelector("#agree0").checked = true;
-      document.querySelector("#agree1").checked = true;
-      document.querySelector("#agree4").checked = true;
-    },
-    shop_name,
-    shop_birthday,
-    shop_hp    
-  );
-
-  /**
-   * 쇼핑엔티(로그인전) 로그인 화면 스크립캡처
-   */
-  await page.screenshot({ path: "shoppingntmall_2.png", fullPage: true });  
-
-  /**
-   * 쇼핑엔티(로그인전) 로그인 버튼 클릭
-   */
-  await page.click('.join_form > .btn_wrap button');
-  await page.on('response', response => {    
-    console.log('ok')
+  await page.goto("https://naver.com", {
+    waitUntil: 'load',
+    timeout: 0,
   });
 
-  // await page.waitForNavigation();  
-
   /**
-   * 쇼핑엔티(로그인후) 상품구매 화면으로 이동
-   */  
-  await page.goto("https://www.shoppingntmall.com/order/purchase/8004085");
-
-  /**
-   * 쇼핑엔티(로그인전) 로그인 화면 스크립캡처
+   * 검색어 입력
    */
-  await page.screenshot({ path: "shoppingntmall_3.png", fullPage: true });    
 
-  // await page.waitForNavigation();
+  await page.evaluate(
+    (query) => {
+      document.querySelector("#query").value = query;
+    },
+    naver_query
+  );
 
+  await page.screenshot({ path: "naver_1.png", fullPage: true });  
 
-  await browser.close();
+  /**
+   * 네이버 검색 버튼 클릭
+   */
+  console.log('elHandleArray 0');  
+  await page.click(".btn_submit");
+  await page.waitFor('.link_tit')
+  
+   const texts = await page.$$eval('a.link_tit', divs => divs.map(({ innerText }) => innerText));
+   console.log(texts);
+
+   await page.screenshot({ path: "naver_2.png", fullPage: true });
+
+   const example = await page.$$('a.link_tit');
+   console.log(example[0].textContent);
+   console.log(example.length);
+   await example[0].click();
+
+   const pages = await browser.pages();
+   /*
+   let i = 0;
+   pages.forEach(newPage => {
+    await newPage.screenshot({ path: "naver_newPage_"+i+"_.png", fullPage: true });
+    i++;
+    newPage.close();
+   });
+   */
+
+   console.log(pages);
+   console.log(pages.length);
+
+  await browser.close(); 
 })();
