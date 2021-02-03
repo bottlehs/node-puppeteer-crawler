@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html>
+<head>
+<title>Test</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+<script type="text/javascript">
+function loadPage (e)
+{
+  //alert ("loadPage")
+  page = $('#URL').val()
+  $('#Content').attr("src", page)
+}
+function showElement (e)
+{
+  x = $('#xpos').val()
+  y = $('#ypos').val()
+  elem = document.elementFromPoint(x, y);
+  //id = $(elem).attr('id')
+  id = elem.id
+  alert("Element at (" + x + ", " + y + "): " + id);
+  if ( id == 'Content' )
+  {
+    // show frame element
+    alert("Checking frame page: " + elem);
+    //alert("Checking frame page 1: " + elem.contentWindow);
+    //alert("Checking frame page 2: " + window.frames[0]);
+    iframeDoc = elem.contentDocument || elem.contentWindow.document;
+    alert("Checking frame page 3: " + iframeDoc);
+    iframeContent = iframeDoc.body.innerHTML;
+    alert("Checking frame page 4: " + iframeContent);
+    //alert("Checking frame page 5: " + window.frames[id].document);
+    frameElem = iframeDoc.elementFromPoint(x, y);
+    id = $(frameElem).attr('id')
+    alert("Frame element at (" + x + ", " + y + "): " + id);
+  }
+}
+</script>
+<body>
+<h1>Point Test</h1>
+<table border="1">
+    <tr><td>
+        <table id="MainTable"><tr><td>
+            <input id="URL" value="http://dataguru.kr" />&nbsp&nbsp<input id="xpos" value="500" />&nbsp&nbsp<input id="ypos" value="200" />
+            <br /><button id="ShowPageB" onclick="loadPage();">Display Page</button>&nbsp&nbsp<button id="ShowElement" onclick="showElement();">Show Element</button>
+        </td></tr>
+        <tr><td>
+            <textarea id="Elem1" rows="5" cols="40"></textarea>
+        </td></tr>
+        </table>
+    </td>
+    <td><iframe id="Content" name="ContentName" width="800px" height="300px" src="https://naver.com"></iframe><br /><div id="Elem2"></div>
+    </td></tr>
+</table>
+</body>
+</html>
