@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <title>HTML Tutorial</title>
+  <body>
+    <div class="cui_recommend_board"><div class="crb_title_wrap"><h3 class="crb_title">인기 주제 판을 확인해 보세요!<a class="crb_right_a" href="/settings/menu/" data-clk="panopen">판관리</a></h3></div><div class="crb_shortcut_wrap"><ul class="crb_list"><li class="crb_item"><a href="/naverapp/?cmd=onMenu&amp;version=3&amp;menuCode=MOVIE" class="crb_a" data-clk="commmvi"><div class="crb_mw"><img src="https://s.pstatic.net/static/www/naverapp/thumbnail_20181016/img_setting_movie.png" class="crb_m" width="34px" height="34px" alt=""></div><span class="crb_t">영화판</span></a></li><li class="crb_item"><a href="/naverapp/?cmd=onMenu&amp;version=3&amp;menuCode=BOOM" class="crb_a" data-clk="commbom"><div class="crb_mw"><img src="https://s.pstatic.net/static/www/naverapp/thumbnail_20181016/img_setting_bboom.png" class="crb_m" width="34px" height="34px" alt=""></div><span class="crb_t">뿜판</span></a></li><li class="crb_item"><a href="/naverapp/?cmd=onMenu&amp;version=3&amp;menuCode=BBOOM" class="crb_a" data-clk="commbwt"><div class="crb_mw"><img src="https://s.pstatic.net/static/www/naverapp/thumbnail_20181016/img_setting_webtoon.png" class="crb_m" width="34px" height="34px" alt=""></div><span class="crb_t">웹툰판</span></a></li><li class="crb_item"><a href="/naverapp/?cmd=onMenu&amp;version=3&amp;menuCode=CARGAME" class="crb_a" data-clk="commcat"><div class="crb_mw"><img src="https://s.pstatic.net/static/www/naverapp/thumbnail_20181016/img_setting_car.png" class="crb_m" width="34px" height="34px" alt=""></div><span class="crb_t">자동차판</span></a></li></ul></div></div>
+
+    <form id="ddd" action="http://naver.com"></form>
+
+    <ul>
+      <li>
+        <a href="" data-i="1">링크1</a>
+      </li>
+      <li>
+        <a href="" data-i="2">링크2</a>
+      </li>      
+      <li>
+        <a href="" data-i="3">링크3</a>
+      </li>            
+      <li>
+        <a href="" data-i="4">링크4</a>
+      </li>            
+      <li>
+        <a href="" data-i="5">링크5</a>
+      </li>            
+    </ul>
+
+
+    <script>
+      // .product_list_item__2tuKA .product_txt_area__AMuMQ .product_info_tit__9jpH8
+      /*
+    (function(){
+      var item = document.querySelectorAll('ul li a');
+      for ( var i = 0; i < item.length; i++ ) {
+        if ( Number(item[i].getAttribute('data-i')) == 1 ) {
+          // item[i].click();
+        }
+      }
+    })()
+    */
+    (function(){
+      var item = document.querySelector('#ddd');
+      alert(item);
+      item.submit();
+
+    })()    
+    </script>
+  </body>
+</html>
