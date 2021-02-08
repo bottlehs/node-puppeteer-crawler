@@ -6,9 +6,32 @@
 
     <form id="ddd" action="http://naver.com"></form>
 
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p><p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+    <p>Click the button to scroll the document window to 500 pixels horizontally.</p>
+
     <ul>
       <li>
-        <a href="" data-i="1">링크1</a>
+        <a href="" class="bbb" data-i="1">링크1</a>
       </li>
       <li>
         <a href="" data-i="2">링크2</a>
@@ -17,7 +40,7 @@
         <a href="" data-i="3">링크3</a>
       </li>            
       <li>
-        <a href="" data-i="4">링크4</a>
+        <a href="" target="_blank" data-i="4">링크4</a>
       </li>            
       <li>
         <a href="" data-i="5">링크5</a>
@@ -27,22 +50,28 @@
 
     <script>
       // .product_list_item__2tuKA .product_txt_area__AMuMQ .product_info_tit__9jpH8
-      /*
     (function(){
-      var item = document.querySelectorAll('ul li a');
-      for ( var i = 0; i < item.length; i++ ) {
-        if ( Number(item[i].getAttribute('data-i')) == 1 ) {
-          // item[i].click();
+      setTimeout(function() {
+        var item = document.querySelectorAll('ul li a');
+        for ( var i = 0; i < item.length; i++ ) {
+          // console.log(item[i].getBoundingClientRect().top);   
+          window.scrollTo(0, item[i].getBoundingClientRect().top);
+          console.log(item[i].getAttribute('target'))
+          if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };
+          if ( Number(item[i].getAttribute('data-i')) == 1 ) {
+            // item[i].click();
+          }
         }
-      }
+      }, 1000);
     })()
-    */
+    /*
     (function(){
       var item = document.querySelector('#ddd');
       alert(item);
       item.submit();
 
     })()    
+    */
     </script>
   </body>
 </html>
