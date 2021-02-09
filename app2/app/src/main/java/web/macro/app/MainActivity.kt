@@ -262,6 +262,7 @@ class MainActivity : AppCompatActivity() {
         webView.settings.setSupportZoom(true)
 
         // More optional settings
+        webView.settings.setCacheMode(WebSettings.LOAD_NO_CACHE)
         webView.settings.domStorageEnabled = true
         webView.settings.setSupportMultipleWindows(true)
         webView.settings.loadWithOverviewMode = true
