@@ -6,6 +6,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         action.put("action", "value")
         action.put("position", "m.naver.com")
         action.put("selector", "#query")
-        action.put("value", "지리산")
+        action.put("value", "해운대")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         action.put("action", "value")
         action.put("position", "m.naver.com")
         action.put("selector", "#nx_query")
-        action.put("value", "쏘팔메토")
+        action.put("value", "비타민나무")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -193,7 +194,7 @@ class MainActivity : AppCompatActivity() {
         action.put("action", "value")
         action.put("position", "m.naver.com")
         action.put("selector", "#sear")
-        action.put("value", "쏘팔메토")
+        action.put("value", "비타민나무")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -217,7 +218,7 @@ class MainActivity : AppCompatActivity() {
         action.put("position", "m.naver.com")
         action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
         action.put("function", "element")
-        action.put("data_i", 9957710933)
+        action.put("data_i", 25184334522)
         action.put("next", false)
         actions.put(action)
 
@@ -228,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         action.put("position", "m.naver.com")
         action.put("selector", ".productPerMall_seller_item__jcayW .productPerMall_link_seller__3GSdU")
         action.put("function", "element")
-        action.put("data_i", 23311970118)
+        action.put("data_i", 21499083928)
         action.put("next", false)
         actions.put(action)
 
