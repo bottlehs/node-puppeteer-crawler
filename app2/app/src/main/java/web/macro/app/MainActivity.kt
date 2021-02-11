@@ -2,15 +2,15 @@ package web.macro.app
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         action.put("action", "value")
         action.put("position", "m.naver.com")
         action.put("selector", "#query")
-        action.put("value", "지리산")
+        action.put("value", "해운대")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         action.put("action", "value")
         action.put("position", "m.naver.com")
         action.put("selector", "#nx_query")
-        action.put("value", "타트체리")
+        action.put("value", "비타민나무")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -194,7 +194,7 @@ class MainActivity : AppCompatActivity() {
         action.put("action", "value")
         action.put("position", "m.naver.com")
         action.put("selector", "#sear")
-        action.put("value", "타트체리")
+        action.put("value", "비타민나무")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -212,17 +212,26 @@ class MainActivity : AppCompatActivity() {
         actions.put(action)
 
         // 쇼핑 검색어 결과 상품 찾기후 클릭
-        /*
         action = JSONObject()
         action.put("name", "쇼핑 검색어 결과 상품 찾기후 클릭")
         action.put("action", "listSearchClick")
         action.put("position", "m.naver.com")
-        action.put("selector", ".product_list_item__2tuKA .product_info_main__1RU2S")
+        action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
         action.put("function", "element")
-        action.put("data_i", 24863761522)
+        action.put("data_i", 25184334522)
         action.put("next", false)
         actions.put(action)
-         */
+
+        // 쇼핑 상세보기 에서 구매하기 화면으로 이동
+        action = JSONObject()
+        action.put("name", "쇼핑 상세보기 에서 구매하기 화면으로 이동")
+        action.put("action", "listSearchClick")
+        action.put("position", "m.naver.com")
+        action.put("selector", ".productPerMall_seller_item__jcayW .productPerMall_link_seller__3GSdU")
+        action.put("function", "element")
+        action.put("data_i", 21499083928)
+        action.put("next", false)
+        actions.put(action)
 
         /*
         // 인기 주제 판을 확인해 보세요! 1
@@ -254,6 +263,7 @@ class MainActivity : AppCompatActivity() {
         webView.settings.setSupportZoom(true)
 
         // More optional settings
+        webView.settings.setCacheMode(WebSettings.LOAD_NO_CACHE)
         webView.settings.domStorageEnabled = true
         webView.settings.setSupportMultipleWindows(true)
         webView.settings.loadWithOverviewMode = true
@@ -269,24 +279,31 @@ class MainActivity : AppCompatActivity() {
         // Set web view client
         webView.webViewClient = object: WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                Log.i("MainActivity","onPageStarted")
+                Log.i("MainActivity", "onPageStarted")
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
 
                 Toast.makeText(applicationContext, "onPageFinished", Toast.LENGTH_LONG).show()
-                Log.i("MainActivity","aa onPageFinished url : "+url)
+                Log.i("MainActivity", "aa onPageFinished url : " + url)
 
-                Log.i("MainActivity","aa actions : "+actions.length())
+                Log.i("MainActivity", "aa actions : " + actions.length())
+                // view.scrollY(0,view.contentHeight())
+
                 if ( actionStep < actions.length() && currentUrl != url.toString() )  {
                     currentUrl = url.toString()
                     val obj = actions.getJSONObject(actionStep);
-                    obj.put("step",actionStep)
+                    obj.put("step", actionStep)
                     actionStep = actionStep + 1
-                    Log.i("MainActivity","aa actionStep onPageFinished : "+obj.getInt("step"))
+                    Log.i("MainActivity", "aa actionStep onPageFinished : " + obj.getInt("step"))
                     GlobalScope.launch(context = Dispatchers.Main) {
                         delay(timeMillis)
-                        Log.i("MainActivity","step info === step:"+obj.getInt("step")+"/name:"+obj.getString("name")+"/action:"+obj.getString("action"))
+                        Log.i(
+                            "MainActivity",
+                            "step info === step:" + obj.getInt("step") + "/name:" + obj.getString(
+                                "name"
+                            ) + "/action:" + obj.getString("action")
+                        )
                         if ( obj.get("function") == "element" ) {
                             elementAction(obj, webView)
                         } else if ( obj.get("function") == "webview" ) {
@@ -302,9 +319,9 @@ class MainActivity : AppCompatActivity() {
         // Set web view chrome client
         webView.webChromeClient = object: WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                Log.i("MainActivity","newProgress:"+newProgress)
+                Log.i("MainActivity", "newProgress:" + newProgress)
                 if ( 100 <= newProgress ) {
-                    Log.i("MainActivity","aa actionStep onPageFinishedaa :")
+                    Log.i("MainActivity", "aa actionStep onPageFinishedaa :")
                 }
             }
         }
@@ -332,42 +349,79 @@ class MainActivity : AppCompatActivity() {
     }
     fun elementAction(obj: JSONObject, webView: WebView) {
         if ( obj.getString("action") == "focus" ) {
-            webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')["+obj.getInt("index")+"].focus();})()")
-            Log.i("MainActivity","aa focusfocusfocusfocusfocusfocusfocusfocus")
+            webView.loadUrl(
+                "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
+                    "index"
+                ) + "].focus();})()"
+            )
+            Log.i("MainActivity", "aa focusfocusfocusfocusfocusfocusfocusfocus")
         } else if ( obj.getString("action") == "value" ) {
-            webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')["+obj.getInt("index")+"].value='"+obj.getString("value")+"'})()")
+            webView.loadUrl(
+                "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
+                    "index"
+                ) + "].value='" + obj.getString("value") + "'})()"
+            )
         } else if ( obj.getString("action") == "click" ) {
             if ( obj.getString("index") == "random" ) {
-                webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')[Math.floor(Math.random() * document.querySelectorAll('"+obj.getString("selector")+"').length)].click();})()")
+                webView.loadUrl(
+                    "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[Math.floor(Math.random() * document.querySelectorAll('" + obj.getString(
+                        "selector"
+                    ) + "').length)].click();})()"
+                )
             } else {
-                webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')["+obj.getInt("index")+"].click();})()")
+                webView.loadUrl(
+                    "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
+                        "index"
+                    ) + "].click();})()"
+                )
             }
         } else if ( obj.getString("action") == "submit" ) {
-            webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')["+obj.getInt("index")+"].submit();})()")
+            webView.loadUrl(
+                "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
+                    "index"
+                ) + "].submit();})()"
+            )
         } else if ( obj.getString("action") == "listSearchClick" ) {
-            webView.loadUrl("(function(){" +
-                    "var item = document.querySelectorAll('"+obj.getString("selector")+"');"+
-                    "for ( var i = 0; i < item.length; i++ ) {"+
-                    "if ( Number(item[i].getAttribute('data-i')) == "+obj.getString("data_i")+" ) {"+
-                    "alert(item[i].getAttribute('href'));"+
-                    //"item[i].setAttribute('target','_self')"+
-                    //"item[i].click();"+
-                    "}"+
-                    "}"+
-                    "})()"
+            Log.i("MainActivity", "aa actionStep listSearchClick")
+
+            // webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')[0].click();})()")
+
+            webView.loadUrl(
+                "javascript:(function(){" +
+                        "setTimeout(function() {"+
+                        "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
+                        "for ( var i = 0; i < item.length; i++ ) {" +
+                        "window.scrollTo(0, item[i].getBoundingClientRect().top);"+
+                        "if ( Number(item[i].getAttribute('data-i')) == " + obj.getString("data_i") + " ) {" +
+                        // "alert('" + obj.getString("data_i") + "');" +
+                        "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };"+
+                        "window.scrollTo(0, item[i].getBoundingClientRect().top);"+
+                        "item[i].click();"+
+                        "break;"+
+                        // "alert(item[i].getAttribute('href'));"+
+                        //"item[i].click();"+
+                        "}" +
+                        "}" +
+                        "}, 2000);"+
+                        "})()"
             )
         }
 
         if ( obj.getBoolean("next") == true ) {
             if ( actionStep < actions.length() ) {
                 val obj = actions.getJSONObject(actionStep);
-                obj.put("step",actionStep)
+                obj.put("step", actionStep)
 
                 actionStep = actionStep + 1
-                Log.i("MainActivity","aa actionStep next : "+obj.getInt("step"))
+                Log.i("MainActivity", "aa actionStep next : " + obj.getInt("step"))
                 GlobalScope.launch(context = Dispatchers.Main) {
                     delay(timeMillis)
-                    Log.i("MainActivity","step info === step:"+obj.getInt("step")+"/name:"+obj.getString("name")+"/action:"+obj.getString("action"))
+                    Log.i(
+                        "MainActivity",
+                        "step info === step:" + obj.getInt("step") + "/name:" + obj.getString(
+                            "name"
+                        ) + "/action:" + obj.getString("action")
+                    )
                     if ( obj.get("function") == "element" ) {
                         elementAction(obj, webView)
                     } else if ( obj.get("function") == "webview" ) {
