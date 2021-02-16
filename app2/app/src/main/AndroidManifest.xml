@@ -2,7 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="web.macro.app">
 
+    <!-- 인터넷 연결 권한 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 네트워크 상태 권한 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 네트워크 상태 변경 권한 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
