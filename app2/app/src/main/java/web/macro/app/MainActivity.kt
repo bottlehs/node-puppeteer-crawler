@@ -1,8 +1,9 @@
 package web.macro.app
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.webkit.WebChromeClient
@@ -19,30 +20,66 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
-    // Actions
+    private val TAG = "MainActivity"
+
+    /*
+    actionStep : 동작 카운드
+    actions : 전체 동작 JSON
+    timeMillis : 동작당 지연 시간 ( 마이크로초 )
+    currentUrl : 현재 URL ( Webview page loading 시 업데이트 되도록 되어 있음 )
+    */
     var actionStep = 0
     val actions = JSONArray()
-    val timeMillis = 1000L // 실행 속도 ( 마이크로초 )
+    val timeMillis = 1000L
     var currentUrl = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /*
+        btnRun (View) : 실행 버튼 ( res/layout/activity_main.xml btn_run 을 참조함 )
+        webView (WebView) : 웹뷰 ( res/layout/activity_main.xml web_view 을 참조함 )
+        rootUrl : 첫 홈페이지
+        rootShopUrl : 쇼핑 홈페이지                
+        */
         val btnRun: View = findViewById(R.id.btn_run);
         val webView: WebView = findViewById(R.id.web_view)
-
         val rootUrl = "https://m.naver.com" // 첫 홈페이지
         val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
-        // Actions
+
+        /*
+        action : actions 에 추가할 json object 선언
+         */
         var action = JSONObject()
+        /*
+        name : 동작명
+        action : 액션 ( focus, value. click, back, url, submit, listSearchClick )
+            focus : selector 요소 포커스
+            value : input 에 action.value 값 입력
+            click : selector 요소 클릭
+            back : webView.goBack()
+            url : action.url 로 이동 ( 웹뷰 url 변경 )
+            submit : selector 요소 submit
+            listSearchClick : selector 요소 리스트에서 action.data_i 값 찾기
+
+        selector : selector 요소 찾기 ( CSS selector 개념 )
+        function : 함수
+            element : 웹뷰내 웹 컨트롤
+            webview : 웹뷰 컨트롤
+
+        index : 
+            int : selector 요소가 여럭개가 나올경우 몆번째 요소인지 명시적 지정
+            random : selector 요소가 여러개 나올경우 특정 번째 요소를 랜덤으로 선택함
+
+        next : 페이지 이동 없이 한 화면에서 다음 동작 수행 ( true or false )
+        */
 
         // 검색 포커스
         action = JSONObject()
         action.put("name", "검색 포커스")
         action.put("action", "focus")
-        action.put("position", "m.naver.com")
         action.put("selector", "#MM_SEARCH_FAKE")
         action.put("function", "element")
         action.put("index", 0)
@@ -53,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 입력")
         action.put("action", "value")
-        action.put("position", "m.naver.com")
         action.put("selector", "#query")
         action.put("value", "해운대")
         action.put("function", "element")
@@ -65,7 +101,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 폼 전송")
         action.put("action", "click")
-        action.put("position", "m.naver.com")
         action.put("selector", ".sch_submit")
         action.put("function", "element")
         action.put("index", 0)
@@ -76,7 +111,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 결과 클릭")
         action.put("action", "click")
-        action.put("position", "m.naver.com")
         action.put("selector", ".sp_nnews .news_wrap .news_tit")
         action.put("function", "element")
         action.put("index", "random")
@@ -87,7 +121,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "뒤로가기")
         action.put("action", "back")
-        action.put("position", "m.naver.com")
         action.put("function", "webview")
         action.put("next", false)
         actions.put(action)
@@ -96,7 +129,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 결과 클릭")
         action.put("action", "click")
-        action.put("position", "m.naver.com")
         action.put("selector", ".sp_nnews .news_wrap .news_tit")
         action.put("function", "element")
         action.put("index", "random")
@@ -107,7 +139,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "뒤로가기")
         action.put("action", "back")
-        action.put("position", "m.naver.com")
         action.put("function", "webview")
         action.put("next", false)
         actions.put(action)
@@ -116,7 +147,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색 포커스")
         action.put("action", "focus")
-        action.put("position", "m.naver.com")
         action.put("selector", "#nx_query")
         action.put("function", "element")
         action.put("index", 0)
@@ -127,7 +157,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 입력")
         action.put("action", "value")
-        action.put("position", "m.naver.com")
         action.put("selector", "#nx_query")
         action.put("value", "비타민나무")
         action.put("function", "element")
@@ -139,7 +168,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 폼 전송")
         action.put("action", "click")
-        action.put("position", "m.naver.com")
         action.put("selector", ".btn_search")
         action.put("function", "element")
         action.put("index", 0)
@@ -150,7 +178,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 결과 쇼핑 클릭")
         action.put("action", "click")
-        action.put("position", "m.naver.com")
         action.put("selector", ".type_white .sch_tab .lst_sch .bx a")
         action.put("function", "element")
         action.put("index", 1)
@@ -161,7 +188,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "쇼핑홈으로 이동")
         action.put("action", "url")
-        action.put("position", "m.naver.com")
         action.put("function", "url")
         action.put("url", rootShopUrl)
         actions.put(action)
@@ -170,7 +196,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색 클릭")
         action.put("action", "click")
-        action.put("position", "m.naver.com")
         action.put("selector", "#sear")
         action.put("function", "element")
         action.put("index", 0)
@@ -181,7 +206,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색 포커스")
         action.put("action", "focus")
-        action.put("position", "m.naver.com")
         action.put("selector", "#sear")
         action.put("function", "element")
         action.put("index", 0)
@@ -192,7 +216,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 입력")
         action.put("action", "value")
-        action.put("position", "m.naver.com")
         action.put("selector", "#sear")
         action.put("value", "비타민나무")
         action.put("function", "element")
@@ -204,7 +227,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 폼 전송")
         action.put("action", "submit")
-        action.put("position", "m.naver.com")
         action.put("selector", "#searchForm")
         action.put("function", "element")
         action.put("index", 0)
@@ -215,7 +237,6 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "쇼핑 검색어 결과 상품 찾기후 클릭")
         action.put("action", "listSearchClick")
-        action.put("position", "m.naver.com")
         action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
         action.put("function", "element")
         action.put("data_i", 25184334522)
@@ -226,31 +247,14 @@ class MainActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "쇼핑 상세보기 에서 구매하기 화면으로 이동")
         action.put("action", "listSearchClick")
-        action.put("position", "m.naver.com")
-        action.put("selector", ".productPerMall_seller_item__jcayW .productPerMall_link_seller__3GSdU")
+        action.put(
+            "selector",
+            ".productPerMall_seller_item__jcayW .productPerMall_link_seller__3GSdU"
+        )
         action.put("function", "element")
         action.put("data_i", 21499083928)
         action.put("next", false)
         actions.put(action)
-
-        /*
-        // 인기 주제 판을 확인해 보세요! 1
-        action.put("action", "click")
-        action.put("position", "m.naver.com")
-        action.put("selector", ".uio_thumbnail .ut_a")
-        action.put("function", "elementAction")
-        action.put("index", 0)
-        actions.put(action)
-
-        // 인기 주제 판을 확인해 보세요! 2
-        action = JSONObject()
-        action.put("action", "click")
-        action.put("position", "m.naver.com")
-        action.put("selector", ".grid1_wrap a")
-        action.put("function", "elementAction")
-        action.put("index", "random")
-        actions.put(action)
-        */
 
         // Enable Javascript in web view
         webView.settings.javaScriptEnabled = true
@@ -279,31 +283,26 @@ class MainActivity : AppCompatActivity() {
         // Set web view client
         webView.webViewClient = object: WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                Log.i("MainActivity", "onPageStarted")
+                Toast.makeText(applicationContext, "onPageStarted", Toast.LENGTH_LONG).show()
+                Log.i(TAG, "onPageStarted")
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-
                 Toast.makeText(applicationContext, "onPageFinished", Toast.LENGTH_LONG).show()
-                Log.i("MainActivity", "aa onPageFinished url : " + url)
-
-                Log.i("MainActivity", "aa actions : " + actions.length())
-                // view.scrollY(0,view.contentHeight())
+                Log.i(TAG, "onPageFinished")
 
                 if ( actionStep < actions.length() && currentUrl != url.toString() )  {
                     currentUrl = url.toString()
                     val obj = actions.getJSONObject(actionStep);
                     obj.put("step", actionStep)
                     actionStep = actionStep + 1
-                    Log.i("MainActivity", "aa actionStep onPageFinished : " + obj.getInt("step"))
                     GlobalScope.launch(context = Dispatchers.Main) {
                         delay(timeMillis)
-                        Log.i(
-                            "MainActivity",
-                            "step info === step:" + obj.getInt("step") + "/name:" + obj.getString(
-                                "name"
-                            ) + "/action:" + obj.getString("action")
-                        )
+                        Toast.makeText(
+                            applicationContext,
+                            "" + obj.getInt("step") + "-" + obj.getString("name"),
+                            Toast.LENGTH_LONG
+                        ).show()
                         if ( obj.get("function") == "element" ) {
                             elementAction(obj, webView)
                         } else if ( obj.get("function") == "webview" ) {
@@ -319,9 +318,14 @@ class MainActivity : AppCompatActivity() {
         // Set web view chrome client
         webView.webChromeClient = object: WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                Log.i("MainActivity", "newProgress:" + newProgress)
+                Log.i(TAG, "onProgressChanged : " + newProgress)
                 if ( 100 <= newProgress ) {
-                    Log.i("MainActivity", "aa actionStep onPageFinishedaa :")
+                    Toast.makeText(
+                        applicationContext,
+                        "onProgressChanged Complete",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.i(TAG, "onProgressChanged Complete")
                 }
             }
         }
@@ -329,16 +333,11 @@ class MainActivity : AppCompatActivity() {
         btnRun.setOnClickListener(View.OnClickListener {
             actionStep = 0
             webView.loadUrl(rootUrl)
-            /*
-            webView.loadUrl("javascript:(function(){document.querySelector('#MM_SEARCH_FAKE').focus();})()")
-            webView.loadUrl("javascript:(function(){document.querySelector('#query').value='hello1';})()")
-            webView.loadUrl("javascript:(function(){document.querySelector('.sp_nnews .news_wrap .news_tit').click();})()")
-            Toast.makeText(applicationContext, "hello", Toast.LENGTH_LONG).show()
-            */
         })
 
 
     }
+
     fun urlAction(obj: JSONObject, webView: WebView) {
         webView.loadUrl(obj.getString("url"))
     }
@@ -354,7 +353,6 @@ class MainActivity : AppCompatActivity() {
                     "index"
                 ) + "].focus();})()"
             )
-            Log.i("MainActivity", "aa focusfocusfocusfocusfocusfocusfocusfocus")
         } else if ( obj.getString("action") == "value" ) {
             webView.loadUrl(
                 "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
@@ -382,27 +380,23 @@ class MainActivity : AppCompatActivity() {
                 ) + "].submit();})()"
             )
         } else if ( obj.getString("action") == "listSearchClick" ) {
-            Log.i("MainActivity", "aa actionStep listSearchClick")
-
-            // webView.loadUrl("javascript:(function(){document.querySelectorAll('"+obj.getString("selector")+"')[0].click();})()")
-
             webView.loadUrl(
                 "javascript:(function(){" +
-                        "setTimeout(function() {"+
+                        "setTimeout(function() {" +
                         "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
                         "for ( var i = 0; i < item.length; i++ ) {" +
-                        "window.scrollTo(0, item[i].getBoundingClientRect().top);"+
+                        "window.scrollTo(0, item[i].getBoundingClientRect().top);" +
                         "if ( Number(item[i].getAttribute('data-i')) == " + obj.getString("data_i") + " ) {" +
                         // "alert('" + obj.getString("data_i") + "');" +
-                        "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };"+
-                        "window.scrollTo(0, item[i].getBoundingClientRect().top);"+
-                        "item[i].click();"+
-                        "break;"+
+                        "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
+                        "window.scrollTo(0, item[i].getBoundingClientRect().top);" +
+                        "item[i].click();" +
+                        "break;" +
                         // "alert(item[i].getAttribute('href'));"+
                         //"item[i].click();"+
                         "}" +
                         "}" +
-                        "}, 2000);"+
+                        "}, 2000);" +
                         "})()"
             )
         }
@@ -413,15 +407,13 @@ class MainActivity : AppCompatActivity() {
                 obj.put("step", actionStep)
 
                 actionStep = actionStep + 1
-                Log.i("MainActivity", "aa actionStep next : " + obj.getInt("step"))
                 GlobalScope.launch(context = Dispatchers.Main) {
                     delay(timeMillis)
-                    Log.i(
-                        "MainActivity",
-                        "step info === step:" + obj.getInt("step") + "/name:" + obj.getString(
-                            "name"
-                        ) + "/action:" + obj.getString("action")
-                    )
+                    Toast.makeText(
+                        applicationContext,
+                        "" + obj.getInt("step") + "-" + obj.getString("name"),
+                        Toast.LENGTH_LONG
+                    ).show()
                     if ( obj.get("function") == "element" ) {
                         elementAction(obj, webView)
                     } else if ( obj.get("function") == "webview" ) {
