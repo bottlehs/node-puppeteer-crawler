@@ -1,11 +1,13 @@
 package web.macro.app
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity: AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -39,10 +41,12 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
         btnRun.setOnClickListener(View.OnClickListener {
-            Toast.makeText(this@MainActivity, "Run", Toast.LENGTH_SHORT).show()
+            var intent = Intent(this, RunActivity::class.java)
+            startActivity(intent)
         })
         btnLog.setOnClickListener(View.OnClickListener {
-            Toast.makeText(this@MainActivity, "Run", Toast.LENGTH_SHORT).show()
+            var intent = Intent(this, LogActivity::class.java)
+            startActivity(intent)
         })
         btnClose.setOnClickListener(View.OnClickListener {
             var builder = AlertDialog.Builder(this)
@@ -60,7 +64,6 @@ class MainActivity: AppCompatActivity() {
 
             builder.setPositiveButton("Positive", listener)
             builder.setNegativeButton("Negative", listener)
-
             builder.show()
         })
     }
