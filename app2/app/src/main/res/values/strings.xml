@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Macro App</string>
     <string name="activity_main_title">Setting</string>
+    <string name="activity_main_hour_label">시간대/구매</string>
+
+
 </resources>
