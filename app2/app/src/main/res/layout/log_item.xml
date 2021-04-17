@@ -4,18 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/hour_height">
     <TextView
+        android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:text="날자"/>
     <TextView
+        android:id="@+id/product"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:text="상품명"/>
     <TextView
+        android:id="@+id/purchase"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
