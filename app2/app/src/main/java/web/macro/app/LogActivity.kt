@@ -3,11 +3,11 @@ package web.macro.app
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity: AppCompatActivity() {
-    private val TAG = "MainActivity"
+class LogActivity: AppCompatActivity() {
+    private val TAG = "LogActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_log)
     }
 }
