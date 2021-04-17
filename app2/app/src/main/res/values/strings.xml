@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">Macro App</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
     <string name="activity_main_title">Setting</string>
     <string name="activity_main_hour_label">시간대/구매</string>
+    <string name="activity_main_queue_label">체류(MIN/MAX)</string>
+    <string name="activity_main_product_name_label">상품명</string>
+    <string name="activity_main_product_link_id_label">상품 링크 ID</string>
+    <string name="activity_main_product_buy_link_id_label">구매 링크 ID</string>
+    <string name="activity_main_auto_label">익일 자동실행</string>
+    <string name="activity_main_auto_use">사용</string>
+    <string name="activity_main_auto_not_use">사용안함</string>
+    <string name="activity_main_save">Save</string>
+    <string name="activity_main_run">Run</string>
+    <string name="activity_main_log">Log</string>
+    <string name="activity_main_close">Quit</string>
 
 
 </resources>
