@@ -17,15 +17,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
                 android:padding="10dp">
                 <LinearLayout
                     android:id="@+id/label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/hour_width"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="@string/activity_main_hour_label"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -37,7 +39,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -49,7 +52,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="~" />
                 </LinearLayout>
                 <LinearLayout
@@ -60,7 +64,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -70,22 +75,25 @@
                     android:layout_toRightOf="@id/endTime">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="10회" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
                 android:padding="10dp">
                 <LinearLayout
                     android:id="@id/label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/hour_width"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="@string/activity_main_hour_label"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -97,7 +105,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -109,7 +118,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="~" />
                 </LinearLayout>
                 <LinearLayout
@@ -120,7 +130,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -130,22 +141,25 @@
                     android:layout_toRightOf="@id/endTime">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="10회" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
                 android:padding="10dp">
                 <LinearLayout
                     android:id="@id/label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/hour_width"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="@string/activity_main_hour_label"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -157,7 +171,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -169,7 +184,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="~" />
                 </LinearLayout>
                 <LinearLayout
@@ -180,7 +196,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -190,22 +207,25 @@
                     android:layout_toRightOf="@id/endTime">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="10회" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
                 android:padding="10dp">
                 <LinearLayout
                     android:id="@id/label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/hour_width"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="@string/activity_main_hour_label"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -217,7 +237,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -229,7 +250,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="~" />
                 </LinearLayout>
                 <LinearLayout
@@ -240,7 +262,8 @@
                     android:layout_marginRight="@dimen/hour_margin">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="07:30" />
                 </LinearLayout>
                 <LinearLayout
@@ -250,10 +273,232 @@
                     android:layout_toRightOf="@id/endTime">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
                         android:text="10회" />
                 </LinearLayout>
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_queue_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="15" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/tum"
+                    android:layout_toRightOf="@id/startTime"
+                    android:layout_marginLeft="@dimen/hour_margin"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="~" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/endTime"
+                    android:layout_toRightOf="@id/tum"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="30" />
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_product_name_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:text="15" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_product_link_id_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:text="15" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_product_buy_link_id_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:text="15" />
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_auto_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="15" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_save"/>
+                <Button
+                    android:id="@+id/btn_run"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_run"/>
+                <Button
+                    android:id="@+id/btn_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_log"/>
+
+                <Button
+                    android:id="@+id/btn_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_close" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
