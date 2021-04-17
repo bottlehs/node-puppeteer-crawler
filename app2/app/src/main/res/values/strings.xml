@@ -16,5 +16,5 @@
     <string name="activity_main_log">Log</string>
     <string name="activity_main_close">Quit</string>
 
-
+    <string name="activity_log_title">Logs</string>
 </resources>
