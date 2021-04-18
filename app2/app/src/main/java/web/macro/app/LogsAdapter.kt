@@ -16,6 +16,5 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
     }
 }
