@@ -471,7 +471,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/hour_margin">
                 <Button
                     android:id="@+id/btn_save"
                     android:layout_width="wrap_content"
@@ -485,11 +486,11 @@
                     android:layout_weight="1"
                     android:text="@string/activity_main_run"/>
                 <Button
-                    android:id="@+id/btn_log"
+                    android:id="@+id/btn_logs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/activity_main_log"/>
+                    android:text="@string/activity_main_logs"/>
 
                 <Button
                     android:id="@+id/btn_close"

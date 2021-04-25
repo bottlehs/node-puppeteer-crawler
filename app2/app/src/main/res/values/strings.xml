@@ -15,7 +15,7 @@
     <string name="activity_main_save_dialog_title">Save</string>
     <string name="activity_main_save_dialog_description">Do you want to save it?</string>
     <string name="activity_main_run">Run</string>
-    <string name="activity_main_log">Log</string>
+    <string name="activity_main_logs">Logs</string>
     <string name="activity_main_close">Exit</string>
     <string name="activity_main_close_dialog_title">Exit</string>
     <string name="activity_main_close_dialog_description">Are you sure you want to exit?</string>
