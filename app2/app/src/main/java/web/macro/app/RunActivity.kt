@@ -10,8 +10,10 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_log.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -37,6 +39,18 @@ class RunActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
 
+        // set toolbar as support action bar
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.apply {
+            title = getString(R.string.activity_run_title)
+
+            // show back button on toolbar
+            // on back button press, it will navigate to parent activity
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+
         /*
         btnRun (View) : 실행 버튼 ( res/layout/activity_main.xml btn_run 을 참조함 )
         webView (WebView) : 웹뷰 ( res/layout/activity_main.xml web_view 을 참조함 )
@@ -44,6 +58,7 @@ class RunActivity : AppCompatActivity() {
         rootShopUrl : 쇼핑 홈페이지                
         */
         val btnRun: View = findViewById(R.id.btn_run);
+        val progressBar: ProgressBar = findViewById(R.id.progress_bar);
         val webView: WebView = findViewById(R.id.web_view)
         val rootUrl = "https://m.naver.com" // 첫 홈페이지
         val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
@@ -319,6 +334,7 @@ class RunActivity : AppCompatActivity() {
         webView.webChromeClient = object: WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 Log.i(TAG, "onProgressChanged : " + newProgress)
+                progressBar.progress = newProgress
                 if ( 100 <= newProgress ) {
                     Toast.makeText(
                         applicationContext,
