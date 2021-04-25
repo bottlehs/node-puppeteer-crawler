@@ -18,7 +18,7 @@ class MainActivity: AppCompatActivity() {
 
         val btnSave: View = findViewById(R.id.btn_save);
         val btnRun: View = findViewById(R.id.btn_run);
-        val btnLog: View = findViewById(R.id.btn_log);
+        val btnLogs: View = findViewById(R.id.btn_logs);
         val btnClose: View = findViewById(R.id.btn_close);
 
         btnSave.setOnClickListener(View.OnClickListener {
@@ -44,8 +44,8 @@ class MainActivity: AppCompatActivity() {
             var intent = Intent(this, RunActivity::class.java)
             startActivity(intent)
         })
-        btnLog.setOnClickListener(View.OnClickListener {
-            var intent = Intent(this, LogActivity::class.java)
+        btnLogs.setOnClickListener(View.OnClickListener {
+            var intent = Intent(this, LogsActivity::class.java)
             startActivity(intent)
         })
         btnClose.setOnClickListener(View.OnClickListener {
