@@ -9,6 +9,10 @@ import kotlinx.android.synthetic.main.log_item.view.*
 
 class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapter<LogsAdapter.ViewHolder>() {
 
+    private val TYPE_HEADER = 0
+    private val TYPE_ITEM = 1
+    private val TYPE_FOOTER = 2
+
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: LogsAdapter.ViewHolder, position: Int) {
@@ -26,9 +30,13 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
         parent: ViewGroup,
         viewType: Int
     ): LogsAdapter.ViewHolder {
-        val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.log_item, parent, false)
-
-        return LogsAdapter.ViewHolder(inflatedView)
+        if ( viewType == TYPE_HEADER ) {
+            val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.log_item, parent, false)
+            return LogsAdapter.ViewHolder(inflatedView)
+        } else {
+            val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.log_item, parent, false)
+            return LogsAdapter.ViewHolder(inflatedView)
+        }
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
