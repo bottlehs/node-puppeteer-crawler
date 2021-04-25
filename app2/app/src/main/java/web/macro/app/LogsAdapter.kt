@@ -26,7 +26,6 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
         parent: ViewGroup,
         viewType: Int
     ): LogsAdapter.ViewHolder {
-        TODO("Not yet implemented")
         val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.log_item, parent, false)
 
         return LogsAdapter.ViewHolder(inflatedView)
@@ -35,9 +34,9 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: DataLogs) {
-            view.date.text = "date";
-            view.product.text = "product";
-            view.purchase.text = "purchase";
+            view.date.text = item.strDate;
+            view.product.text = item.strProduct;
+            view.purchase.text = item.strPurchase;
         }
     }
 }
