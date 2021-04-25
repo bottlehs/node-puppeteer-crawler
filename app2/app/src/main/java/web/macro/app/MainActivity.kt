@@ -41,8 +41,22 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
         btnRun.setOnClickListener(View.OnClickListener {
-            var intent = Intent(this, RunActivity::class.java)
-            startActivity(intent)
+            var builder = AlertDialog.Builder(this)
+            builder.setTitle(R.string.activity_main_run_dialog_title)
+            builder.setMessage(R.string.activity_main_run_dialog_description)
+
+            var listener = object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    when (p1) {
+                        DialogInterface.BUTTON_POSITIVE ->
+                            run()
+                    }
+                }
+            }
+
+            builder.setPositiveButton(R.string.positive, listener)
+            builder.setNegativeButton(R.string.negative, listener)
+            builder.show()
         })
         btnLogs.setOnClickListener(View.OnClickListener {
             var intent = Intent(this, LogsActivity::class.java)
@@ -66,5 +80,10 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
+    }
+
+    fun run () {
+        var intent = Intent(this, RunActivity::class.java)
+        startActivity(intent)
     }
 }

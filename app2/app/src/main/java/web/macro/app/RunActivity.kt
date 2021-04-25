@@ -1,6 +1,7 @@
 package web.macro.app
 
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -10,8 +11,14 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import kotlinx.android.synthetic.main.activity_log.*
+import kotlinx.android.synthetic.main.activity_log.toolbar
+import kotlinx.android.synthetic.main.activity_run.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -28,14 +35,29 @@ class RunActivity : AppCompatActivity() {
     timeMillis : 동작당 지연 시간 ( 마이크로초 )
     currentUrl : 현재 URL ( Webview page loading 시 업데이트 되도록 되어 있음 )
     */
+    var isProgress = false;
     var actionStep = 0
     val actions = JSONArray()
     val timeMillis = 1000L
     var currentUrl = ""
+    val rootUrl = "https://m.naver.com" // 첫 홈페이지
+    val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
+
+        // set toolbar as support action bar
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.apply {
+            title = getString(R.string.activity_run_title)
+
+            // show back button on toolbar
+            // on back button press, it will navigate to parent activity
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         /*
         btnRun (View) : 실행 버튼 ( res/layout/activity_main.xml btn_run 을 참조함 )
@@ -44,9 +66,8 @@ class RunActivity : AppCompatActivity() {
         rootShopUrl : 쇼핑 홈페이지                
         */
         val btnRun: View = findViewById(R.id.btn_run);
+        val progressBar: ProgressBar = findViewById(R.id.progress_bar);
         val webView: WebView = findViewById(R.id.web_view)
-        val rootUrl = "https://m.naver.com" // 첫 홈페이지
-        val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
 
         /*
@@ -285,9 +306,13 @@ class RunActivity : AppCompatActivity() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 Toast.makeText(applicationContext, "onPageStarted", Toast.LENGTH_LONG).show()
                 Log.i(TAG, "onPageStarted")
+
+                progressBar.isVisible = true
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
+                progressBar.isVisible = false
+
                 Toast.makeText(applicationContext, "onPageFinished", Toast.LENGTH_LONG).show()
                 Log.i(TAG, "onPageFinished")
 
@@ -311,6 +336,8 @@ class RunActivity : AppCompatActivity() {
                             urlAction(obj, webView)
                         }
                     }
+                } else {
+                    stop()
                 }
             }
         }
@@ -319,6 +346,7 @@ class RunActivity : AppCompatActivity() {
         webView.webChromeClient = object: WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 Log.i(TAG, "onProgressChanged : " + newProgress)
+                progressBar.progress = newProgress
                 if ( 100 <= newProgress ) {
                     Toast.makeText(
                         applicationContext,
@@ -331,8 +359,37 @@ class RunActivity : AppCompatActivity() {
         }
 
         btnRun.setOnClickListener(View.OnClickListener {
-            actionStep = 0
-            webView.loadUrl(rootUrl)
+            if ( isProgress ) {
+                var builder = AlertDialog.Builder(this)
+                builder.setTitle(R.string.activity_run_running_dialog_title)
+                builder.setMessage(R.string.activity_run_running_dialog_description)
+
+                var listener = object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                    }
+                }
+
+                builder.setPositiveButton(R.string.positive, listener)
+                builder.show()
+            } else {
+                var builder = AlertDialog.Builder(this)
+                builder.setTitle(R.string.activity_run_run_dialog_title)
+                builder.setMessage(R.string.activity_run_run_dialog_description)
+
+                var listener = object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        when (p1) {
+                            DialogInterface.BUTTON_POSITIVE ->
+                                play()
+
+                        }
+                    }
+                }
+
+                builder.setPositiveButton(R.string.positive, listener)
+                builder.setNegativeButton(R.string.negative, listener)
+                builder.show()
+            }
         })
 
 
@@ -422,7 +479,22 @@ class RunActivity : AppCompatActivity() {
                         urlAction(obj, webView)
                     }
                 }
+            } else {
+                stop()
             }
         }
+    }
+
+    fun play() {
+        isProgress = true
+        actionStep = 0
+        web_view.loadUrl(rootUrl)
+
+        btn_run.setImageDrawable(getDrawable(R.drawable.ic_stop))
+    }
+
+    fun stop() {
+        isProgress = false
+        btn_run.setImageDrawable(getDrawable(R.drawable.ic_play))
     }
 }
