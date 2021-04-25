@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Macro App</string>
-    <string name="ok">Ok</string>
-    <string name="cancel">Cancel</string>
+    <string name="positive">Positive</string>
+    <string name="negative">Negative</string>
     <string name="activity_main_title">Setting</string>
     <string name="activity_main_hour_label">시간대/구매</string>
     <string name="activity_main_queue_label">체류(MIN/MAX)</string>
@@ -12,9 +12,11 @@
     <string name="activity_main_auto_use">사용</string>
     <string name="activity_main_auto_not_use">사용안함</string>
     <string name="activity_main_save">Save</string>
+    <string name="activity_main_save_dialog_title">Save</string>
+    <string name="activity_main_save_dialog_description">Do you want to save it?</string>
     <string name="activity_main_run">Run</string>
     <string name="activity_main_logs">Logs</string>
-    <string name="activity_main_close">Quit</string>
-
-    <string name="activity_logs_title">Logs</string>
+    <string name="activity_main_close">Exit</string>
+    <string name="activity_main_close_dialog_title">Exit</string>
+    <string name="activity_main_close_dialog_description">Are you sure you want to exit?</string>
 </resources>

@@ -35,8 +35,8 @@ class MainActivity: AppCompatActivity() {
                 }
             }
 
-            builder.setPositiveButton("Positive", listener)
-            builder.setNegativeButton("Negative", listener)
+            builder.setPositiveButton(R.string.positive, listener)
+            builder.setNegativeButton(R.string.negative, listener)
 
             builder.show()
         })
@@ -50,8 +50,8 @@ class MainActivity: AppCompatActivity() {
         })
         btnClose.setOnClickListener(View.OnClickListener {
             var builder = AlertDialog.Builder(this)
-            builder.setTitle("Quit")
-            builder.setMessage("Are you sure that you want to quit the program?")
+            builder.setTitle(R.string.activity_main_close_dialog_title)
+            builder.setMessage(R.string.activity_main_close_dialog_description)
 
             var listener = object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
@@ -62,8 +62,8 @@ class MainActivity: AppCompatActivity() {
                 }
             }
 
-            builder.setPositiveButton("Positive", listener)
-            builder.setNegativeButton("Negative", listener)
+            builder.setPositiveButton(R.string.positive, listener)
+            builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
     }
