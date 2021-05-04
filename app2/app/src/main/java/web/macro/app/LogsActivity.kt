@@ -1,11 +1,14 @@
 package web.macro.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_log.*
 
 class LogsActivity: AppCompatActivity() {
     private val TAG = "LogActivity"
+    var db : AppDatabase? = null
+    var logsList = mutableListOf<Logs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +26,24 @@ class LogsActivity: AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        val lgos = ArrayList<DataLogs>()
-        for (i in 1..10000) {
-            lgos.add(DataLogs("date "+i,"product "+i, "purchase "+i));
+        db = AppDatabase.getInstance(this)
+        val logs = ArrayList<DataLogs>()
+
+        val savedLogs = db!!.logsDao().getAll()
+        Log.i(TAG,""+savedLogs.size)
+        if(savedLogs.isNotEmpty()){
+            savedLogs.forEach{ row ->
+                logs.add(DataLogs(row.strDate,row.strProduct, row.strPurchase));
+            }
         }
 
-        val adapter = LogsAdapter(lgos)
+        val adapter = LogsAdapter(logs)
         logs_list.adapter = adapter
+
+        /* insert
+        val log = Logs(0,"date","product","purchase")
+        db?.contactsDao()?.insertAll(log)
+        */
     }
 
     override fun onSupportNavigateUp(): Boolean {

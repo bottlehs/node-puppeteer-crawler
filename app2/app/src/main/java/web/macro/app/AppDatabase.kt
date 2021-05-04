@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Logs::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun contactsDao(): LogsDao
+    abstract fun logsDao(): LogsDao
 
     companion object {
         private var instance: AppDatabase? = null
