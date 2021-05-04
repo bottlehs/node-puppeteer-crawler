@@ -85,10 +85,10 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
-        Log.i(TAG,"hello")
-        Log.i(TAG,App.prefs.myEditText)
+        Log.i(TAG,"hello1")
+        Log.i(TAG,App.prefs.productName)
 
-        App.prefs.myEditText = "고래상어!!!";
+        App.prefs.productName = "고래상어!!!";
     }
 
     fun run () {
