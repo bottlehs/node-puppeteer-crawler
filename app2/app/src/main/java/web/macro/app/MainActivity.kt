@@ -3,6 +3,7 @@ package web.macro.app
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -11,10 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity: AppCompatActivity() {
     private val TAG = "MainActivity"
+    var db : AppDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db = AppDatabase.getInstance(this)
+        val savedLogs = db!!.logsDao().getAll()
 
         val btnSave: View = findViewById(R.id.btn_save);
         val btnRun: View = findViewById(R.id.btn_run);
@@ -80,6 +85,10 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
+        Log.i(TAG,"hello")
+        Log.i(TAG,App.prefs.myEditText)
+
+        App.prefs.myEditText = "고래상어!!!";
     }
 
     fun run () {

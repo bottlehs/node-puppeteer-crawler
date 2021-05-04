@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.activity_log.*
 class LogsActivity: AppCompatActivity() {
     private val TAG = "LogActivity"
     var db : AppDatabase? = null
-    var logsList = mutableListOf<Logs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
