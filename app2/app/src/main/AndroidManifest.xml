@@ -8,7 +8,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 네트워크 상태 변경 권한 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    
+    <!-- 파일 쓰기 권한 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 파일 읽기 권한 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
