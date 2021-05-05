@@ -2,6 +2,7 @@
     <string name="app_name">Macro App</string>
     <string name="positive">Positive</string>
     <string name="negative">Negative</string>
+    <string name="activity_main_require_label">(*)</string>
     <string name="activity_main_title">Setting</string>
     <string name="activity_main_hour_label">시간대/구매</string>
     <string name="activity_main_queue_label">체류(MIN/MAX)</string>
@@ -11,6 +12,10 @@
     <string name="activity_main_auto_label">익일 자동실행</string>
     <string name="activity_main_auto_use">사용</string>
     <string name="activity_main_auto_not_use">사용안함</string>
+
+    <string name="activity_main_search_label">검색어</string>
+    <string name="activity_main_address_label">배송지</string>
+
     <string name="activity_main_save">Save</string>
     <string name="activity_main_save_dialog_title">Save</string>
     <string name="activity_main_save_dialog_description">Do you want to save it?</string>

@@ -18,13 +18,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_log.*
 import kotlinx.android.synthetic.main.activity_log.toolbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_run.*
+import kotlinx.android.synthetic.main.activity_run.btn_run
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+import kotlin.random.Random
 
 class RunActivity : AppCompatActivity() {
     private val TAG = "RunActivity"
@@ -43,9 +49,23 @@ class RunActivity : AppCompatActivity() {
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
     val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
+    val productName = App.prefs.productName;
+    val productId = App.prefs.productId;
+    val purchaseId = App.prefs.purchaseId;
+
+    var search : ArrayList<String> = ArrayList();
+    var address : ArrayList<String> = ArrayList();
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
+
+        // 셋팅
+        val searchTxtFilePath = filesDir.path+"/search.txt"
+        readSearchTextFromFile(searchTxtFilePath)
+
+        val addressTxtFilePath = filesDir.path+"/address.txt"
+        readAddressTextFromFile(addressTxtFilePath)
 
         // set toolbar as support action bar
         setSupportActionBar(toolbar)
@@ -112,7 +132,7 @@ class RunActivity : AppCompatActivity() {
         action.put("name", "검색어 입력")
         action.put("action", "value")
         action.put("selector", "#query")
-        action.put("value", "해운대")
+        action.put("value", search.get(Random.nextInt(0, search.size)))
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -122,7 +142,7 @@ class RunActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 폼 전송")
         action.put("action", "click")
-        action.put("selector", ".sch_submit")
+        action.put("selector", ".sch_btn_search")
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", false)
@@ -238,7 +258,7 @@ class RunActivity : AppCompatActivity() {
         action.put("name", "검색어 입력")
         action.put("action", "value")
         action.put("selector", "#sear")
-        action.put("value", "비타민나무")
+        action.put("value", productName)
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -260,7 +280,7 @@ class RunActivity : AppCompatActivity() {
         action.put("action", "listSearchClick")
         action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
         action.put("function", "element")
-        action.put("data_i", 25184334522)
+        action.put("data_i", productId)
         action.put("next", false)
         actions.put(action)
 
@@ -273,7 +293,7 @@ class RunActivity : AppCompatActivity() {
             ".productPerMall_seller_item__jcayW .productPerMall_link_seller__3GSdU"
         )
         action.put("function", "element")
-        action.put("data_i", 21499083928)
+        action.put("data_i", purchaseId)
         action.put("next", false)
         actions.put(action)
 
@@ -496,5 +516,37 @@ class RunActivity : AppCompatActivity() {
     fun stop() {
         isProgress = false
         btn_run.setImageDrawable(getDrawable(R.drawable.ic_play))
+    }
+
+    fun readSearchTextFromFile(path: String) {
+        val file = File(path)
+        val fileReader = FileReader(file)
+        val bufferedReader = BufferedReader(fileReader)
+        var txt = "";
+        bufferedReader.readLines().forEach() {
+            txt = txt+it;
+        }
+
+        txt.split(",").forEach{ row ->
+            search.add(row)
+        }
+
+        Log.i(TAG,search.get(0));
+        Log.i(TAG,search.get(1));
+        Log.i(TAG,search.get(2));
+        Log.i(TAG,search.get(Random.nextInt(0, search.size)));
+    }
+
+    fun readAddressTextFromFile(path: String) {
+        val file = File(path)
+        val fileReader = FileReader(file)
+        val bufferedReader = BufferedReader(fileReader)
+        var txt = "";
+        bufferedReader.readLines().forEach() {
+            address.add(it)
+        }
+
+        Log.i(TAG,address.get(0));
+        Log.i(TAG,address.get(1));
     }
 }
