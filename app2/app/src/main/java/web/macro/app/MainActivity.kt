@@ -40,7 +40,7 @@ class MainActivity: AppCompatActivity() {
         Log.i(TAG,"checkTxt : "+checkTxt)
 
         if ( !checkTxt ) {
-            Toast.makeText(this@MainActivity, "search.txt, address.txt 를 확인해 주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Please check search.txt, address.txt", Toast.LENGTH_SHORT).show()
             finish()
         }
 
@@ -73,7 +73,13 @@ class MainActivity: AppCompatActivity() {
 
                 builder.show()
             } else {
-                Toast.makeText(this@MainActivity, "필수값을 입력해 주세요", Toast.LENGTH_SHORT).show()
+                if ( App.prefs.productName.toString().length == 0 ) {
+                    Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_name_label)+" field is required", Toast.LENGTH_SHORT).show()
+                } else if ( App.prefs.productId.toString().length == 0 ) {
+                    Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
+                } else if ( App.prefs.purchaseId.toString().length == 0 ) {
+                    Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_buy_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
+                }
             }
         })
         btnRun.setOnClickListener(View.OnClickListener {
@@ -323,7 +329,7 @@ class MainActivity: AppCompatActivity() {
 
         purchase1.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("구매")
+            builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
             builder.setView(input)
@@ -339,7 +345,7 @@ class MainActivity: AppCompatActivity() {
 
         purchase2.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("구매")
+            builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
             builder.setView(input)
@@ -355,7 +361,7 @@ class MainActivity: AppCompatActivity() {
 
         purchase3.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("구매")
+            builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
             builder.setView(input)
@@ -371,7 +377,7 @@ class MainActivity: AppCompatActivity() {
 
         purchase4.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("구매")
+            builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
             builder.setView(input)
@@ -399,7 +405,7 @@ class MainActivity: AppCompatActivity() {
 
         queue1.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("체류 MIN")
+            builder.setTitle("Queue(MIN)")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
             builder.setView(input)
@@ -415,7 +421,7 @@ class MainActivity: AppCompatActivity() {
 
         queue2.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("체류 MAX")
+            builder.setTitle("Queue(MAX)")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
             builder.setView(input)
@@ -668,7 +674,7 @@ class MainActivity: AppCompatActivity() {
         if ( (0 == time11.text.toString().length || time11.text.toString() == "-:-") || (0 == time12.text.toString().length || time12.text.toString() == "-:-") || purchase1.text.toString() == "-" ) {
             Log.i(TAG, "time1 시간 저장불가능")
             if ( time11.text.toString() != "-:-" || time12.text.toString() != "-:-" || purchase1.text.toString() != "-" ) {
-                Toast.makeText(this@MainActivity, "시간대/구매 1 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
                 isSaveValidation = false;
             }
         } else {
@@ -679,7 +685,7 @@ class MainActivity: AppCompatActivity() {
         if ( (0 == time21.text.toString().length || time21.text.toString() == "-:-") || (0 == time22.text.toString().length || time22.text.toString() == "-:-") || purchase2.text.toString() == "-" ) {
             Log.i(TAG, "time2 시간 저장불가능")
             if ( time21.text.toString() != "-:-" || time22.text.toString() != "-:-" || purchase2.text.toString() != "-" ) {
-                Toast.makeText(this@MainActivity, "시간대/구매 2 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
                 isSaveValidation = false;
             }
         } else {
@@ -689,7 +695,7 @@ class MainActivity: AppCompatActivity() {
         if ( (0 == time31.text.toString().length || time31.text.toString() == "-:-") || (0 == time32.text.toString().length || time32.text.toString() == "-:-") || purchase3.text.toString() == "-" ) {
             Log.i(TAG, "time3 시간 저장불가능")
             if ( time31.text.toString() != "-:-" || time32.text.toString() != "-:-" || purchase3.text.toString() != "-" ) {
-                Toast.makeText(this@MainActivity, "시간대/구매 3 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
                 isSaveValidation = false;
             }
         } else {
@@ -700,7 +706,7 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "time4 시간 저장불가능")
             if ( time41.text.toString() != "-:-" || time42.text.toString() != "-:-" || purchase4.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "시간대/구매 4 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
             }
         } else {
             time4Value = time41.text.toString()+"/"+time42.text.toString();
@@ -711,7 +717,7 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "queue 저장불가능")
             if ( queue1.text.toString() != "-" || queue2.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "체류(MIN/MAX) 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_queue_label)+" field is required", Toast.LENGTH_SHORT).show()
             }
         } else {
             queueValue = queue1.text.toString()+"/"+queue2.text.toString();
@@ -720,7 +726,7 @@ class MainActivity: AppCompatActivity() {
         if ( productName.text.toString().length == 0 || productName.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "productName 저장불가능")
-            Toast.makeText(this@MainActivity, "상품명 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_name_label)+" field is required", Toast.LENGTH_SHORT).show()
         } else {
             productNameValue = productName.text.toString();
         }
@@ -728,7 +734,7 @@ class MainActivity: AppCompatActivity() {
         if ( productId.text.toString().length == 0 || productId.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "productId 저장불가능")
-            Toast.makeText(this@MainActivity, "상품 링크 ID 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
         } else {
             productIdValue = productId.text.toString();
         }
@@ -736,7 +742,7 @@ class MainActivity: AppCompatActivity() {
         if ( purchaseId.text.toString().length == 0 || purchaseId.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "purchaseId 저장불가능")
-            Toast.makeText(this@MainActivity, "구매 링크 ID 항목을 모두 입력해 주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_buy_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
         } else {
             purchaseIdValue = purchaseId.text.toString();
         }
@@ -786,7 +792,7 @@ class MainActivity: AppCompatActivity() {
     fun writeSearchTextToFile(path: String) {
         val file = File(path)
         if ( !file.exists() ) {
-            Log.d(TAG,"writeSearchTextToFile 파일이 없으므로 파일을 생성 합니")
+            Log.d(TAG,"writeSearchTextToFile 파일이 없으므로 파일을 생성 합니다.")
             val fileWriter = FileWriter(file, false)
             val bufferedWriter = BufferedWriter(fileWriter)
             bufferedWriter.append("해운대,부산,서울,대구,제주도,호수공원")
@@ -812,7 +818,7 @@ class MainActivity: AppCompatActivity() {
     fun writeAddressTextToFile(path: String) {
         val file = File(path)
         if ( !file.exists() ) {
-            Log.d(TAG,"writeAddressTextToFile 파일이 없으므로 파일을 생성 합니")
+            Log.d(TAG,"writeAddressTextToFile 파일이 없으므로 파일을 생성 합니다.")
             val fileWriter = FileWriter(file, false)
             val bufferedWriter = BufferedWriter(fileWriter)
             bufferedWriter.append("신나라,신사동 536-9,1,017-0000-0001,ergjeorgj@test.com")
