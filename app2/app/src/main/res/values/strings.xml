@@ -1,12 +1,42 @@
 <resources>
     <string name="app_name">Macro App</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="positive">Positive</string>
+    <string name="negative">Negative</string>
+    <string name="activity_main_require_label">(*)</string>
+    <string name="activity_main_title">Setting</string>
+    <string name="activity_main_hour_label">Time/Buy</string>
+    <string name="activity_main_queue_label">Queue(MIN/MAX)</string>
+    <string name="activity_main_product_name_label">Product</string>
+    <string name="activity_main_product_link_id_label">Product Link ID</string>
+    <string name="activity_main_product_buy_link_id_label">Buy Link ID</string>
+    <string name="activity_main_auto_label">Auto-Run Next Day</string>
+    <string name="activity_main_auto_use">Enable</string>
+    <string name="activity_main_auto_not_use">Disable</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="activity_main_search_label">Search Keyword</string>
+    <string name="activity_main_address_label">Address</string>
+
+    <string name="activity_main_save">Save</string>
+    <string name="activity_main_save_dialog_title">Save</string>
+    <string name="activity_main_save_dialog_description">Do you want to save it?</string>
+    <string name="activity_main_run">Run</string>
+    <string name="activity_main_logs">Logs</string>
+    <string name="activity_main_close">Exit</string>
+    <string name="activity_main_close_dialog_title">Exit</string>
+    <string name="activity_main_close_dialog_description">Are you sure you want to exit?</string>
+    <string name="activity_main_run_dialog_title">Run</string>
+    <string name="activity_main_run_dialog_description">Do you want to save and run?</string>
+
+    <string name="activity_logs_title">Logs</string>
+    <string name="activity_logs_item_date_label">Date</string>
+    <string name="activity_logs_item_product_label">Product</string>
+    <string name="activity_logs_item_buy_label">Buy</string>
+
+    <string name="activity_run_title">Run</string>
+
+    <string name="activity_run_running_dialog_title">Running</string>
+    <string name="activity_run_running_dialog_description">Currently running</string>
+    <string name="activity_run_run_dialog_title">Run</string>
+    <string name="activity_run_run_dialog_description">Do you want to run?</string>
+
 </resources>

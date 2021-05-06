@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="hour_margin">5dp</dimen>
+    <dimen name="hour_height">50dp</dimen>
+    <dimen name="hour_width">130dp</dimen>
+    <dimen name="hour_min_width">30dp</dimen>
 </resources>

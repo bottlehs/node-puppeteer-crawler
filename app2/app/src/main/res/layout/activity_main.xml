@@ -1,37 +1,662 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2015 The Android Open Source Project
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <WebView
-        android:id="@+id/web_view"
+    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_run"
-        android:layout_width="wrap_content"
+        <!-- Your scrolling content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@+id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_hour_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time11"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tum"
+                    android:layout_toRightOf="@id/startTime"
+                    android:layout_marginLeft="@dimen/hour_margin"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="~" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/endTime"
+                    android:layout_toRightOf="@id/tum"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time12"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/hit"
+                    android:layout_toRightOf="@id/endTime">
+                    <TextView
+                        android:id="@+id/purchase1"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="10" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="회" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_hour_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time21"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/tum"
+                    android:layout_toRightOf="@id/startTime"
+                    android:layout_marginLeft="@dimen/hour_margin"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="~" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/endTime"
+                    android:layout_toRightOf="@id/tum"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time22"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/hit"
+                    android:layout_toRightOf="@id/endTime">
+                    <TextView
+                        android:id="@+id/purchase2"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="10" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="회" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_hour_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time31"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/tum"
+                    android:layout_toRightOf="@id/startTime"
+                    android:layout_marginLeft="@dimen/hour_margin"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="~" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/endTime"
+                    android:layout_toRightOf="@id/tum"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time32"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/hit"
+                    android:layout_toRightOf="@id/endTime">
+                    <TextView
+                        android:id="@+id/purchase3"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="10" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="회" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_hour_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time41"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/tum"
+                    android:layout_toRightOf="@id/startTime"
+                    android:layout_marginLeft="@dimen/hour_margin"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="~" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/endTime"
+                    android:layout_toRightOf="@id/tum"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/time42"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="07:30" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/hit"
+                    android:layout_toRightOf="@id/endTime">
+                    <TextView
+                        android:id="@+id/purchase4"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="10" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="회" />
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_queue_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/queue1"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="15" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/tum"
+                    android:layout_toRightOf="@id/startTime"
+                    android:layout_marginLeft="@dimen/hour_margin"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="~" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/endTime"
+                    android:layout_toRightOf="@id/tum"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/queue2"
+                        android:minWidth="@dimen/hour_min_width"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="30" />
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_product_name_label"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_require_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/productName"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="30"/>
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="@string/activity_main_product_link_id_label"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_require_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/productId"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="30" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_product_buy_link_id_label"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_require_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/purchaseId"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center_vertical"
+                        android:text="30" />
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hour_height"
+            android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_auto_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <CheckBox
+                        android:id="@+id/nextAuto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></CheckBox>
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_search_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:minHeight="@dimen/hour_height"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/searchTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></TextView>
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_address_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:minHeight="@dimen/hour_height"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/addressTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></TextView>
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/hour_margin">
+                <Button
+                    android:id="@+id/btn_run"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_run"/>
+                <Button
+                    android:id="@+id/btn_logs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_logs"/>
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_save"/>
+                <Button
+                    android:id="@+id/btn_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_main_close" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:contentDescription="hello"
-        android:layout_margin="16dp" />
-</FrameLayout>
+        android:layout_width="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/activity_main_title"
+            android:theme="@style/Toolbar"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+        <!--
+        <androidx.appcompat.widget.Toolbar
+        ...
+        app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <com.google.android.material.tabs.TabLayout
+        ...
+        app:layout_scrollFlags="scroll|enterAlways"/>
+        -->
+    </com.google.android.material.appbar.AppBarLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
