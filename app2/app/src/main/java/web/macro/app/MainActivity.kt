@@ -20,7 +20,7 @@ import java.util.*
 
 
 class MainActivity: AppCompatActivity() {
-    private val TAG = "MainActivity"
+    private val TAG = MainActivity::class.qualifiedName
     var db : AppDatabase? = null
     var checkTxt = true
 
@@ -54,33 +54,23 @@ class MainActivity: AppCompatActivity() {
         val btnClose: View = findViewById(R.id.btn_close);
 
         btnSave.setOnClickListener(View.OnClickListener {
-            if ( App.prefs.productName.toString().length != 0 && App.prefs.productId.toString().length != 0 && App.prefs.purchaseId.toString().length != 0 ) {
-                var builder = AlertDialog.Builder(this)
-                builder.setTitle("Save")
-                builder.setMessage("Would you like to save it?")
+            var builder = AlertDialog.Builder(this)
+            builder.setTitle("Save")
+            builder.setMessage("Would you like to save it?")
 
-                var listener = object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        when (p1) {
-                            DialogInterface.BUTTON_POSITIVE ->
-                                saveForm()
-                        }
+            var listener = object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    when (p1) {
+                        DialogInterface.BUTTON_POSITIVE ->
+                            saveForm()
                     }
                 }
-
-                builder.setPositiveButton(R.string.positive, listener)
-                builder.setNegativeButton(R.string.negative, listener)
-
-                builder.show()
-            } else {
-                if ( App.prefs.productName.toString().length == 0 ) {
-                    Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_name_label)+" field is required", Toast.LENGTH_SHORT).show()
-                } else if ( App.prefs.productId.toString().length == 0 ) {
-                    Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
-                } else if ( App.prefs.purchaseId.toString().length == 0 ) {
-                    Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_buy_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
-                }
             }
+
+            builder.setPositiveButton(R.string.positive, listener)
+            builder.setNegativeButton(R.string.negative, listener)
+
+            builder.show()
         })
         btnRun.setOnClickListener(View.OnClickListener {
             run()
@@ -657,6 +647,8 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun saveForm() {
+        Log.i(TAG,"productName.text.toString() : "+productName.text.toString())
+
         var isSaveValidation =  true;
         var time1Value = "";
         var time2Value = "";
@@ -674,8 +666,9 @@ class MainActivity: AppCompatActivity() {
         if ( (0 == time11.text.toString().length || time11.text.toString() == "-:-") || (0 == time12.text.toString().length || time12.text.toString() == "-:-") || purchase1.text.toString() == "-" ) {
             Log.i(TAG, "time1 시간 저장불가능")
             if ( time11.text.toString() != "-:-" || time12.text.toString() != "-:-" || purchase1.text.toString() != "-" ) {
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
                 isSaveValidation = false;
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                return
             }
         } else {
             // 저장 가능
@@ -685,8 +678,9 @@ class MainActivity: AppCompatActivity() {
         if ( (0 == time21.text.toString().length || time21.text.toString() == "-:-") || (0 == time22.text.toString().length || time22.text.toString() == "-:-") || purchase2.text.toString() == "-" ) {
             Log.i(TAG, "time2 시간 저장불가능")
             if ( time21.text.toString() != "-:-" || time22.text.toString() != "-:-" || purchase2.text.toString() != "-" ) {
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
                 isSaveValidation = false;
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                return
             }
         } else {
             time2Value = time21.text.toString()+"/"+time22.text.toString();
@@ -695,8 +689,9 @@ class MainActivity: AppCompatActivity() {
         if ( (0 == time31.text.toString().length || time31.text.toString() == "-:-") || (0 == time32.text.toString().length || time32.text.toString() == "-:-") || purchase3.text.toString() == "-" ) {
             Log.i(TAG, "time3 시간 저장불가능")
             if ( time31.text.toString() != "-:-" || time32.text.toString() != "-:-" || purchase3.text.toString() != "-" ) {
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
                 isSaveValidation = false;
+                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                return
             }
         } else {
             time3Value = time31.text.toString()+"/"+time32.text.toString();
@@ -707,6 +702,7 @@ class MainActivity: AppCompatActivity() {
             if ( time41.text.toString() != "-:-" || time42.text.toString() != "-:-" || purchase4.text.toString() != "-" ) {
                 isSaveValidation = false;
                 Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                return
             }
         } else {
             time4Value = time41.text.toString()+"/"+time42.text.toString();
@@ -718,15 +714,16 @@ class MainActivity: AppCompatActivity() {
             if ( queue1.text.toString() != "-" || queue2.text.toString() != "-" ) {
                 isSaveValidation = false;
                 Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_queue_label)+" field is required", Toast.LENGTH_SHORT).show()
+                return
             }
         } else {
             queueValue = queue1.text.toString()+"/"+queue2.text.toString();
         }
-
         if ( productName.text.toString().length == 0 || productName.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "productName 저장불가능")
             Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_name_label)+" field is required", Toast.LENGTH_SHORT).show()
+            return
         } else {
             productNameValue = productName.text.toString();
         }
@@ -735,6 +732,7 @@ class MainActivity: AppCompatActivity() {
             isSaveValidation = false;
             Log.i(TAG, "productId 저장불가능")
             Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
+            return
         } else {
             productIdValue = productId.text.toString();
         }
@@ -743,6 +741,7 @@ class MainActivity: AppCompatActivity() {
             isSaveValidation = false;
             Log.i(TAG, "purchaseId 저장불가능")
             Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_buy_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
+            return
         } else {
             purchaseIdValue = purchaseId.text.toString();
         }
@@ -785,7 +784,7 @@ class MainActivity: AppCompatActivity() {
 
             Toast.makeText(this@MainActivity, "Save Success", Toast.LENGTH_SHORT).show()
         } else {
-            // Toast.makeText(this@MainActivity, "Save failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Save failed", Toast.LENGTH_SHORT).show()
         }
     }
 
