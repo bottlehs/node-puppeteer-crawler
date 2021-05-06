@@ -2,20 +2,19 @@ package web.macro.app
 
 import android.content.DialogInterface
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Message
 import android.util.Log
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_log.toolbar
 import kotlinx.android.synthetic.main.activity_run.*
-import kotlinx.android.synthetic.main.activity_run.btn_run
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -25,10 +24,17 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
+
 class RunActivity : AppCompatActivity() {
-    private val TAG = "RunActivity"
+    private val TAG = RunActivity::class.qualifiedName
 
     /*
     actionStep : 동작 카운드
@@ -47,6 +53,15 @@ class RunActivity : AppCompatActivity() {
     val productName = App.prefs.productName;
     val productId = App.prefs.productId;
     val purchaseId = App.prefs.purchaseId;
+    val productIdUrl = "https://msearch.shopping.naver.com/catalog/"+productId+"/products";
+
+    var timeBuy : ArrayList<String> = ArrayList();
+    var timeBuy1 : ArrayList<String> = ArrayList();
+    var timeBuy2 : ArrayList<String> = ArrayList();
+    var timeBuy3 : ArrayList<String> = ArrayList();
+    var timeBuy4 : ArrayList<String> = ArrayList();
+    var queue = 0;
+    var buyCnt = 0;
 
     var search : ArrayList<String> = ArrayList();
     var address : ArrayList<String> = ArrayList();
@@ -61,6 +76,123 @@ class RunActivity : AppCompatActivity() {
 
         val addressTxtFilePath = filesDir.path+"/address.txt"
         readAddressTextFromFile(addressTxtFilePath)
+
+        if ( 0 < App.prefs.queue.toString().length ) {
+            val temp = App.prefs.queue.toString().split("/")
+            queue = Random.nextInt(temp.get(0).toInt(), temp.get(1).toInt());
+        }
+
+        if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
+            timeBuy1.add(App.prefs.time1.toString())
+            timeBuy1.add(App.prefs.purchase1.toString())
+        }
+
+        if ( 0 < App.prefs.time2.toString().length && 0 < App.prefs.purchase2.toString().length ) {
+            timeBuy2.add(App.prefs.time2.toString())
+            timeBuy2.add(App.prefs.purchase2.toString())
+        }
+
+        if ( 0 < App.prefs.time3.toString().length && 0 < App.prefs.purchase3.toString().length ) {
+            timeBuy3.add(App.prefs.time3.toString())
+            timeBuy3.add(App.prefs.purchase3.toString())
+        }
+
+        if ( 0 < App.prefs.time4.toString().length && 0 < App.prefs.purchase4.toString().length ) {
+            timeBuy4.add(App.prefs.time4.toString())
+            timeBuy4.add(App.prefs.purchase4.toString())
+        }
+
+        val current = LocalDateTime.now()
+        val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        val temp = currentDate.toString().split("-")
+
+        if ( timeBuy1.size == 2 ) {
+            val timeTemp = timeBuy1.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy1.get(0).toString())
+                timeBuy.add(timeBuy1.get(1).toString())
+            }
+        }
+
+        if ( timeBuy2.size == 2 ) {
+            val timeTemp = timeBuy2.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy2.get(0).toString())
+                timeBuy.add(timeBuy2.get(1).toString())
+            }
+        }
+
+        if ( timeBuy3.size == 2 ) {
+            val timeTemp = timeBuy3.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy3.get(0).toString())
+                timeBuy.add(timeBuy3.get(1).toString())
+            }
+        }
+
+        if ( timeBuy4.size == 2 ) {
+            val timeTemp = timeBuy4.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy4.get(0).toString())
+                timeBuy.add(timeBuy4.get(1).toString())
+            }
+        }
 
         // set toolbar as support action bar
         setSupportActionBar(toolbar)
@@ -147,7 +279,7 @@ class RunActivity : AppCompatActivity() {
         action = JSONObject()
         action.put("name", "검색어 결과 클릭")
         action.put("action", "click")
-        action.put("selector", ".sp_nnews .news_wrap .news_tit")
+        action.put("selector", ".sp_ntotal .total_tit .link_tit")
         action.put("function", "element")
         action.put("index", "random")
         action.put("next", false)
@@ -194,7 +326,7 @@ class RunActivity : AppCompatActivity() {
         action.put("name", "검색어 입력")
         action.put("action", "value")
         action.put("selector", "#nx_query")
-        action.put("value", "비타민나무")
+        action.put("value", productName)
         action.put("function", "element")
         action.put("index", 0)
         action.put("next", true)
@@ -272,11 +404,29 @@ class RunActivity : AppCompatActivity() {
         // 쇼핑 검색어 결과 상품 찾기후 클릭
         action = JSONObject()
         action.put("name", "쇼핑 검색어 결과 상품 찾기후 클릭")
-        action.put("action", "listSearchClick")
+        action.put("action", "productListSearchClick")
         action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
         action.put("function", "element")
         action.put("data_i", productId)
         action.put("next", false)
+        actions.put(action)
+
+        // 쇼핑 상세보기 에서 전체 판매처 보러가기
+        action = JSONObject()
+        action.put("name", "쇼핑 상세보기 에서 전체 판매처 보러가기")
+        action.put("action", "detailClick")
+        action.put("selector", ".main_link_more__1qw78.linkAnchor")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("next", false)
+        actions.put(action)
+
+        // 쇼핑 상세보기 에서 전체 판매처로 이동
+        action = JSONObject()
+        action.put("name", "쇼핑 상세보기 에서 전체 판매처로 이동")
+        action.put("action", "url")
+        action.put("function", "url")
+        action.put("url", productIdUrl)
         actions.put(action)
 
         // 쇼핑 상세보기 에서 구매하기 화면으로 이동
@@ -285,12 +435,226 @@ class RunActivity : AppCompatActivity() {
         action.put("action", "listSearchClick")
         action.put(
             "selector",
-            ".productPerMall_seller_item__jcayW .productPerMall_link_seller__3GSdU"
+            ".productContent_item_inner___teBC .productContent_link_seller__uA-1b"
         )
         action.put("function", "element")
         action.put("data_i", purchaseId)
         action.put("next", false)
         actions.put(action)
+
+        // 구매하기 화면 - 구매하기
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 구매하기")
+        action.put("action", "click")
+        action.put("selector", "#fixedActionButton .ec-base-button.gColumn  a.btnStrong")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("next", false)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 구매하기")
+        action.put("action", "click")
+        action.put("selector", ".btnEm")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("next", false)
+        actions.put(action)
+        // 06035 / 서울특별시 강남구 가로수길 9 (신사동) / 없음
+        // 신나라,신사동 536-9,1,017-0000-0001,ergjeorgj@test.com
+        // 신나라,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,@123@123
+
+        // 구매하기 화면 - 비회원구매 - 이름 입력 1
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 이름 입력 1")
+        action.put("action", "value")
+        action.put("selector", "#rname")
+        action.put("value", "신나라")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 5)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 우편번호
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 우편번호")
+        action.put("action", "value")
+        action.put("selector", "#rzipcode1")
+        action.put("value", "6035")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 기본주소
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 기본주소")
+        action.put("action", "value")
+        action.put("selector", "#raddr1")
+        action.put("value", "서울특별시 강남구 가로수길 9 (신사동)")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 상세주소
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 상세주소")
+        action.put("action", "value")
+        action.put("selector", "#raddr2")
+        action.put("value", "없음")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 전화번호 _ 1
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 전화번호 _ 1")
+        action.put("action", "value")
+        action.put("selector", "#rphone2_1")
+        action.put("value", "017")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 전화번호 _ 2
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 전화번호 _ 2")
+        action.put("action", "value")
+        action.put("selector", "#rphone2_2")
+        action.put("value", "0001")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 전화번호 _ 3
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 전화번호 _ 3")
+        action.put("action", "value")
+        action.put("selector", "#rphone2_3")
+        action.put("value", "0000")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 이메일 _ 1
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 이메일 _ 1")
+        action.put("action", "value")
+        action.put("selector", "#oemail1")
+        action.put("value", "ergjeorgj")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 이메일 _ 2
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 이메일 _ 2")
+        action.put("action", "value")
+        action.put("selector", "#oemail2")
+        action.put("value", "test.com")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 비밀번호
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 비밀번호")
+        action.put("action", "value")
+        action.put("selector", "#order_password")
+        action.put("value", "@123@123")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 비밀번호 확인
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 비밀번호 확인")
+        action.put("action", "value")
+        action.put("selector", "#order_password_confirm")
+        action.put("value", "@123@123")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 입금은행
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 입금은행")
+        action.put("action", "value")
+        action.put("selector", "#bankaccount")
+        action.put("value", "bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 입금자명
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 입금은행")
+        action.put("action", "value")
+        action.put("selector", "#pname")
+        action.put("value", "신나라")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", true)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 모든 약관 동의
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 모든 약관 동의")
+        action.put("action", "click")
+        action.put("selector", "#allAgree")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", false)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 결제하기
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 결제하기")
+        action.put("action", "click")
+        action.put("selector", "#btn_payment")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 3)
+        action.put("next", false)
+        actions.put(action)
+
+        // 구매하기 화면 - 비회원구매 - 이름 입력 2
+        action = JSONObject()
+        action.put("name", "구매하기 화면 - 비회원구매 - 이름 입력 2")
+        action.put("action", "value")
+        action.put("selector", "#rname")
+        action.put("value", "신나라")
+        action.put("function", "element")
+        action.put("index", 0)
+        action.put("delay", 5)
+        action.put("next", true)
+        actions.put(action)
+
 
         // Enable Javascript in web view
         webView.settings.javaScriptEnabled = true
@@ -326,32 +690,48 @@ class RunActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(TAG, "onPageFinished")
-
                 progressBar.isVisible = false
-                if ( actionStep < actions.length() && currentUrl != url.toString() )  {
-                    currentUrl = url.toString()
+
+                Executors.newSingleThreadScheduledExecutor().schedule({
                     val obj = actions.getJSONObject(actionStep);
-                    obj.put("step", actionStep)
-                    actionStep = actionStep + 1
-                    GlobalScope.launch(context = Dispatchers.Main) {
-                        delay(timeMillis)
-                        Log.d(TAG,"" + obj.getInt("step") + "-" + obj.getString("name"))
-                        if ( obj.get("function") == "element" ) {
-                            elementAction(obj, webView)
-                        } else if ( obj.get("function") == "webview" ) {
-                            backAction(obj, webView)
-                        } else if ( obj.get("function") == "url" ) {
-                            urlAction(obj, webView)
-                        }
-                    }
-                } else {
-                    stop()
-                }
+                    if (obj.getString("action") != "detailClick") {
+                        webView.post(Runnable {
+                            webView.loadUrl(
+                                "javascript:(function(){" +
+                                        "window.scrollTo(0, document.body.scrollHeight);" +
+                                        "})()"
+                            )
+                        });
+                    };
+
+                    pageFinishedAction(webView, url.toString())
+                }, queue.toLong(), TimeUnit.SECONDS)
             }
         }
 
         // Set web view chrome client
         webView.webChromeClient = object: WebChromeClient() {
+            /*
+            override fun onCreateWindow(
+                view: WebView?,
+                isDialog: Boolean,
+                isUserGesture: Boolean,
+                resultMsg: Message?
+            ): Boolean {
+                Log.d(TAG, "resultMsg ::::::::::::::: " + resultMsg?.data)
+                val result = view!!.hitTestResult
+                val data = result.extra
+                Log.d(TAG,"Uri.parse(data) : "+data)
+                /*
+                view?.requestFocusNodeHref(resultMsg)
+                val browserIntent = Intent(this@MainActivity, TabActivity::class.java)
+                browserIntent.putExtra("URL", resultMsg?.data?.getString("url"))
+                startActivity(browserIntent)
+                */
+                return false
+            }
+            */
+
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 Log.i(TAG, "onProgressChanged : " + newProgress)
                 progressBar.progress = newProgress
@@ -362,7 +742,7 @@ class RunActivity : AppCompatActivity() {
         }
 
         btnRun.setOnClickListener(View.OnClickListener {
-            if ( isProgress ) {
+            if (isProgress) {
                 var builder = AlertDialog.Builder(this)
                 builder.setTitle(R.string.activity_run_running_dialog_title)
                 builder.setMessage(R.string.activity_run_running_dialog_description)
@@ -398,6 +778,28 @@ class RunActivity : AppCompatActivity() {
 
     }
 
+    fun pageFinishedAction(webView: WebView, url: String) {
+        if ( actionStep < actions.length() && currentUrl != url.toString() )  {
+            currentUrl = url.toString()
+            val obj = actions.getJSONObject(actionStep);
+            obj.put("step", actionStep)
+            actionStep = actionStep + 1
+            GlobalScope.launch(context = Dispatchers.Main) {
+                delay(timeMillis)
+                Log.d(TAG, "" + obj.getInt("step") + "-" + obj.getString("name"))
+                if ( obj.get("function") == "element" ) {
+                    elementAction(obj, webView)
+                } else if ( obj.get("function") == "webview" ) {
+                    backAction(obj, webView)
+                } else if ( obj.get("function") == "url" ) {
+                    urlAction(obj, webView)
+                }
+            }
+        } else {
+            stop()
+        }
+    }
+
     fun urlAction(obj: JSONObject, webView: WebView) {
         webView.loadUrl(obj.getString("url"))
     }
@@ -414,11 +816,22 @@ class RunActivity : AppCompatActivity() {
                 ) + "].focus();})()"
             )
         } else if ( obj.getString("action") == "value" ) {
-            webView.loadUrl(
-                "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                    "index"
-                ) + "].value='" + obj.getString("value") + "'})()"
-            )
+            if ( obj.has("delay") ) {
+                webView.loadUrl(
+                    "javascript:(function(){" +
+                    "setTimeout(function() {" +
+                    "document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt("index") + "].value='" + obj.getString("value") + "';" +
+                    "console.log(document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt("index") + "].value);"+
+                    "}, 500);" +
+                    "})()"
+                )
+            } else {
+                webView.loadUrl(
+                    "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
+                        "index"
+                    ) + "].value='" + obj.getString("value") + "'})()"
+                )
+            }
         } else if ( obj.getString("action") == "click" ) {
             if ( obj.getString("index") == "random" ) {
                 webView.loadUrl(
@@ -439,17 +852,25 @@ class RunActivity : AppCompatActivity() {
                     "index"
                 ) + "].submit();})()"
             )
+        } else if ( obj.getString("action") == "detailClick" ) {
+            webView.loadUrl(
+                "javascript:(function(){" +
+                        // "document.querySelectorAll('" + obj.getString("selector") + "')[0].setAttribute('target','_self')" +
+                        "document.querySelectorAll('" + obj.getString("selector") + "')[0].click();" +
+                        "})()"
+            )
+
         } else if ( obj.getString("action") == "listSearchClick" ) {
             webView.loadUrl(
                 "javascript:(function(){" +
                         "setTimeout(function() {" +
                         "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
                         "for ( var i = 0; i < item.length; i++ ) {" +
-                        "window.scrollTo(0, item[i].getBoundingClientRect().top);" +
+                        "window.scrollTo(0, document.body.scrollHeight);" +
                         "if ( Number(item[i].getAttribute('data-i')) == " + obj.getString("data_i") + " ) {" +
                         // "alert('" + obj.getString("data_i") + "');" +
                         "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
-                        "window.scrollTo(0, item[i].getBoundingClientRect().top);" +
+                        "window.scrollTo(0, document.body.scrollHeight);" +
                         "item[i].click();" +
                         "break;" +
                         // "alert(item[i].getAttribute('href'));"+
@@ -457,6 +878,37 @@ class RunActivity : AppCompatActivity() {
                         "}" +
                         "}" +
                         "}, 2000);" +
+                        "})()"
+            )
+        } else if ( obj.getString("action") == "productListSearchClick" ) {
+            webView.loadUrl(
+                "javascript:(function(){" +
+                        "window.scrollTo(0, document.body.scrollHeight);" +
+                        "var productSearch = function () {" +
+                        "setTimeout(function() {" +
+                        "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
+                        "var selectProduct = false;" +
+                        "for ( var i = 0; i < item.length; i++ ) {" +
+                        "if ( Number(item[i].getAttribute('data-i')) ==  " + obj.getString("data_i") + " ) {" +
+                        "console.log('있다1');" +
+                        "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
+                        "selectProduct = true;" +
+                        "item[i].click();" +
+                        "break;" +
+                        "}" +
+                        "}" +
+                        "if ( !selectProduct ) {" +
+                        "document.querySelectorAll('.paginator_list_paging__2cmhX button.paginator_btn_next__36Dhk')[0].click();" +
+                        "window.scrollTo(0, 0);" +
+                        "setTimeout(() => {" +
+                        "console.log('없다없다12');" +
+                        "window.scrollTo(0, document.body.scrollHeight);" +
+                        "productSearch()" +
+                        "}, 500);" +
+                        "};" +
+                        "}, 2000);" +
+                        "};" +
+                        "productSearch();" +
                         "})()"
             )
         }
@@ -469,7 +921,7 @@ class RunActivity : AppCompatActivity() {
                 actionStep = actionStep + 1
                 GlobalScope.launch(context = Dispatchers.Main) {
                     delay(timeMillis)
-                    Log.d(TAG,"" + obj.getInt("step") + "-" + obj.getString("name"))
+                    Log.d(TAG, "" + obj.getInt("step") + "-" + obj.getString("name"))
                     if ( obj.get("function") == "element" ) {
                         elementAction(obj, webView)
                     } else if ( obj.get("function") == "webview" ) {
@@ -485,11 +937,115 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun play() {
-        isProgress = true
-        actionStep = 0
-        web_view.loadUrl(rootUrl)
+        Log.d(TAG, "timeBuy.size : " + timeBuy.size)
 
-        btn_run.setImageDrawable(getDrawable(R.drawable.ic_stop))
+        val current = LocalDateTime.now()
+        val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        val temp = currentDate.toString().split("-")
+
+        if ( timeBuy1.size == 2 ) {
+            val timeTemp = timeBuy1.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy1.get(0).toString())
+                timeBuy.add(timeBuy1.get(1).toString())
+            }
+        }
+
+        if ( timeBuy2.size == 2 ) {
+            val timeTemp = timeBuy2.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy2.get(0).toString())
+                timeBuy.add(timeBuy2.get(1).toString())
+            }
+        }
+
+        if ( timeBuy3.size == 2 ) {
+            val timeTemp = timeBuy3.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy3.get(0).toString())
+                timeBuy.add(timeBuy3.get(1).toString())
+            }
+        }
+
+        if ( timeBuy4.size == 2 ) {
+            val timeTemp = timeBuy4.get(0).toString().split("/");
+            val startTimeTemp = timeTemp.get(0).toString().split(":");
+            val endTimeTemp = timeTemp.get(1).toString().split(":");
+            val startTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    0
+                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+            )
+            val endTime = LocalDateTime.of(
+                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
+                    0
+                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
+            )
+            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
+                // true
+                timeBuy.clear()
+                timeBuy.add(timeBuy4.get(0).toString())
+                timeBuy.add(timeBuy4.get(1).toString())
+            }
+        }
+
+        if ( timeBuy.size == 2 ) {
+            if ( buyCnt < timeBuy.get(1).toInt() ) {
+                isProgress = true
+                actionStep = 0
+                web_view.loadUrl(rootUrl)
+
+                btn_run.setImageDrawable(getDrawable(R.drawable.ic_stop))
+            } else {
+                Toast.makeText(this@RunActivity, "Failed", Toast.LENGTH_SHORT).show()
+                stop();
+            }
+        } else {
+            Toast.makeText(this@RunActivity, "Failed", Toast.LENGTH_SHORT).show()
+            stop();
+        }
     }
 
     fun stop() {
@@ -510,10 +1066,10 @@ class RunActivity : AppCompatActivity() {
             search.add(row)
         }
 
-        Log.i(TAG,search.get(0));
-        Log.i(TAG,search.get(1));
-        Log.i(TAG,search.get(2));
-        Log.i(TAG,search.get(Random.nextInt(0, search.size)));
+        Log.i(TAG, search.get(0));
+        Log.i(TAG, search.get(1));
+        Log.i(TAG, search.get(2));
+        Log.i(TAG, search.get(Random.nextInt(0, search.size)));
     }
 
     fun readAddressTextFromFile(path: String) {
@@ -525,7 +1081,12 @@ class RunActivity : AppCompatActivity() {
             address.add(it)
         }
 
-        Log.i(TAG,address.get(0));
-        Log.i(TAG,address.get(1));
+        Log.i(TAG, address.get(0));
+        Log.i(TAG, address.get(1));
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
