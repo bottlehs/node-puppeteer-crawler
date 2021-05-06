@@ -1,9 +1,7 @@
 package web.macro.app
 
-import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Bitmap
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,13 +10,10 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.activity_log.*
 import kotlinx.android.synthetic.main.activity_log.toolbar
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_run.*
 import kotlinx.android.synthetic.main.activity_run.btn_run
 import kotlinx.coroutines.Dispatchers
@@ -324,18 +319,15 @@ class RunActivity : AppCompatActivity() {
         // Set web view client
         webView.webViewClient = object: WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                Toast.makeText(applicationContext, "onPageStarted", Toast.LENGTH_LONG).show()
-                Log.i(TAG, "onPageStarted")
+                Log.d(TAG, "onPageStarted")
 
                 progressBar.isVisible = true
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
+                Log.d(TAG, "onPageFinished")
+
                 progressBar.isVisible = false
-
-                Toast.makeText(applicationContext, "onPageFinished", Toast.LENGTH_LONG).show()
-                Log.i(TAG, "onPageFinished")
-
                 if ( actionStep < actions.length() && currentUrl != url.toString() )  {
                     currentUrl = url.toString()
                     val obj = actions.getJSONObject(actionStep);
@@ -343,11 +335,7 @@ class RunActivity : AppCompatActivity() {
                     actionStep = actionStep + 1
                     GlobalScope.launch(context = Dispatchers.Main) {
                         delay(timeMillis)
-                        Toast.makeText(
-                            applicationContext,
-                            "" + obj.getInt("step") + "-" + obj.getString("name"),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Log.d(TAG,"" + obj.getInt("step") + "-" + obj.getString("name"))
                         if ( obj.get("function") == "element" ) {
                             elementAction(obj, webView)
                         } else if ( obj.get("function") == "webview" ) {
@@ -368,11 +356,6 @@ class RunActivity : AppCompatActivity() {
                 Log.i(TAG, "onProgressChanged : " + newProgress)
                 progressBar.progress = newProgress
                 if ( 100 <= newProgress ) {
-                    Toast.makeText(
-                        applicationContext,
-                        "onProgressChanged Complete",
-                        Toast.LENGTH_LONG
-                    ).show()
                     Log.i(TAG, "onProgressChanged Complete")
                 }
             }
@@ -486,11 +469,7 @@ class RunActivity : AppCompatActivity() {
                 actionStep = actionStep + 1
                 GlobalScope.launch(context = Dispatchers.Main) {
                     delay(timeMillis)
-                    Toast.makeText(
-                        applicationContext,
-                        "" + obj.getInt("step") + "-" + obj.getString("name"),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Log.d(TAG,"" + obj.getInt("step") + "-" + obj.getString("name"))
                     if ( obj.get("function") == "element" ) {
                         elementAction(obj, webView)
                     } else if ( obj.get("function") == "webview" ) {
