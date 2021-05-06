@@ -9,19 +9,19 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="날자"/>
+        android:text="@string/activity_logs_item_date_label"/>
     <TextView
         android:id="@+id/product"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="상품명"/>
+        android:text="@string/activity_logs_item_product_label"/>
     <TextView
         android:id="@+id/purchase"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="구매"/>
+        android:text="@string/activity_logs_item_buy_label"/>
 </LinearLayout>
