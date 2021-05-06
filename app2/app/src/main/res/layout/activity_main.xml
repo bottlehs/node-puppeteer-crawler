@@ -534,10 +534,12 @@
                 </LinearLayout>
             </RelativeLayout>
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hour_height"
                 android:background="#eee"/>
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp">
@@ -568,10 +570,12 @@
                 </LinearLayout>
             </RelativeLayout>
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hour_height"
                 android:background="#eee"/>
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp">
