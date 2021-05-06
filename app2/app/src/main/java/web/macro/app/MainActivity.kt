@@ -4,7 +4,6 @@ import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.text.InputType
 import android.util.Log
 import android.view.View
@@ -436,7 +435,7 @@ class MainActivity: AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.activity_main_product_name_label))
             val input = EditText(this)
-            input.inputType = InputType.TYPE_CLASS_NUMBER
+            input.inputType = InputType.TYPE_CLASS_TEXT
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -460,7 +459,7 @@ class MainActivity: AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.activity_main_product_link_id_label))
             val input = EditText(this)
-            input.inputType = InputType.TYPE_CLASS_NUMBER
+            input.inputType = InputType.TYPE_CLASS_TEXT
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -484,7 +483,7 @@ class MainActivity: AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
             val input = EditText(this)
-            input.inputType = InputType.TYPE_CLASS_NUMBER
+            input.inputType = InputType.TYPE_CLASS_TEXT
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -812,7 +811,7 @@ class MainActivity: AppCompatActivity() {
 
     fun writeAddressTextToFile(path: String) {
         val file = File(path)
-        if ( file.exists() ) {
+        if ( !file.exists() ) {
             Log.d(TAG,"writeAddressTextToFile 파일이 없으므로 파일을 생성 합니")
             val fileWriter = FileWriter(file, false)
             val bufferedWriter = BufferedWriter(fileWriter)
