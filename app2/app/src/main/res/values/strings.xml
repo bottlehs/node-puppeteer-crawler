@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Macro App</string>
+    <string name="app_name">Macro</string>
     <string name="positive">Positive</string>
     <string name="negative">Negative</string>
     <string name="activity_main_require_label">(*)</string>
