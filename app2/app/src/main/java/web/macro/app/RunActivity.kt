@@ -62,7 +62,6 @@ class RunActivity : AppCompatActivity() {
     var timeBuy3 : ArrayList<String> = ArrayList();
     var timeBuy4 : ArrayList<String> = ArrayList();
     var queue = 0;
-    var buyCnt = 0;
     var second = 0;
 
     var search : ArrayList<String> = ArrayList();
@@ -574,14 +573,9 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                    // true
-                    if ( timeBuy.size == 2 ) {
-                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
-                            buyCnt = 0;
-                        }
-                    }
 
+                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy1.get(1).toInt() < savedLogs1.size ) {
                     timeBuy.clear()
                     timeBuy.add(timeBuy1.get(0).toString())
                     timeBuy.add(timeBuy1.get(1).toString())
@@ -602,14 +596,8 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                    // true
-                    if ( timeBuy.size == 2 ) {
-                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
-                            buyCnt = 0;
-                        }
-                    }
-
+                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy2.get(1).toInt() < savedLogs1.size ) {
                     timeBuy.clear()
                     timeBuy.add(timeBuy2.get(0).toString())
                     timeBuy.add(timeBuy2.get(1).toString())
@@ -630,14 +618,8 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                    // true
-                    if ( timeBuy.size == 2 ) {
-                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
-                            buyCnt = 0;
-                        }
-                    }
-
+                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy3.get(1).toInt() < savedLogs1.size ) {
                     timeBuy.clear()
                     timeBuy.add(timeBuy3.get(0).toString())
                     timeBuy.add(timeBuy3.get(1).toString())
@@ -658,14 +640,8 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                    // true
-                    if ( timeBuy.size == 2 ) {
-                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
-                            buyCnt = 0;
-                        }
-                    }
-
+                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy4.get(1).toInt() < savedLogs1.size ) {
                     timeBuy.clear()
                     timeBuy.add(timeBuy4.get(0).toString())
                     timeBuy.add(timeBuy4.get(1).toString())
@@ -673,7 +649,7 @@ class RunActivity : AppCompatActivity() {
             }
 
             if ( timeBuy.size == 2 ) {
-                if ( buyCnt < timeBuy.get(1).toInt() && playDate == currentDate ) {
+                if ( playDate == currentDate ) {
                     currentUrl = "";
                     isProgress = true;
                     isBuy = false;
