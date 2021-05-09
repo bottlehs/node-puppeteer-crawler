@@ -284,9 +284,10 @@ class RunActivity : AppCompatActivity() {
                 // 반복실행할 구문
                 Log.d(TAG,"second : "+second)
                 if ( 60 <= second ) {
+                    stop()
+
                     second = 0;
                     runOnUiThread {
-                        stop()
                         play()
                     }
                 } else {
@@ -314,6 +315,11 @@ class RunActivity : AppCompatActivity() {
         Log.i(TAG,"actionStep.length() : "+actions.length())
         Log.i(TAG,"actionStep.currentUrl : "+currentUrl)
         Log.i(TAG,"actionStep.url.toString() : "+url.toString())
+
+        if ( url.toString().contains("order_result") || isBuy ) {
+            Log.d(TAG,"최종 완료");
+            insertLog()
+        }
 
         if ( actionStep < actions.length() && currentUrl != url.toString() )  {
             currentUrl = url.toString()
@@ -496,7 +502,6 @@ class RunActivity : AppCompatActivity() {
         if ( obj.has("buy") ) {
             if ( obj.getBoolean("buy") == true ) {
                 isBuy = true;
-                insertLog()
             }
         }
 
@@ -528,8 +533,7 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun play() {
-        Log.d(TAG, "searchPosition : " + searchPosition)
-        Log.d(TAG, "addressPosition : " + addressPosition)
+        Log.d(TAG,"play : "+isProgress)
         if ( !isProgress ) {
             web_view.clearCache(true)
             web_view.clearHistory();
@@ -538,6 +542,8 @@ class RunActivity : AppCompatActivity() {
             val current = LocalDateTime.now()
             val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val temp = currentDate.toString().split("-")
+
+            timeBuy.clear()
 
             if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
                 timeBuy1.add(App.prefs.time1.toString())
@@ -672,9 +678,6 @@ class RunActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this@RunActivity, "Failed: Time/Buy", Toast.LENGTH_SHORT).show()
 
-                // 타이머 종료
-                timer.cancel()
-
                 // 중지
                 stop();
                 return
@@ -688,6 +691,12 @@ class RunActivity : AppCompatActivity() {
             if ( address.size <= addressPosition ) {
                 addressPosition = 0;
             }
+
+            App.prefs.searchPosition = searchPosition.toString();
+            App.prefs.addressPosition = addressPosition.toString();
+
+            Log.d(TAG, "searchPosition : " + searchPosition)
+            Log.d(TAG, "addressPosition : " + addressPosition)
 
             address.get(0).split(",").forEach{ row ->
                 useAddress.add(row);
@@ -1118,7 +1127,7 @@ class RunActivity : AppCompatActivity() {
             action.put("selector", "#btn_payment")
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 0)
             action.put("buy", true)
             action.put("next", false)
 
@@ -1159,6 +1168,7 @@ class RunActivity : AppCompatActivity() {
         fileInputStream.close()
         if ( stringBuilder.toString().trim().length != 0 ) {
             stringBuilder.toString().split(",").forEach{ row ->
+                Log.d(TAG,"search stringBuilder"+row)
                 search.add(row)
             }
         }
@@ -1172,6 +1182,7 @@ class RunActivity : AppCompatActivity() {
         val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
         var text: String? = null
         while ({ text = bufferedReader.readLine(); text }() != null) {
+            Log.d(TAG,"address stringBuilder"+text.toString())
             address.add(text.toString())
         }
         fileInputStream.close()
