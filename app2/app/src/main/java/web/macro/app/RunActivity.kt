@@ -540,6 +540,26 @@ class RunActivity : AppCompatActivity() {
             val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val temp = currentDate.toString().split("-")
 
+            if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
+                timeBuy1.add(App.prefs.time1.toString())
+                timeBuy1.add(App.prefs.purchase1.toString())
+            }
+
+            if ( 0 < App.prefs.time2.toString().length && 0 < App.prefs.purchase2.toString().length ) {
+                timeBuy2.add(App.prefs.time2.toString())
+                timeBuy2.add(App.prefs.purchase2.toString())
+            }
+
+            if ( 0 < App.prefs.time3.toString().length && 0 < App.prefs.purchase3.toString().length ) {
+                timeBuy3.add(App.prefs.time3.toString())
+                timeBuy3.add(App.prefs.purchase3.toString())
+            }
+
+            if ( 0 < App.prefs.time4.toString().length && 0 < App.prefs.purchase4.toString().length ) {
+                timeBuy4.add(App.prefs.time4.toString())
+                timeBuy4.add(App.prefs.purchase4.toString())
+            }
+
             if ( timeBuy1.size == 2 ) {
                 val timeTemp = timeBuy1.get(0).toString().split("/");
                 val startTimeTemp = timeTemp.get(0).toString().split(":");
