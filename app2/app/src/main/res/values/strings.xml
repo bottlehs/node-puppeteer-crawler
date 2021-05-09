@@ -5,6 +5,7 @@
     <string name="activity_main_require_label">(*)</string>
     <string name="activity_main_title">Setting</string>
     <string name="activity_main_hour_label">Time/Buy</string>
+    <string name="activity_main_count_label">Count</string>
     <string name="activity_main_queue_label">Queue(MIN/MAX)</string>
     <string name="activity_main_product_name_label">Product</string>
     <string name="activity_main_product_link_id_label">Product Link ID</string>

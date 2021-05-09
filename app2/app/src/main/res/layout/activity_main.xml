@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/hour_height"
                         android:gravity="center"
-                        android:text="회" />
+                        android:text="@string/activity_main_count_label" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -165,7 +165,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/hour_height"
                         android:gravity="center"
-                        android:text="회" />
+                        android:text="@string/activity_main_count_label" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -242,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/hour_height"
                         android:gravity="center"
-                        android:text="회" />
+                        android:text="@string/activity_main_count_label" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -319,7 +319,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/hour_height"
                         android:gravity="center"
-                        android:text="회" />
+                        android:text="@string/activity_main_count_label" />
                 </LinearLayout>
             </RelativeLayout>
             <LinearLayout
