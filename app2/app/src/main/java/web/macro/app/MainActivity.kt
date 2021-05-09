@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.*
 import java.net.NetworkInterface
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -1067,6 +1069,9 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun run () {
+        val current = LocalDateTime.now()
+        val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        App.prefs.playDate = currentDate
         var intent = Intent(this, RunActivity::class.java)
         startActivity(intent)
     }

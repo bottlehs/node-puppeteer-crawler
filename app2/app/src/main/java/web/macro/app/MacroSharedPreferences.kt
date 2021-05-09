@@ -107,4 +107,9 @@ class MacroSharedPreferences(context: Context) {
     var addressPosition: String?
         get() = prefs.getString("prefsKeyAddressPosition","0")
         set(value) = prefs.edit().putString("prefsKeyAddressPosition", value).apply()
+
+    // 실행되는 날짜
+   var playDate: String?
+        get() = prefs.getString("prefsKeyPlayDate","")
+        set(value) = prefs.edit().putString("prefsKeyPlayDate", value).apply()
 }
