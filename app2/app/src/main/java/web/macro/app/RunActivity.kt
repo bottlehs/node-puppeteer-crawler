@@ -301,10 +301,13 @@ class RunActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(TAG, "onPageFinished")
+                Log.d(TAG, "onPageFinished : "+queue.toLong())
                 progressBar.isVisible = false
 
                 Executors.newSingleThreadScheduledExecutor().schedule({
                     val obj = actions.getJSONObject(actionStep);
+                    Log.d(TAG, "onPageFinished : 11")
+
                     if (obj.getString("action") != "detailClick") {
                         webView.post(Runnable {
                             webView.loadUrl(
@@ -389,10 +392,13 @@ class RunActivity : AppCompatActivity() {
         val TT: TimerTask = object : TimerTask() {
             override fun run() {
                 // 반복실행할 구문
+                Log.d(TAG,"second : "+second)
                 if ( 60 <= second ) {
                     second = 0;
-                    stop()
-                    play()
+                    runOnUiThread {
+                        stop()
+                        play()
+                    }
                 } else {
                     second++
                 }
@@ -412,7 +418,14 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun pageFinishedAction(webView: WebView, url: String) {
-        if ( actionStep < actions.length() && currentUrl != url.toString() && isProgress )  {
+        Log.d(TAG, "pageFinishedAction ::::::: ")
+        val ss = actions.getJSONObject(actionStep);
+        Log.i(TAG,"actionStep : "+actionStep)
+        Log.i(TAG,"actionStep.length() : "+actions.length())
+        Log.i(TAG,"actionStep.currentUrl : "+currentUrl)
+        Log.i(TAG,"actionStep.url.toString() : "+url.toString())
+
+        if ( actionStep < actions.length() && currentUrl != url.toString() )  {
             currentUrl = url.toString()
             val obj = actions.getJSONObject(actionStep);
             obj.put("step", actionStep)
@@ -434,10 +447,6 @@ class RunActivity : AppCompatActivity() {
             }
         } else {
             stop()
-            if ( isBuy ) {
-                insertLog()
-                play()
-            }
         }
     }
 
@@ -445,13 +454,18 @@ class RunActivity : AppCompatActivity() {
         webView.post(Runnable {
             webView.loadUrl(obj.getString("url"))
         });
+
+        second = 0;
     }
     fun backAction(obj: JSONObject, webView: WebView) {
         if ( obj.getString("action") == "back" ) {
             webView.goBack()
         }
+
+        second = 0;
     }
     fun elementAction(obj: JSONObject, webView: WebView) {
+        Log.d(TAG,"elementAction"+obj.getString("action"))
         if ( obj.getString("action") == "focus" ) {
             webView.post(Runnable {
                 webView.loadUrl(
@@ -461,6 +475,7 @@ class RunActivity : AppCompatActivity() {
                 )
             });
         } else if ( obj.getString("action") == "value" ) {
+            Log.d(TAG,"elementAction"+obj.getString("action")+" // "+obj.getString("selector") + " // "+obj.getString("value"))
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
@@ -591,11 +606,14 @@ class RunActivity : AppCompatActivity() {
         if ( obj.has("buy") ) {
             if ( obj.getBoolean("buy") == true ) {
                 isBuy = true;
+                insertLog()
             }
         }
 
+        Log.d(TAG,"isBuy : "+isBuy);
+
         if ( obj.getBoolean("next") == true ) {
-            if ( actionStep < actions.length() && isProgress ) {
+            if ( actionStep < actions.length() ) {
                 val obj = actions.getJSONObject(actionStep);
                 obj.put("step", actionStep)
 
@@ -615,6 +633,8 @@ class RunActivity : AppCompatActivity() {
                 stop()
             }
         }
+
+        second = 0;
     }
 
     fun play() {
@@ -1196,7 +1216,7 @@ class RunActivity : AppCompatActivity() {
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
-            action.put("next", false)
+            action.put("next", true)
             actions.put(action)
 
             /*
