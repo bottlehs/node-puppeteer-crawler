@@ -427,6 +427,7 @@ class RunActivity : AppCompatActivity() {
                 }
             }
         } else {
+            insertLog()
             stop()
         }
     }
