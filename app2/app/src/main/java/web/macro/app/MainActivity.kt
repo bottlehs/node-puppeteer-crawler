@@ -78,44 +78,6 @@ class MainActivity: AppCompatActivity() {
 
         }
 
-
-
-
-        Log.d(TAG, "ip ip: $ip")
-        Log.d(TAG, "Wifi connected: $isWifiConn")
-        Log.d(TAG, "Mobile connected: $isMobileConn")
-
-        checkAirplaneMode()
-
-        try {
-            val intent = Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-            intent.putExtra("state", true)
-            sendBroadcast(intent)
-
-            /*
-            Settings.Global.putInt(
-                this.applicationContext.getContentResolver(),
-                Settings.Global.AIRPLANE_MODE_ON, 1
-            )
-            */
-            // The below old code is now not necessary @ API Level 23, 26 ...
-            //Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-            //context.sendBroadcast(intent);
-            /*
-        Settings.System.putInt(getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
-
-        Settings.System.putInt(getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
-        val intent = Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-        intent.putExtra("state", mode)
-        sendBroadcast(intent)
-
-             */
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-
-        checkAirplaneMode()
-
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@MainActivity,
@@ -1078,8 +1040,8 @@ class MainActivity: AppCompatActivity() {
         appExternalFile = File(getExternalFilesDir(filepath), path)
         try {
             val fileOutPutStream = FileOutputStream(appExternalFile)
-            fileOutPutStream.write("신나라1,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,@123@123,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
-            fileOutPutStream.write("신나라2,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,@123@123,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
+            fileOutPutStream.write("신나라1,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
+            fileOutPutStream.write("신나라2,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
             fileOutPutStream.close()
         } catch (e: IOException) {
             e.printStackTrace()

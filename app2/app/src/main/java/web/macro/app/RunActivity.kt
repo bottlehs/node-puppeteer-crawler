@@ -43,6 +43,7 @@ class RunActivity : AppCompatActivity() {
     currentUrl : 현재 URL ( Webview page loading 시 업데이트 되도록 되어 있음 )
     */
     var isProgress = false;
+    var isBuy = false;
     var actionStep = 0
     val actions = JSONArray()
     val timeMillis = 1000L
@@ -70,9 +71,11 @@ class RunActivity : AppCompatActivity() {
     var addressPosition = App.prefs.addressPosition.toString().toInt();
 
     var timer = Timer()
+    val buyPassword = "@123@123";
 
     private val filepath = "txtFileStorage"
     internal var appExternalFile: File?=null
+
     private val isExternalStorageReadOnly: Boolean get() {
         val extStorageState = Environment.getExternalStorageState()
         return if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
@@ -398,8 +401,7 @@ class RunActivity : AppCompatActivity() {
 
         timer.schedule(TT, 0, 1000); //Timer 실행
 
-        // play()
-        // timer.cancel();//타이머 종료
+        play()
     }
 
     override fun onDestroy() {
@@ -416,7 +418,11 @@ class RunActivity : AppCompatActivity() {
             obj.put("step", actionStep)
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
-                delay(timeMillis)
+                if ( obj.has("delay") ) {
+                    delay(10000L)
+                } else {
+                    delay(timeMillis)
+                }
                 Log.d(TAG, "" + obj.getInt("step") + "-" + obj.getString("name"))
                 if ( obj.get("function") == "element" ) {
                     elementAction(obj, webView)
@@ -427,8 +433,11 @@ class RunActivity : AppCompatActivity() {
                 }
             }
         } else {
-            insertLog()
             stop()
+            if ( isBuy ) {
+                insertLog()
+                play()
+            }
         }
     }
 
@@ -452,6 +461,14 @@ class RunActivity : AppCompatActivity() {
                 )
             });
         } else if ( obj.getString("action") == "value" ) {
+            webView.post(Runnable {
+                webView.loadUrl(
+                    "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
+                        "index"
+                    ) + "].value='" + obj.getString("value") + "'})()"
+                )
+            });
+            /*
             if ( obj.has("delay") ) {
                 webView.post(Runnable {
                     webView.loadUrl(
@@ -478,6 +495,7 @@ class RunActivity : AppCompatActivity() {
                     )
                 });
             }
+            */
         } else if ( obj.getString("action") == "click" ) {
             if ( obj.getString("index") == "random" ) {
                 webView.post(Runnable {
@@ -570,6 +588,12 @@ class RunActivity : AppCompatActivity() {
             });
         }
 
+        if ( obj.has("buy") ) {
+            if ( obj.getBoolean("buy") == true ) {
+                isBuy = true;
+            }
+        }
+
         if ( obj.getBoolean("next") == true ) {
             if ( actionStep < actions.length() && isProgress ) {
                 val obj = actions.getJSONObject(actionStep);
@@ -621,6 +645,12 @@ class RunActivity : AppCompatActivity() {
                 )
                 if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
                     // true
+                    if ( timeBuy.size == 2 ) {
+                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
+                            buyCnt = 0;
+                        }
+                    }
+
                     timeBuy.clear()
                     timeBuy.add(timeBuy1.get(0).toString())
                     timeBuy.add(timeBuy1.get(1).toString())
@@ -643,6 +673,12 @@ class RunActivity : AppCompatActivity() {
                 )
                 if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
                     // true
+                    if ( timeBuy.size == 2 ) {
+                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
+                            buyCnt = 0;
+                        }
+                    }
+
                     timeBuy.clear()
                     timeBuy.add(timeBuy2.get(0).toString())
                     timeBuy.add(timeBuy2.get(1).toString())
@@ -665,6 +701,12 @@ class RunActivity : AppCompatActivity() {
                 )
                 if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
                     // true
+                    if ( timeBuy.size == 2 ) {
+                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
+                            buyCnt = 0;
+                        }
+                    }
+
                     timeBuy.clear()
                     timeBuy.add(timeBuy3.get(0).toString())
                     timeBuy.add(timeBuy3.get(1).toString())
@@ -687,6 +729,12 @@ class RunActivity : AppCompatActivity() {
                 )
                 if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
                     // true
+                    if ( timeBuy.size == 2 ) {
+                        if ( timeBuy.get(0) != timeBuy1.get(0).toString() ) {
+                            buyCnt = 0;
+                        }
+                    }
+
                     timeBuy.clear()
                     timeBuy.add(timeBuy4.get(0).toString())
                     timeBuy.add(timeBuy4.get(1).toString())
@@ -696,15 +744,16 @@ class RunActivity : AppCompatActivity() {
             if ( timeBuy.size == 2 ) {
                 if ( buyCnt < timeBuy.get(1).toInt() ) {
                     isProgress = true
+                    isBuy = false;
                     actionStep = 0
 
-                    web_view?.post {
+                    web_view.post(Runnable {
                         web_view.loadUrl(rootUrl)
-                    }
+                    });
 
                     btn_run.setImageDrawable(getDrawable(R.drawable.ic_stop))
                 } else {
-                    Toast.makeText(this@RunActivity, "Failed: Time/Buy", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RunActivity, "Failed: 'Max Buy", Toast.LENGTH_SHORT).show()
                     stop();
                     return
                 }
@@ -723,8 +772,13 @@ class RunActivity : AppCompatActivity() {
                 searchPosition = 0;
             }
 
+            var useAddress : ArrayList<String> = ArrayList();
             if ( address.size <= addressPosition ) {
                 addressPosition = 0;
+            }
+
+            address.get(0).split(",").forEach{ row ->
+                useAddress.add(row);
             }
 
             /*
@@ -870,7 +924,7 @@ class RunActivity : AppCompatActivity() {
             action.put("url", rootShopUrl)
             actions.put(action)
 
-            /*
+            /**/
             // 검색 클릭
             action = JSONObject()
             action.put("name", "검색 클릭")
@@ -981,7 +1035,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 이름 입력 1")
             action.put("action", "value")
             action.put("selector", "#rname")
-            action.put("value", "신나라")
+            action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 5)
@@ -993,7 +1047,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 우편번호")
             action.put("action", "value")
             action.put("selector", "#rzipcode1")
-            action.put("value", "6035")
+            action.put("value", useAddress.get(1))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1005,7 +1059,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 기본주소")
             action.put("action", "value")
             action.put("selector", "#raddr1")
-            action.put("value", "서울특별시 강남구 가로수길 9 (신사동)")
+            action.put("value", useAddress.get(2))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1017,19 +1071,20 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 상세주소")
             action.put("action", "value")
             action.put("selector", "#raddr2")
-            action.put("value", "없음")
+            action.put("value", useAddress.get(3))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
             action.put("next", true)
             actions.put(action)
 
+            val useAddressTel = useAddress.get(4).split("-")
             // 구매하기 화면 - 비회원구매 - 전화번호 _ 1
             action = JSONObject()
             action.put("name", "구매하기 화면 - 비회원구매 - 전화번호 _ 1")
             action.put("action", "value")
             action.put("selector", "#rphone2_1")
-            action.put("value", "017")
+            action.put("value", useAddressTel.get(0))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1041,7 +1096,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 전화번호 _ 2")
             action.put("action", "value")
             action.put("selector", "#rphone2_2")
-            action.put("value", "0001")
+            action.put("value", useAddressTel.get(1))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1053,19 +1108,20 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 전화번호 _ 3")
             action.put("action", "value")
             action.put("selector", "#rphone2_3")
-            action.put("value", "0000")
+            action.put("value", useAddressTel.get(2))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
             action.put("next", true)
             actions.put(action)
 
+            val useAddressEmail = useAddress.get(5).split("@")
             // 구매하기 화면 - 비회원구매 - 이메일 _ 1
             action = JSONObject()
             action.put("name", "구매하기 화면 - 비회원구매 - 이메일 _ 1")
             action.put("action", "value")
             action.put("selector", "#oemail1")
-            action.put("value", "ergjeorgj")
+            action.put("value", useAddressEmail.get(0))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1077,7 +1133,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 이메일 _ 2")
             action.put("action", "value")
             action.put("selector", "#oemail2")
-            action.put("value", "test.com")
+            action.put("value", useAddressEmail.get(1))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1089,7 +1145,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 비밀번호")
             action.put("action", "value")
             action.put("selector", "#order_password")
-            action.put("value", "@123@123")
+            action.put("value", buyPassword)
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1101,7 +1157,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 비밀번호 확인")
             action.put("action", "value")
             action.put("selector", "#order_password_confirm")
-            action.put("value", "@123@123")
+            action.put("value", buyPassword)
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1113,7 +1169,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 입금은행")
             action.put("action", "value")
             action.put("selector", "#bankaccount")
-            action.put("value", "bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com")
+            action.put("value", useAddress.get(6))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1125,7 +1181,7 @@ class RunActivity : AppCompatActivity() {
             action.put("name", "구매하기 화면 - 비회원구매 - 입금은행")
             action.put("action", "value")
             action.put("selector", "#pname")
-            action.put("value", "신나라")
+            action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
@@ -1143,6 +1199,7 @@ class RunActivity : AppCompatActivity() {
             action.put("next", false)
             actions.put(action)
 
+            /*
             // 구매하기 화면 - 비회원구매 - 이름 입력 2
             action = JSONObject()
             action.put("name", "구매하기 화면 - 비회원구매 - 이름 입력 2")
@@ -1298,6 +1355,7 @@ class RunActivity : AppCompatActivity() {
             action.put("delay", 3)
             action.put("next", true)
             actions.put(action)
+            */
 
             // 구매하기 화면 - 비회원구매 - 결제하기
             action = JSONObject()
@@ -1307,9 +1365,10 @@ class RunActivity : AppCompatActivity() {
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 3)
+            action.put("buy", true)
             action.put("next", false)
+
             actions.put(action)
-            */
 
             searchPosition++;
             addressPosition++;
@@ -1366,6 +1425,8 @@ class RunActivity : AppCompatActivity() {
         val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
         val currentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
         val temp = currentTime.split(".");
+
+        Log.d(TAG,"insertLog : " + currentDate+" "+temp[0] +" / "+ productName.toString())
 
         val log = Logs(0,currentDate+" "+temp[0],productName.toString(),"1")
         db?.logsDao()?.insertAll(log)
