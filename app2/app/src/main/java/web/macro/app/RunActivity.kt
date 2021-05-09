@@ -535,14 +535,19 @@ class RunActivity : AppCompatActivity() {
     fun play() {
         Log.d(TAG,"play : "+isProgress)
         if ( !isProgress ) {
+            Log.d(TAG,"play : 1")
             web_view.clearCache(true)
+            Log.d(TAG,"play : 2")
             web_view.clearHistory();
+            Log.d(TAG,"play : 3")
             web_view.clearFormData();
-
+            Log.d(TAG,"play : 4")
             val current = LocalDateTime.now()
+            Log.d(TAG,"play : 5")
             val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+            Log.d(TAG,"play : 6")
             val temp = currentDate.toString().split("-")
-
+            Log.d(TAG,"play : 8")
             timeBuy.clear()
 
             if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
@@ -1130,7 +1135,6 @@ class RunActivity : AppCompatActivity() {
             action.put("delay", 0)
             action.put("buy", true)
             action.put("next", false)
-
             actions.put(action)
 
             searchPosition++;
