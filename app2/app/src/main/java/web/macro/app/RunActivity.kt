@@ -763,7 +763,8 @@ class RunActivity : AppCompatActivity() {
 
             if ( timeBuy.size == 2 ) {
                 if ( buyCnt < timeBuy.get(1).toInt() ) {
-                    isProgress = true
+                    currentUrl = "";
+                    isProgress = true;
                     isBuy = false;
                     actionStep = 0
 
