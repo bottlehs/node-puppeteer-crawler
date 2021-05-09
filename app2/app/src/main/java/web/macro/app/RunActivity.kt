@@ -574,8 +574,9 @@ class RunActivity : AppCompatActivity() {
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
 
-                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy1.get(1).toInt() < savedLogs1.size ) {
+                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy1.get(1).toInt() ) {
+                    Log.d(TAG,"timeBuy - 1")
                     timeBuy.clear()
                     timeBuy.add(timeBuy1.get(0).toString())
                     timeBuy.add(timeBuy1.get(1).toString())
@@ -596,8 +597,9 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy2.get(1).toInt() < savedLogs1.size ) {
+                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy2.get(1).toInt() ) {
+                    Log.d(TAG,"timeBuy - 2")
                     timeBuy.clear()
                     timeBuy.add(timeBuy2.get(0).toString())
                     timeBuy.add(timeBuy2.get(1).toString())
@@ -618,8 +620,9 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy3.get(1).toInt() < savedLogs1.size ) {
+                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy3.get(1).toInt() ) {
+                    Log.d(TAG,"timeBuy - 3")
                     timeBuy.clear()
                     timeBuy.add(timeBuy3.get(0).toString())
                     timeBuy.add(timeBuy3.get(1).toString())
@@ -640,8 +643,9 @@ class RunActivity : AppCompatActivity() {
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                val savedLogs1 = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && timeBuy4.get(1).toInt() < savedLogs1.size ) {
+                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy4.get(1).toInt() ) {
+                    Log.d(TAG,"timeBuy - 4")
                     timeBuy.clear()
                     timeBuy.add(timeBuy4.get(0).toString())
                     timeBuy.add(timeBuy4.get(1).toString())
