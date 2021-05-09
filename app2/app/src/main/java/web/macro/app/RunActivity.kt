@@ -70,6 +70,9 @@ class RunActivity : AppCompatActivity() {
     var address : ArrayList<String> = ArrayList();
     var addressPosition = App.prefs.addressPosition.toString().toInt();
 
+    var playDate = App.prefs.playDate.toString();
+    var nextAuto = App.prefs.nextAuto.toString();
+
     var timer = Timer()
     val buyPassword = "@123@123";
 
@@ -130,118 +133,6 @@ class RunActivity : AppCompatActivity() {
                 queue = temp.get(0).toInt();
             } else {
                 queue = Random.nextInt(temp.get(0).toInt(), temp.get(1).toInt());
-            }
-        }
-
-        if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
-            timeBuy1.add(App.prefs.time1.toString())
-            timeBuy1.add(App.prefs.purchase1.toString())
-        }
-
-        if ( 0 < App.prefs.time2.toString().length && 0 < App.prefs.purchase2.toString().length ) {
-            timeBuy2.add(App.prefs.time2.toString())
-            timeBuy2.add(App.prefs.purchase2.toString())
-        }
-
-        if ( 0 < App.prefs.time3.toString().length && 0 < App.prefs.purchase3.toString().length ) {
-            timeBuy3.add(App.prefs.time3.toString())
-            timeBuy3.add(App.prefs.purchase3.toString())
-        }
-
-        if ( 0 < App.prefs.time4.toString().length && 0 < App.prefs.purchase4.toString().length ) {
-            timeBuy4.add(App.prefs.time4.toString())
-            timeBuy4.add(App.prefs.purchase4.toString())
-        }
-
-        val current = LocalDateTime.now()
-        val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
-        val temp = currentDate.toString().split("-")
-
-        if ( timeBuy1.size == 2 ) {
-            val timeTemp = timeBuy1.get(0).toString().split("/");
-            val startTimeTemp = timeTemp.get(0).toString().split(":");
-            val endTimeTemp = timeTemp.get(1).toString().split(":");
-            val startTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
-                    0
-                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
-            )
-            val endTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
-                    0
-                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
-            )
-            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                // true
-                timeBuy.clear()
-                timeBuy.add(timeBuy1.get(0).toString())
-                timeBuy.add(timeBuy1.get(1).toString())
-            }
-        }
-
-        if ( timeBuy2.size == 2 ) {
-            val timeTemp = timeBuy2.get(0).toString().split("/");
-            val startTimeTemp = timeTemp.get(0).toString().split(":");
-            val endTimeTemp = timeTemp.get(1).toString().split(":");
-            val startTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
-                    0
-                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
-            )
-            val endTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
-                    0
-                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
-            )
-            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                // true
-                timeBuy.clear()
-                timeBuy.add(timeBuy2.get(0).toString())
-                timeBuy.add(timeBuy2.get(1).toString())
-            }
-        }
-
-        if ( timeBuy3.size == 2 ) {
-            val timeTemp = timeBuy3.get(0).toString().split("/");
-            val startTimeTemp = timeTemp.get(0).toString().split(":");
-            val endTimeTemp = timeTemp.get(1).toString().split(":");
-            val startTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
-                    0
-                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
-            )
-            val endTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
-                    0
-                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
-            )
-            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                // true
-                timeBuy.clear()
-                timeBuy.add(timeBuy3.get(0).toString())
-                timeBuy.add(timeBuy3.get(1).toString())
-            }
-        }
-
-        if ( timeBuy4.size == 2 ) {
-            val timeTemp = timeBuy4.get(0).toString().split("/");
-            val startTimeTemp = timeTemp.get(0).toString().split(":");
-            val endTimeTemp = timeTemp.get(1).toString().split(":");
-            val startTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
-                    0
-                ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
-            )
-            val endTime = LocalDateTime.of(
-                temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
-                    0
-                ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
-            )
-            if ( current.isAfter(startTime)  &&  current.isBefore(endTime) ) {
-                // true
-                timeBuy.clear()
-                timeBuy.add(timeBuy4.get(0).toString())
-                timeBuy.add(timeBuy4.get(1).toString())
             }
         }
 
@@ -762,7 +653,7 @@ class RunActivity : AppCompatActivity() {
             }
 
             if ( timeBuy.size == 2 ) {
-                if ( buyCnt < timeBuy.get(1).toInt() ) {
+                if ( buyCnt < timeBuy.get(1).toInt() && playDate == currentDate ) {
                     currentUrl = "";
                     isProgress = true;
                     isBuy = false;
@@ -1400,6 +1291,14 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun stop() {
+        if ( nextAuto == "Y" ) {
+            val current = LocalDateTime.now()
+            val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+
+            playDate == currentDate;
+            App.prefs.playDate = currentDate;
+        }
+
         isProgress = false
         btn_run.setImageDrawable(getDrawable(R.drawable.ic_play))
     }
