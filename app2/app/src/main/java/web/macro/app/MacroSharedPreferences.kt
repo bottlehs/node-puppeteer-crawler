@@ -7,6 +7,8 @@ class MacroSharedPreferences(context: Context) {
     private val prefsFilename = "prefs"
 
     /**
+     * # 설정
+     *
      * 시간대/구매 ~ 4
      * 07:30 ~ 10:30 (String) / 1 (Int)
      * time1 / purchase1
@@ -33,6 +35,15 @@ class MacroSharedPreferences(context: Context) {
      * 익일 자동실행
      * true (String)
      * nextAuto
+     *
+     * # 실행
+     * 검색어 위치
+     * 0 (Int)
+     * searchPosition
+     *
+     * 주소 위치
+     * 0 (Int)
+     * addressPosition
      */
     private val prefs : SharedPreferences = context.getSharedPreferences(prefsFilename, 0)
 
@@ -86,4 +97,14 @@ class MacroSharedPreferences(context: Context) {
     var nextAuto: String?
         get() = prefs.getString("prefsKeyNextAuto","N")
         set(value) = prefs.edit().putString("prefsKeyNextAuto", value).apply()
+
+    // 검색어 위치
+    var searchPosition: String?
+        get() = prefs.getString("prefsKeySearchPosition","0")
+        set(value) = prefs.edit().putString("prefsKeySearchPosition", value).apply()
+
+    // 주소 위치
+    var addressPosition: String?
+        get() = prefs.getString("prefsKeyAddressPosition","0")
+        set(value) = prefs.edit().putString("prefsKeyAddressPosition", value).apply()
 }
