@@ -34,6 +34,7 @@ import kotlin.random.Random
 
 class RunActivity : AppCompatActivity() {
     private val TAG = RunActivity::class.qualifiedName
+    var db : AppDatabase? = null
 
     /*
     actionStep : 동작 카운드
@@ -92,6 +93,8 @@ class RunActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
+
+        db = AppDatabase.getInstance(this)
 
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
@@ -1355,5 +1358,15 @@ class RunActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    fun insertLog() {
+        val current = LocalDateTime.now()
+        val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        val currentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
+        val temp = currentTime.split(".");
+
+        val log = Logs(0,currentDate+" "+temp[0],productName.toString(),"1")
+        db?.logsDao()?.insertAll(log)
     }
 }

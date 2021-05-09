@@ -39,9 +39,9 @@ class LogsActivity: AppCompatActivity() {
         val adapter = LogsAdapter(logs)
         logs_list.adapter = adapter
 
-        /* insert
+        /*
         val log = Logs(0,"date","product","purchase")
-        db?.contactsDao()?.insertAll(log)
+        db?.logsDao()?.insertAll(log)
         */
     }
 
