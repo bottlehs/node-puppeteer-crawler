@@ -195,6 +195,13 @@ class RunActivity : AppCompatActivity() {
                 progressBar.isVisible = false
 
                 Executors.newSingleThreadScheduledExecutor().schedule({
+                    Log.d(TAG,"newSingleThreadScheduledExecutor : "+url.toString().contains("order_result"));
+                    Log.d(TAG,"newSingleThreadScheduledExecutor isBuy : "+isBuy);
+                    if ( url.toString().contains("order_result") || isBuy ) {
+                        Log.d(TAG,"최종 완료");
+                        insertLog()
+                    }
+
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
 
@@ -315,11 +322,6 @@ class RunActivity : AppCompatActivity() {
         Log.i(TAG,"actionStep.length() : "+actions.length())
         Log.i(TAG,"actionStep.currentUrl : "+currentUrl)
         Log.i(TAG,"actionStep.url.toString() : "+url.toString())
-
-        if ( url.toString().contains("order_result") || isBuy ) {
-            Log.d(TAG,"최종 완료");
-            insertLog()
-        }
 
         if ( actionStep < actions.length() && currentUrl != url.toString() )  {
             currentUrl = url.toString()
@@ -551,21 +553,25 @@ class RunActivity : AppCompatActivity() {
             timeBuy.clear()
 
             if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
+                timeBuy1.clear();
                 timeBuy1.add(App.prefs.time1.toString())
                 timeBuy1.add(App.prefs.purchase1.toString())
             }
 
             if ( 0 < App.prefs.time2.toString().length && 0 < App.prefs.purchase2.toString().length ) {
+                timeBuy2.clear();
                 timeBuy2.add(App.prefs.time2.toString())
                 timeBuy2.add(App.prefs.purchase2.toString())
             }
 
             if ( 0 < App.prefs.time3.toString().length && 0 < App.prefs.purchase3.toString().length ) {
+                timeBuy3.clear();
                 timeBuy3.add(App.prefs.time3.toString())
                 timeBuy3.add(App.prefs.purchase3.toString())
             }
 
             if ( 0 < App.prefs.time4.toString().length && 0 < App.prefs.purchase4.toString().length ) {
+                timeBuy4.clear();
                 timeBuy4.add(App.prefs.time4.toString())
                 timeBuy4.add(App.prefs.purchase4.toString())
             }
@@ -1223,5 +1229,6 @@ class RunActivity : AppCompatActivity() {
 
         val log = Logs(0,currentDate+" "+temp[0], productName.toString(),"1")
         db?.logsDao()?.insertAll(log)
+        isBuy = false;
     }
 }
