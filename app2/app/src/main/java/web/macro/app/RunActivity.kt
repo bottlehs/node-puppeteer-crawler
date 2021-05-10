@@ -587,11 +587,15 @@ class RunActivity : AppCompatActivity() {
 
                 var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
                 if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy1.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 1")
+                    Log.d(TAG,"timeBuy - 1 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy1.get(0).toString())
                     timeBuy.add(timeBuy1.get(1).toString())
+                } else {
+                    Log.d(TAG,"timeBuy - 1 no")
                 }
+            } else {
+                Log.d(TAG,"timeBuy - 1 / "+timeBuy1.size)
             }
 
             if ( timeBuy2.size == 2 ) {
@@ -610,11 +614,15 @@ class RunActivity : AppCompatActivity() {
                 )
                 var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
                 if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy2.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 2")
+                    Log.d(TAG,"timeBuy - 2 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy2.get(0).toString())
                     timeBuy.add(timeBuy2.get(1).toString())
+                } else {
+                    Log.d(TAG,"timeBuy - 2 no")
                 }
+            } else {
+                Log.d(TAG,"timeBuy - 2 / "+timeBuy2.size)
             }
 
             if ( timeBuy3.size == 2 ) {
@@ -633,11 +641,15 @@ class RunActivity : AppCompatActivity() {
                 )
                 var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
                 if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy3.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 3")
+                    Log.d(TAG,"timeBuy - 3 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy3.get(0).toString())
                     timeBuy.add(timeBuy3.get(1).toString())
+                } else {
+                    Log.d(TAG,"timeBuy - 3 no")
                 }
+            } else {
+                Log.d(TAG,"timeBuy - 3 / "+timeBuy3.size)
             }
 
             if ( timeBuy4.size == 2 ) {
@@ -656,11 +668,15 @@ class RunActivity : AppCompatActivity() {
                 )
                 var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
                 if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy4.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 4")
+                    Log.d(TAG,"timeBuy - 4 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy4.get(0).toString())
                     timeBuy.add(timeBuy4.get(1).toString())
+                } else {
+                    Log.d(TAG,"timeBuy - 4 no")
                 }
+            } else {
+                Log.d(TAG,"timeBuy - 4 / "+timeBuy4.size)
             }
 
             if ( timeBuy.size == 2 ) {
@@ -676,7 +692,7 @@ class RunActivity : AppCompatActivity() {
 
                     btn_run.setImageDrawable(getDrawable(R.drawable.ic_stop))
                 } else {
-                    Toast.makeText(this@RunActivity, "Failed: 'Max Buy", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RunActivity, "Failed: 'Date" + playDate + " / " +currentDate, Toast.LENGTH_SHORT).show()
                     stop();
                     return
                 }
@@ -1150,7 +1166,7 @@ class RunActivity : AppCompatActivity() {
             val current = LocalDateTime.now()
             val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
-            playDate == currentDate;
+            playDate = currentDate;
             App.prefs.playDate = currentDate;
         }
 
