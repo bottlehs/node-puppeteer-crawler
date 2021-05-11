@@ -7,10 +7,10 @@ import androidx.room.Query
 
 @Dao
 interface LogsDao {
-    @Query("SELECT * FROM tb_logs")
+    @Query("SELECT * FROM table_logs")
     fun getAll(): List<Logs>
 
-    @Query("SELECT * FROM tb_logs WHERE strDate BETWEEN strftime('%Y-%m-%d %H:%M:%S',:startStrDate) AND strftime('%Y-%m-%d %H:%M:%S',:endStrDate)")
+    @Query("SELECT * FROM table_logs WHERE strDate BETWEEN strftime('%Y-%m-%d %H:%M:%S',:startStrDate) AND strftime('%Y-%m-%d %H:%M:%S',:endStrDate)")
     fun getDateAll(startStrDate: String, endStrDate: String): List<Logs>
 
     @Insert
