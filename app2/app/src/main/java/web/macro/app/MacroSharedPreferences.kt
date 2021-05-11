@@ -44,6 +44,14 @@ class MacroSharedPreferences(context: Context) {
      * 주소 위치
      * 0 (Int)
      * addressPosition
+     *
+     * 실행되는 날짜
+     * 2021-05-09 (String)
+     * playDate
+     *
+     * 비행기모드
+     * 0 (Int)
+     * airplaneMode
      */
     private val prefs : SharedPreferences = context.getSharedPreferences(prefsFilename, 0)
 
@@ -112,4 +120,9 @@ class MacroSharedPreferences(context: Context) {
    var playDate: String?
         get() = prefs.getString("prefsKeyPlayDate","")
         set(value) = prefs.edit().putString("prefsKeyPlayDate", value).apply()
+
+    // 비행기 모드
+   var airplaneMode: String?
+       get() = prefs.getString("prefsKeyAirplaneMode","0")
+       set(value) = prefs.edit().putString("prefsKeyAirplaneMode", value).apply()
 }

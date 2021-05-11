@@ -8,15 +8,19 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
+import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_log.*
-
-private const val PERMISSION_CODE = 110
+import web.macro.app.service.FloatingClickService
+import web.macro.app.service.autoClickService
 
 class AirplaneActivity: AppCompatActivity() {
     private val TAG = AirplaneActivity::class.qualifiedName
+
+    private var serviceIntent: Intent? = null
+
+    private val PERMISSION_CODE = 110
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,20 @@ class AirplaneActivity: AppCompatActivity() {
             // on back button press, it will navigate to parent activity
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+        }
+
+        val button: View = findViewById(R.id.button);
+        button.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
+                || Settings.canDrawOverlays(this)) {
+                serviceIntent = Intent(this@AirplaneActivity,
+                    FloatingClickService::class.java)
+                startService(serviceIntent)
+                onBackPressed()
+            } else {
+                askPermission()
+                shortToast("You need System Alert Window Permission to do this")
+            }
         }
     }
 
