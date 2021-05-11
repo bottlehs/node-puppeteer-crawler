@@ -67,7 +67,7 @@ class RunActivity : AppCompatActivity() {
     var timeBuy2 : ArrayList<String> = ArrayList();
     var timeBuy3 : ArrayList<String> = ArrayList();
     var timeBuy4 : ArrayList<String> = ArrayList();
-    var queue = 0;
+    var queue = 5;
     var second = 0;
 
     var search : ArrayList<String> = ArrayList();
