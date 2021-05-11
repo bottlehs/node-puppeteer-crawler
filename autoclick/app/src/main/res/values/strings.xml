@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AutoclickService</string>
+
+    <string name="accessibility_service_description">TODO</string>
+    <string name="accessibility_service_name">AutoClickService</string>
+    <string name="accessibility_service_id">web.macro.autoclick/.service.AutoClickService</string>
+</resources>
