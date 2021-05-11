@@ -30,34 +30,42 @@ class AutoClickService : AccessibilityService() {
         super.onServiceConnected()
         "onServiceConnected".logd()
         autoClickService = this
-        startActivity(Intent(this, MainActivity::class.java)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        startActivity(
+            Intent(this, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
     }
 
     fun click(x: Int, y: Int) {
         "click $x $y".logd()
-        Log.d("AutoClickService","airplaneModeairplaneMode click ::::::: "+App.prefs.airplaneMode!!.toInt())
-        var airplaneMode = App.prefs.airplaneMode!!.toInt();
+        Log.d(
+            "AutoClickService",
+            "airplaneModeairplaneMode click ::::::: " + App.prefs.airplaneMode!!.toInt()
+        )
+        var airplaneMode = App.prefs.airplaneMode.toString().toInt();
+        var backButtonSizeX = App.prefs.backButtonSizeX.toString().toFloat();
         if ( 0 < airplaneMode ) {
-            Log.d("AutoClickService","airplaneModeairplaneMode click ::::::: 클릭")
+            Log.d("AutoClickService", "airplaneModeairplaneMode click ::::::: 클릭")
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return
             val path = Path()
-            path.moveTo(x.toFloat(), y.toFloat())
+
+            if ( airplaneMode < 2 ) {
+                airplaneMode = airplaneMode + 1;
+                path.moveTo(x.toFloat(), y.toFloat())
+            } else {
+                airplaneMode = 0;
+                path.moveTo(x.toFloat(), backButtonSizeX)
+            }
+
+            App.prefs.airplaneMode = airplaneMode.toString();
+
             val builder = GestureDescription.Builder()
             val gestureDescription = builder
                 .addStroke(GestureDescription.StrokeDescription(path, 10, 10))
                 .build()
             dispatchGesture(gestureDescription, null, null)
-
-            if ( airplaneMode < 2 ) {
-                airplaneMode++;
-            } else {
-                airplaneMode = 0;
-            }
-
-            App.prefs.airplaneMode = airplaneMode.toString();
         } else {
-            Log.d("AutoClickService","airplaneModeairplaneMode click ::::::: 클릭 하지 않음")
+            Log.d("AutoClickService", "airplaneModeairplaneMode click ::::::: 클릭 하지 않음")
         }
     }
 
