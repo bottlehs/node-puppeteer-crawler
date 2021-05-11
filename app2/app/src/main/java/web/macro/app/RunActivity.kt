@@ -192,16 +192,17 @@ class RunActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(TAG, "onPageFinished")
                 Log.d(TAG, "onPageFinished : "+queue.toLong())
+
+                if ( url.toString().contains("order_result") || isBuy ) {
+                    Log.d(TAG,"최종 완료");
+                    insertLog()
+                }
+
                 progressBar.isVisible = false
 
                 Executors.newSingleThreadScheduledExecutor().schedule({
                     Log.d(TAG,"newSingleThreadScheduledExecutor : "+url.toString().contains("order_result"));
                     Log.d(TAG,"newSingleThreadScheduledExecutor isBuy : "+isBuy);
-                    if ( url.toString().contains("order_result") || isBuy ) {
-                        Log.d(TAG,"최종 완료");
-                        insertLog()
-                    }
-
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
 

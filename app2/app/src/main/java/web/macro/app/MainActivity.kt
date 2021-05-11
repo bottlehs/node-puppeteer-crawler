@@ -1,9 +1,12 @@
 package web.macro.app
 
+import android.accessibilityservice.GestureDescription
+import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Path
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
@@ -79,6 +82,64 @@ class MainActivity: AppCompatActivity() {
         } else {
 
         }
+
+        Log.d(TAG, "airplane_mode_on ::::::: 1 / ");
+
+        val brightnessMode = Settings.System.getInt(
+            getContentResolver(),
+            Settings.System.SCREEN_BRIGHTNESS_MODE
+        );
+        val locationMode = Settings.Secure.getInt(
+            getContentResolver(),
+            Settings.Secure.LOCATION_MODE
+        );
+        val debugApp = Settings.Global.getString(getContentResolver(), Settings.Global.DEBUG_APP);
+        Log.d(TAG, "brightnessMode : " + brightnessMode);
+        Log.d(TAG, "locationMode : " + locationMode);
+        Log.d(TAG, "debugApp : " + debugApp);
+
+        Settings.System.putInt(this.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
+        Runtime.getRuntime().exec("settings put global airplane_mode_on 1")
+        Runtime.getRuntime().exec("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
+
+        Log.d(
+            TAG, "airplane_mode_on Settings.System : " + Settings.System.getInt(
+                this.getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON,
+                0
+            )
+        )
+
+        /*
+        val intent = Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        intent.putExtra("state", true)
+        sendBroadcast(intent)
+
+        val second = 50
+
+        object : CountDownTimer((second * 1000).toLong(), (second * 1000).toLong()) {
+            override fun onTick(l: Long) {}
+            override fun onFinish() {
+                execute(
+                    "settings put global airplane_mode_on 1;" +
+                            "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true;"
+                )
+                try {
+                    Thread.sleep(1000)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+                execute(
+                    "settings put global airplane_mode_on 0;" +
+                            "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false;"
+                )
+                start()
+            }
+        }.start()
+        */
+
+
+        Log.d(TAG, "airplane_mode_on ::::::: 2 / ");
 
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
@@ -693,6 +754,51 @@ class MainActivity: AppCompatActivity() {
         } else {
             nextAuto.isChecked = false;
         }
+    }
+
+    /*
+    fun execute(cmd: String?): Boolean {
+        try {
+            if (cmd != null && cmd.length > 0) {
+                val p = Runtime.getRuntime().exec("su")
+                val dos = DataOutputStream(p.outputStream)
+                dos.writeBytes(
+                    """
+                    $cmd
+                    
+                    """.trimIndent()
+                )
+                dos.writeBytes("exit\n")
+                dos.flush()
+                dos.close()
+                p.waitFor()
+            } else {
+                Log.e(TAG, "command is null or empty")
+            }
+        } catch (ex: IOException) {
+            Log.e(TAG, "IOException")
+            ex.printStackTrace()
+        } catch (ex: SecurityException) {
+            Log.e(TAG, "SecurityException")
+            ex.printStackTrace()
+        } catch (ex: java.lang.Exception) {
+            Log.e(TAG, "Generic Exception")
+            ex.printStackTrace()
+        }
+        return false
+    }
+    */
+
+    // (x, y) in screen coordinates
+    private fun createClick(x: Float, y: Float): GestureDescription? {
+        // for a single tap a duration of 1 ms is enough
+        val DURATION = 1
+        val clickPath = Path()
+        clickPath.moveTo(x, y)
+        val clickStroke = StrokeDescription(clickPath, 0, DURATION.toLong())
+        val clickBuilder = GestureDescription.Builder()
+        clickBuilder.addStroke(clickStroke)
+        return clickBuilder.build()
     }
 
     fun setTime11(value: String) {
