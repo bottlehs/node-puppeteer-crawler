@@ -125,4 +125,8 @@ class MacroSharedPreferences(context: Context) {
    var airplaneMode: String?
        get() = prefs.getString("prefsKeyAirplaneMode","0")
        set(value) = prefs.edit().putString("prefsKeyAirplaneMode", value).apply()
+
+    var backButtonSizeX: String?
+        get() = prefs.getString("prefsKeyBackButtonSizeX","0")
+        set(value) = prefs.edit().putString("prefsKeyBackButtonSizeX", value).apply()
 }
