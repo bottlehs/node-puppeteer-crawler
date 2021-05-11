@@ -2,10 +2,11 @@ package web.macro.app
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Point
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
@@ -1328,8 +1329,28 @@ class RunActivity : AppCompatActivity() {
         ) !== 0
     }
 
-    private fun AirplaneMode() {
-        
+    private fun airplaneMode() {
+        App.prefs.airplaneMode = "1";
+
+        val display = windowManager.defaultDisplay // in case of Activity
+        val size = Point()
+        display.getRealSize(size) // or getSize(size)
+        val width = size.x
+        val height = size.y
+        Log.d(TAG, "heightheightheightheight :::" + height);
+
+        var bottomBarHeight = 0
+        val resourceIdBottom = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceIdBottom > 0) bottomBarHeight =
+            resources.getDimensionPixelSize(resourceIdBottom)
+
+        Log.d(TAG,"bottomBarHeightbottomBarHeight:::::::::::: "+bottomBarHeight)
+
+        val sizeX = height - (bottomBarHeight/2);
+        App.prefs.backButtonSizeX = sizeX.toString();
+
+        val intent = Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS)
+        startActivity(intent)
     }
 
     fun getDeviceipMobileData(): String? {
@@ -1371,5 +1392,6 @@ class RunActivity : AppCompatActivity() {
         val log = Logs(0, currentDate + " " + temp[0], productName.toString(), "1", ip.toString())
         db?.logsDao()?.insertAll(log)
         isBuy = false;
+        airplaneMode()
     }
 }
