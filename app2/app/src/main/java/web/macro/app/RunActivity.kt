@@ -301,7 +301,7 @@ class RunActivity : AppCompatActivity() {
             override fun run() {
                 // 반복실행할 구문
                 Log.d(TAG, "second : " + second)
-                if ( 60 <= second ) {
+                if ( 100 <= second ) {
                     stop()
 
                     second = 0;
