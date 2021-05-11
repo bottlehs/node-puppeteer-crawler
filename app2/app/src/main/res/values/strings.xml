@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Macro</string>
 
-    <string name="accessibility_service_description">TODO</string>
+    <string name="accessibility_service_description">Accessibility is used only to provide the following AutoClickService(Macro) features, and only when the user has specified then:\n\nAppContext:\n(when selected in Macro prefs)\n\nEvents:\nButton Widget Clicked\n\nActions:\nBack Button, Swipe\n\nVariables:\n%WIN, %NTITLE (older devices)</string>
     <string name="accessibility_service_name">AutoClickService</string>
     <string name="accessibility_service_id">web.macro.app/.service.AutoClickService</string>
 
@@ -18,6 +18,8 @@
     <string name="activity_main_auto_label">Auto-Run Next Day</string>
     <string name="activity_main_auto_use">Enable</string>
     <string name="activity_main_auto_not_use">Disable</string>
+    <string name="activity_main_airplane_mode_label">Airplane Mode</string>
+    <string name="activity_main_airplane_mode_setting">Set airplane mode</string>
 
     <string name="activity_main_search_label">Search Keyword</string>
     <string name="activity_main_address_label">Address</string>
