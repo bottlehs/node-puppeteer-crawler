@@ -5,7 +5,9 @@ import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.graphics.Path
 import android.os.Build
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import web.macro.app.App
 import web.macro.app.MainActivity
 import web.macro.app.been.Event
 import web.macro.app.logd
@@ -34,14 +36,29 @@ class AutoClickService : AccessibilityService() {
 
     fun click(x: Int, y: Int) {
         "click $x $y".logd()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return
-        val path = Path()
-        path.moveTo(x.toFloat(), y.toFloat())
-        val builder = GestureDescription.Builder()
-        val gestureDescription = builder
-            .addStroke(GestureDescription.StrokeDescription(path, 10, 10))
-            .build()
-        dispatchGesture(gestureDescription, null, null)
+        Log.d("AutoClickService","airplaneModeairplaneMode click ::::::: "+App.prefs.airplaneMode!!.toInt())
+        var airplaneMode = App.prefs.airplaneMode!!.toInt();
+        if ( 0 < airplaneMode ) {
+            Log.d("AutoClickService","airplaneModeairplaneMode click ::::::: 클릭")
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return
+            val path = Path()
+            path.moveTo(x.toFloat(), y.toFloat())
+            val builder = GestureDescription.Builder()
+            val gestureDescription = builder
+                .addStroke(GestureDescription.StrokeDescription(path, 10, 10))
+                .build()
+            dispatchGesture(gestureDescription, null, null)
+
+            if ( airplaneMode < 2 ) {
+                airplaneMode++;
+            } else {
+                airplaneMode = 0;
+            }
+
+            App.prefs.airplaneMode = airplaneMode.toString();
+        } else {
+            Log.d("AutoClickService","airplaneModeairplaneMode click ::::::: 클릭 하지 않음")
+        }
     }
 
     fun run(newEvents: MutableList<Event>) {
