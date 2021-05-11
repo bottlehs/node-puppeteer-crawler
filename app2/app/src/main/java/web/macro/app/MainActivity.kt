@@ -3,17 +3,12 @@ package web.macro.app
 import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Path
-import android.net.ConnectivityManager
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Settings
 import android.text.InputType
-import android.text.format.Formatter
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
@@ -24,7 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.*
-import java.net.NetworkInterface
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -33,113 +27,22 @@ import java.util.*
 
 class MainActivity: AppCompatActivity() {
     private val TAG = MainActivity::class.qualifiedName
-    var db : AppDatabase? = null
     var checkTxt = true
 
     private val filepath = "txtFileStorage"
-    internal var appExternalFile: File?=null
+    private var appExternalFile: File?=null
     private val isExternalStorageReadOnly: Boolean get() {
         val extStorageState = Environment.getExternalStorageState()
-        return if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
-            true
-        } else {
-            false
-        }
+        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)
     }
     private val isExternalStorageAvailable: Boolean get() {
         val extStorageState = Environment.getExternalStorageState()
-        return if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
-            true
-        } else{
-            false
-        }
+        return Environment.MEDIA_MOUNTED.equals(extStorageState)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        var ip = "";
-        val connMgr = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        var isWifiConn: Boolean = false
-        var isMobileConn: Boolean = false
-
-        connMgr.allNetworks.forEach { network ->
-            connMgr.getNetworkInfo(network).apply {
-                if (type == ConnectivityManager.TYPE_WIFI) {
-                    isWifiConn = isWifiConn or isConnected
-                }
-                if (type == ConnectivityManager.TYPE_MOBILE) {
-                    isMobileConn = isMobileConn or isConnected
-                }
-            }
-        }
-
-        if ( isWifiConn ) {
-            ip = getDeviceipWiFiData().toString();
-        } else if ( isMobileConn ) {
-            ip = getDeviceipMobileData().toString();
-        } else {
-
-        }
-
-        Log.d(TAG, "airplane_mode_on ::::::: 1 / ");
-
-        val brightnessMode = Settings.System.getInt(
-            getContentResolver(),
-            Settings.System.SCREEN_BRIGHTNESS_MODE
-        );
-        val locationMode = Settings.Secure.getInt(
-            getContentResolver(),
-            Settings.Secure.LOCATION_MODE
-        );
-        val debugApp = Settings.Global.getString(getContentResolver(), Settings.Global.DEBUG_APP);
-        Log.d(TAG, "brightnessMode : " + brightnessMode);
-        Log.d(TAG, "locationMode : " + locationMode);
-        Log.d(TAG, "debugApp : " + debugApp);
-
-        Settings.System.putInt(this.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
-        Runtime.getRuntime().exec("settings put global airplane_mode_on 1")
-        Runtime.getRuntime().exec("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
-
-        Log.d(
-            TAG, "airplane_mode_on Settings.System : " + Settings.System.getInt(
-                this.getContentResolver(),
-                Settings.Global.AIRPLANE_MODE_ON,
-                0
-            )
-        )
-
-        /*
-        val intent = Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-        intent.putExtra("state", true)
-        sendBroadcast(intent)
-
-        val second = 50
-
-        object : CountDownTimer((second * 1000).toLong(), (second * 1000).toLong()) {
-            override fun onTick(l: Long) {}
-            override fun onFinish() {
-                execute(
-                    "settings put global airplane_mode_on 1;" +
-                            "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true;"
-                )
-                try {
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-                execute(
-                    "settings put global airplane_mode_on 0;" +
-                            "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false;"
-                )
-                start()
-            }
-        }.start()
-        */
-
-
-        Log.d(TAG, "airplane_mode_on ::::::: 2 / ");
 
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
@@ -159,8 +62,6 @@ class MainActivity: AppCompatActivity() {
         writeAddressTextToFile(addressTxtFilePath)
         readAddressTextFromFile(addressTxtFilePath)
 
-        Log.i(TAG, "checkTxt : " + checkTxt)
-
         if ( !checkTxt ) {
             Toast.makeText(
                 this@MainActivity,
@@ -169,10 +70,6 @@ class MainActivity: AppCompatActivity() {
             ).show()
             finish()
         }
-
-
-        db = AppDatabase.getInstance(this)
-        val savedLogs = db!!.logsDao().getAll()
 
         val btnSave: View = findViewById(R.id.btn_save);
         val btnRun: View = findViewById(R.id.btn_run);
@@ -238,8 +135,6 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
-        Log.i(TAG, "hello1")
-        Log.i(TAG, App.prefs.productName)
 
         val time11 : TextView = findViewById(R.id.time11) as TextView;
         val time12 : TextView = findViewById(R.id.time12) as TextView;
@@ -296,7 +191,6 @@ class MainActivity: AppCompatActivity() {
 
             var hour = cal.get(Calendar.HOUR_OF_DAY);
             var minute = cal.get(Calendar.MINUTE);
-            Log.d(TAG, "time11.text.toString():::" + time11.text.toString())
             if (time11.text.toString() != "-:-") {
                 val timeTemp = time11.text.toString().toString().split(":");
                 hour = timeTemp.get(0).toInt();
@@ -1138,7 +1032,6 @@ class MainActivity: AppCompatActivity() {
             stringBuilder.append(text)
         }
         fileInputStream.close()
-        Log.d(TAG, "stringBuilder::" + stringBuilder.toString())
         if ( stringBuilder.toString().trim().length == 0 ) {
             checkTxt = false;
         }
@@ -1168,7 +1061,6 @@ class MainActivity: AppCompatActivity() {
             stringBuilder.append(text)
         }
         fileInputStream.close()
-        Log.d(TAG, "stringBuilder::" + stringBuilder.toString())
         if ( stringBuilder.toString().trim().length == 0 ) {
             checkTxt = false;
         }
@@ -1180,46 +1072,5 @@ class MainActivity: AppCompatActivity() {
         App.prefs.playDate = currentDate
         var intent = Intent(this, RunActivity::class.java)
         startActivity(intent)
-    }
-
-    // network check test
-    private fun checkAirplaneMode() {
-        if (isAirplaneModeOn(applicationContext)) {
-            Log.d(TAG, "Airplane Mode is Enabled")
-        } else {
-            Log.d(TAG, "Airplane Mode is Disabled")
-        }
-    }
-
-    private fun isAirplaneModeOn(context: Context): Boolean {
-        return Settings.System.getInt(
-            context.contentResolver,
-            Settings.Global.AIRPLANE_MODE_ON,
-            0
-        ) !== 0
-    }
-
-    fun getDeviceipMobileData(): String? {
-        try {
-            val en = NetworkInterface.getNetworkInterfaces()
-            while (en.hasMoreElements()) {
-                val networkinterface = en.nextElement()
-                val enumIpAddr = networkinterface.inetAddresses
-                while (enumIpAddr.hasMoreElements()) {
-                    val inetAddress = enumIpAddr.nextElement()
-                    if (!inetAddress.isLoopbackAddress) {
-                        return inetAddress.hostAddress.toString()
-                    }
-                }
-            }
-        } catch (ex: Exception) {
-            Log.e("Current IP", ex.toString())
-        }
-        return null
-    }
-
-    fun getDeviceipWiFiData(): String? {
-        val wm = getSystemService(WIFI_SERVICE) as WifiManager
-        return Formatter.formatIpAddress(wm.connectionInfo.ipAddress)
     }
 }
