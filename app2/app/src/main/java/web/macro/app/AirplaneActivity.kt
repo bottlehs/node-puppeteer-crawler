@@ -8,10 +8,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_airplane.*
 import kotlinx.android.synthetic.main.activity_log.*
+import kotlinx.android.synthetic.main.activity_log.toolbar
 import web.macro.app.service.FloatingClickService
 import web.macro.app.service.autoClickService
 
@@ -38,19 +41,37 @@ class AirplaneActivity: AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        val button: View = findViewById(R.id.button);
-        button.setOnClickListener {
+        val btnStart: View = findViewById(R.id.btn_start);
+
+        btnStart.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
                 || Settings.canDrawOverlays(this)) {
+                App.prefs.airplaneMode = "1";
                 serviceIntent = Intent(this@AirplaneActivity,
                     FloatingClickService::class.java)
                 startService(serviceIntent)
-                onBackPressed()
+                // onBackPressed()
             } else {
                 askPermission()
                 shortToast("You need System Alert Window Permission to do this")
             }
         }
+
+        /*
+        var isStart = false;
+        serviceIntent?.let {
+            isStart = true
+        }
+        autoClickService?.let {
+            isStart = true
+        }
+
+        if ( isStart ) {
+            btn_start.setImageDrawable(getDrawable(R.drawable.ic_stop))
+        } else {
+            btn_start.setImageDrawable(getDrawable(R.drawable.ic_play))
+        }
+        */
     }
 
     private fun checkAccess(): Boolean {
@@ -70,11 +91,13 @@ class AirplaneActivity: AppCompatActivity() {
         val hasPermission = checkAccess()
         "has access? $hasPermission".logd()
         if (!hasPermission) {
+            Log.d(TAG,"권한 받기 실행1");
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && !Settings.canDrawOverlays(this)) {
             askPermission()
+            Log.d(TAG,"권한 받기 실행2");
         }
     }
 
@@ -87,6 +110,8 @@ class AirplaneActivity: AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
+        /*
         serviceIntent?.let {
             "stop floating click service".logd()
             stopService(it)
@@ -97,11 +122,7 @@ class AirplaneActivity: AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return it.disableSelf()
             autoClickService = null
         }
-        super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        moveTaskToBack(true)
+        */
     }
 
     override fun onSupportNavigateUp(): Boolean {
