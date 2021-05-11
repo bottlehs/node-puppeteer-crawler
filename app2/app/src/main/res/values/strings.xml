@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Macro</string>
+
+    <string name="accessibility_service_description">TODO</string>
+    <string name="accessibility_service_name">AutoClickService</string>
+    <string name="accessibility_service_id">web.macro.app/.service.AutoClickService</string>
+
     <string name="positive">Positive</string>
     <string name="negative">Negative</string>
     <string name="activity_main_require_label">(*)</string>
@@ -34,6 +39,8 @@
     <string name="activity_logs_item_buy_label">Buy</string>
 
     <string name="activity_run_title">Run</string>
+
+    <string name="activity_airplane_title">Airplane</string>
 
     <string name="activity_run_running_dialog_title">Running</string>
     <string name="activity_run_running_dialog_description">Currently running</string>
