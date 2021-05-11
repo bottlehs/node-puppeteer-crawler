@@ -71,6 +71,12 @@ class MainActivity: AppCompatActivity() {
             finish()
         }
 
+        val airplaneMode: View = findViewById(R.id.airplaneMode);
+        airplaneMode.setOnClickListener(View.OnClickListener {
+            var intent = Intent(this, AirplaneActivity::class.java)
+            startActivity(intent)
+        })
+
         val btnSave: View = findViewById(R.id.btn_save);
         val btnRun: View = findViewById(R.id.btn_run);
         val btnLogs: View = findViewById(R.id.btn_logs);
