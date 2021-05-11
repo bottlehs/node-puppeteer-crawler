@@ -49,7 +49,7 @@ class AutoClickService : AccessibilityService() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return
             val path = Path()
 
-            if ( airplaneMode < 2 ) {
+            if ( airplaneMode < 3 ) {
                 airplaneMode = airplaneMode + 1;
                 path.moveTo(x.toFloat(), y.toFloat())
             } else {
