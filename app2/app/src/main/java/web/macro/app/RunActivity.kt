@@ -1,11 +1,16 @@
 package web.macro.app
 
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Message
+import android.provider.Settings
+import android.text.format.Formatter
 import android.util.Log
 import android.view.View
 import android.webkit.*
@@ -23,6 +28,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
+import java.net.NetworkInterface
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -536,8 +542,10 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun play() {
-        Log.d(TAG,"play : "+isProgress)
-        if ( !isProgress ) {
+        val ip = getIp()        
+        Log.d(TAG,"play isProgress : "+isProgress)
+        Log.d(TAG,"ip toString : "+ip.toString())
+        if ( !isProgress && 0 < ip.toString().length ) {
             Log.d(TAG,"play : 1")
             web_view.clearCache(true)
             Log.d(TAG,"play : 2")
@@ -1220,15 +1228,76 @@ class RunActivity : AppCompatActivity() {
         return true
     }
 
+    fun getIp(): String? {
+        var ip = "";
+        val connMgr = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var isWifiConn: Boolean = false
+        var isMobileConn: Boolean = false
+
+        connMgr.allNetworks.forEach { network ->
+            connMgr.getNetworkInfo(network).apply {
+                if (type == ConnectivityManager.TYPE_WIFI) {
+                    isWifiConn = isWifiConn or isConnected
+                }
+                if (type == ConnectivityManager.TYPE_MOBILE) {
+                    isMobileConn = isMobileConn or isConnected
+                }
+            }
+        }
+
+        if ( isWifiConn ) {
+            ip = getDeviceipWiFiData().toString();
+        } else if ( isMobileConn ) {
+            ip = getDeviceipMobileData().toString();
+        } else {
+            ip = "";
+        }
+
+        return ip;
+    }
+
+    private fun isAirplaneModeOn(context: Context): Boolean {
+        return Settings.System.getInt(
+            context.contentResolver,
+            Settings.Global.AIRPLANE_MODE_ON,
+            0
+        ) !== 0
+    }
+
+    fun getDeviceipMobileData(): String? {
+        try {
+            val en = NetworkInterface.getNetworkInterfaces()
+            while (en.hasMoreElements()) {
+                val networkinterface = en.nextElement()
+                val enumIpAddr = networkinterface.inetAddresses
+                while (enumIpAddr.hasMoreElements()) {
+                    val inetAddress = enumIpAddr.nextElement()
+                    if (!inetAddress.isLoopbackAddress) {
+                        return inetAddress.hostAddress.toString()
+                    }
+                }
+            }
+        } catch (ex: Exception) {
+            Log.e("Current IP", ex.toString())
+        }
+        return null
+    }
+
+    fun getDeviceipWiFiData(): String? {
+        val wm = getSystemService(WIFI_SERVICE) as WifiManager
+        return Formatter.formatIpAddress(wm.connectionInfo.ipAddress)
+    }
+
     fun insertLog() {
         val current = LocalDateTime.now()
         val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
         val currentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
         val temp = currentTime.split(".");
+        var ip = getIp()
 
-        Log.d(TAG,"insertLog : " + currentDate+" "+temp[0] +" / "+ productName.toString())
+        Log.d(TAG,"insertLog : " + currentDate+" "+temp[0] +" / "+ productName.toString() + " / "+ip.toString())
 
-        val log = Logs(0,currentDate+" "+temp[0], productName.toString(),"1")
+        val log = Logs(0,currentDate+" "+temp[0], productName.toString(),"1", ip.toString())
         db?.logsDao()?.insertAll(log)
         isBuy = false;
     }
