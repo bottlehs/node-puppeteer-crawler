@@ -5,10 +5,9 @@ import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
-import android.os.Message
 import android.provider.Settings
 import android.text.format.Formatter
 import android.util.Log
@@ -197,18 +196,22 @@ class RunActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(TAG, "onPageFinished")
-                Log.d(TAG, "onPageFinished : "+queue.toLong())
+                Log.d(TAG, "onPageFinished : " + queue.toLong())
 
                 if ( url.toString().contains("order_result") || isBuy ) {
-                    Log.d(TAG,"최종 완료");
+                    Log.d(TAG, "최종 완료");
                     insertLog()
                 }
 
                 progressBar.isVisible = false
 
                 Executors.newSingleThreadScheduledExecutor().schedule({
-                    Log.d(TAG,"newSingleThreadScheduledExecutor : "+url.toString().contains("order_result"));
-                    Log.d(TAG,"newSingleThreadScheduledExecutor isBuy : "+isBuy);
+                    Log.d(
+                        TAG,
+                        "newSingleThreadScheduledExecutor : " + url.toString()
+                            .contains("order_result")
+                    );
+                    Log.d(TAG, "newSingleThreadScheduledExecutor isBuy : " + isBuy);
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
 
@@ -296,7 +299,7 @@ class RunActivity : AppCompatActivity() {
         val TT: TimerTask = object : TimerTask() {
             override fun run() {
                 // 반복실행할 구문
-                Log.d(TAG,"second : "+second)
+                Log.d(TAG, "second : " + second)
                 if ( 60 <= second ) {
                     stop()
 
@@ -325,10 +328,10 @@ class RunActivity : AppCompatActivity() {
     fun pageFinishedAction(webView: WebView, url: String) {
         Log.d(TAG, "pageFinishedAction ::::::: ")
         val ss = actions.getJSONObject(actionStep);
-        Log.i(TAG,"actionStep : "+actionStep)
-        Log.i(TAG,"actionStep.length() : "+actions.length())
-        Log.i(TAG,"actionStep.currentUrl : "+currentUrl)
-        Log.i(TAG,"actionStep.url.toString() : "+url.toString())
+        Log.i(TAG, "actionStep : " + actionStep)
+        Log.i(TAG, "actionStep.length() : " + actions.length())
+        Log.i(TAG, "actionStep.currentUrl : " + currentUrl)
+        Log.i(TAG, "actionStep.url.toString() : " + url.toString())
 
         if ( actionStep < actions.length() && currentUrl != url.toString() )  {
             currentUrl = url.toString()
@@ -370,7 +373,7 @@ class RunActivity : AppCompatActivity() {
         second = 0;
     }
     fun elementAction(obj: JSONObject, webView: WebView) {
-        Log.d(TAG,"elementAction"+obj.getString("action"))
+        Log.d(TAG, "elementAction" + obj.getString("action"))
         if ( obj.getString("action") == "focus" ) {
             webView.post(Runnable {
                 webView.loadUrl(
@@ -380,7 +383,12 @@ class RunActivity : AppCompatActivity() {
                 )
             });
         } else if ( obj.getString("action") == "value" ) {
-            Log.d(TAG,"elementAction"+obj.getString("action")+" // "+obj.getString("selector") + " // "+obj.getString("value"))
+            Log.d(
+                TAG,
+                "elementAction" + obj.getString("action") + " // " + obj.getString("selector") + " // " + obj.getString(
+                    "value"
+                )
+            )
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
@@ -514,7 +522,7 @@ class RunActivity : AppCompatActivity() {
             }
         }
 
-        Log.d(TAG,"isBuy : "+isBuy);
+        Log.d(TAG, "isBuy : " + isBuy);
 
         if ( obj.getBoolean("next") == true ) {
             if ( actionStep < actions.length() ) {
@@ -542,23 +550,23 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun play() {
-        val ip = getIp()        
-        Log.d(TAG,"play isProgress : "+isProgress)
-        Log.d(TAG,"ip toString : "+ip.toString())
+        val ip = getIp()
+        Log.d(TAG, "play isProgress : " + isProgress)
+        Log.d(TAG, "ip toString : " + ip.toString())
         if ( !isProgress && 0 < ip.toString().length ) {
-            Log.d(TAG,"play : 1")
+            Log.d(TAG, "play : 1")
             web_view.clearCache(true)
-            Log.d(TAG,"play : 2")
+            Log.d(TAG, "play : 2")
             web_view.clearHistory();
-            Log.d(TAG,"play : 3")
+            Log.d(TAG, "play : 3")
             web_view.clearFormData();
-            Log.d(TAG,"play : 4")
+            Log.d(TAG, "play : 4")
             val current = LocalDateTime.now()
-            Log.d(TAG,"play : 5")
+            Log.d(TAG, "play : 5")
             val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
-            Log.d(TAG,"play : 6")
+            Log.d(TAG, "play : 6")
             val temp = currentDate.toString().split("-")
-            Log.d(TAG,"play : 8")
+            Log.d(TAG, "play : 8")
             timeBuy.clear()
 
             if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
@@ -590,9 +598,15 @@ class RunActivity : AppCompatActivity() {
                 val startTimeTemp = timeTemp.get(0).toString().split(":");
                 val endTimeTemp = timeTemp.get(1).toString().split(":");
                 val startTime = LocalDateTime.of(
-                    temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    temp.get(0).toInt(),
+                    temp.get(1).toInt(),
+                    temp.get(2).toInt(),
+                    startTimeTemp.get(
                         0
-                    ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+                    ).toInt(),
+                    startTimeTemp.get(1).toInt(),
+                    0,
+                    0
                 )
                 val endTime = LocalDateTime.of(
                     temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
@@ -600,17 +614,24 @@ class RunActivity : AppCompatActivity() {
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
 
-                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy1.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 1 ok")
+                var savedLogs = db!!.logsDao().getDateAll(
+                    currentDate + " " + timeTemp.get(0).toString() + ":00",
+                    currentDate + " " + timeTemp.get(
+                        1
+                    ).toString() + ":59"
+                )
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy1.get(
+                        1
+                    ).toInt() ) {
+                    Log.d(TAG, "timeBuy - 1 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy1.get(0).toString())
                     timeBuy.add(timeBuy1.get(1).toString())
                 } else {
-                    Log.d(TAG,"timeBuy - 1 no")
+                    Log.d(TAG, "timeBuy - 1 no")
                 }
             } else {
-                Log.d(TAG,"timeBuy - 1 / "+timeBuy1.size)
+                Log.d(TAG, "timeBuy - 1 / " + timeBuy1.size)
             }
 
             if ( timeBuy2.size == 2 ) {
@@ -618,26 +639,39 @@ class RunActivity : AppCompatActivity() {
                 val startTimeTemp = timeTemp.get(0).toString().split(":");
                 val endTimeTemp = timeTemp.get(1).toString().split(":");
                 val startTime = LocalDateTime.of(
-                    temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    temp.get(0).toInt(),
+                    temp.get(1).toInt(),
+                    temp.get(2).toInt(),
+                    startTimeTemp.get(
                         0
-                    ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+                    ).toInt(),
+                    startTimeTemp.get(1).toInt(),
+                    0,
+                    0
                 )
                 val endTime = LocalDateTime.of(
                     temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy2.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 2 ok")
+                var savedLogs = db!!.logsDao().getDateAll(
+                    currentDate + " " + timeTemp.get(0).toString() + ":00",
+                    currentDate + " " + timeTemp.get(
+                        1
+                    ).toString() + ":59"
+                )
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy2.get(
+                        1
+                    ).toInt() ) {
+                    Log.d(TAG, "timeBuy - 2 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy2.get(0).toString())
                     timeBuy.add(timeBuy2.get(1).toString())
                 } else {
-                    Log.d(TAG,"timeBuy - 2 no")
+                    Log.d(TAG, "timeBuy - 2 no")
                 }
             } else {
-                Log.d(TAG,"timeBuy - 2 / "+timeBuy2.size)
+                Log.d(TAG, "timeBuy - 2 / " + timeBuy2.size)
             }
 
             if ( timeBuy3.size == 2 ) {
@@ -645,26 +679,39 @@ class RunActivity : AppCompatActivity() {
                 val startTimeTemp = timeTemp.get(0).toString().split(":");
                 val endTimeTemp = timeTemp.get(1).toString().split(":");
                 val startTime = LocalDateTime.of(
-                    temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    temp.get(0).toInt(),
+                    temp.get(1).toInt(),
+                    temp.get(2).toInt(),
+                    startTimeTemp.get(
                         0
-                    ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+                    ).toInt(),
+                    startTimeTemp.get(1).toInt(),
+                    0,
+                    0
                 )
                 val endTime = LocalDateTime.of(
                     temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy3.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 3 ok")
+                var savedLogs = db!!.logsDao().getDateAll(
+                    currentDate + " " + timeTemp.get(0).toString() + ":00",
+                    currentDate + " " + timeTemp.get(
+                        1
+                    ).toString() + ":59"
+                )
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy3.get(
+                        1
+                    ).toInt() ) {
+                    Log.d(TAG, "timeBuy - 3 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy3.get(0).toString())
                     timeBuy.add(timeBuy3.get(1).toString())
                 } else {
-                    Log.d(TAG,"timeBuy - 3 no")
+                    Log.d(TAG, "timeBuy - 3 no")
                 }
             } else {
-                Log.d(TAG,"timeBuy - 3 / "+timeBuy3.size)
+                Log.d(TAG, "timeBuy - 3 / " + timeBuy3.size)
             }
 
             if ( timeBuy4.size == 2 ) {
@@ -672,26 +719,39 @@ class RunActivity : AppCompatActivity() {
                 val startTimeTemp = timeTemp.get(0).toString().split(":");
                 val endTimeTemp = timeTemp.get(1).toString().split(":");
                 val startTime = LocalDateTime.of(
-                    temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), startTimeTemp.get(
+                    temp.get(0).toInt(),
+                    temp.get(1).toInt(),
+                    temp.get(2).toInt(),
+                    startTimeTemp.get(
                         0
-                    ).toInt(), startTimeTemp.get(1).toInt(), 0, 0
+                    ).toInt(),
+                    startTimeTemp.get(1).toInt(),
+                    0,
+                    0
                 )
                 val endTime = LocalDateTime.of(
                     temp.get(0).toInt(), temp.get(1).toInt(), temp.get(2).toInt(), endTimeTemp.get(
                         0
                     ).toInt(), endTimeTemp.get(1).toInt(), 0, 0
                 )
-                var savedLogs = db!!.logsDao().getDateAll(currentDate+" "+timeTemp.get(0).toString()+":00",currentDate+" "+timeTemp.get(1).toString()+":59")
-                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy4.get(1).toInt() ) {
-                    Log.d(TAG,"timeBuy - 4 ok")
+                var savedLogs = db!!.logsDao().getDateAll(
+                    currentDate + " " + timeTemp.get(0).toString() + ":00",
+                    currentDate + " " + timeTemp.get(
+                        1
+                    ).toString() + ":59"
+                )
+                if ( (current.isAfter(startTime)  &&  current.isBefore(endTime)) && savedLogs.size < timeBuy4.get(
+                        1
+                    ).toInt() ) {
+                    Log.d(TAG, "timeBuy - 4 ok")
                     timeBuy.clear()
                     timeBuy.add(timeBuy4.get(0).toString())
                     timeBuy.add(timeBuy4.get(1).toString())
                 } else {
-                    Log.d(TAG,"timeBuy - 4 no")
+                    Log.d(TAG, "timeBuy - 4 no")
                 }
             } else {
-                Log.d(TAG,"timeBuy - 4 / "+timeBuy4.size)
+                Log.d(TAG, "timeBuy - 4 / " + timeBuy4.size)
             }
 
             if ( timeBuy.size == 2 ) {
@@ -707,7 +767,11 @@ class RunActivity : AppCompatActivity() {
 
                     btn_run.setImageDrawable(getDrawable(R.drawable.ic_stop))
                 } else {
-                    Toast.makeText(this@RunActivity, "Failed: 'Date" + playDate + " / " +currentDate, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RunActivity,
+                        "Failed: 'Date" + playDate + " / " + currentDate,
+                        Toast.LENGTH_SHORT
+                    ).show()
                     stop();
                     return
                 }
@@ -1203,7 +1267,7 @@ class RunActivity : AppCompatActivity() {
         fileInputStream.close()
         if ( stringBuilder.toString().trim().length != 0 ) {
             stringBuilder.toString().split(",").forEach{ row ->
-                Log.d(TAG,"search stringBuilder"+row)
+                Log.d(TAG, "search stringBuilder" + row)
                 search.add(row)
             }
         }
@@ -1217,7 +1281,7 @@ class RunActivity : AppCompatActivity() {
         val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
         var text: String? = null
         while ({ text = bufferedReader.readLine(); text }() != null) {
-            Log.d(TAG,"address stringBuilder"+text.toString())
+            Log.d(TAG, "address stringBuilder" + text.toString())
             address.add(text.toString())
         }
         fileInputStream.close()
@@ -1264,6 +1328,10 @@ class RunActivity : AppCompatActivity() {
         ) !== 0
     }
 
+    private fun AirplaneMode() {
+        
+    }
+
     fun getDeviceipMobileData(): String? {
         try {
             val en = NetworkInterface.getNetworkInterfaces()
@@ -1295,9 +1363,12 @@ class RunActivity : AppCompatActivity() {
         val temp = currentTime.split(".");
         var ip = getIp()
 
-        Log.d(TAG,"insertLog : " + currentDate+" "+temp[0] +" / "+ productName.toString() + " / "+ip.toString())
+        Log.d(
+            TAG,
+            "insertLog : " + currentDate + " " + temp[0] + " / " + productName.toString() + " / " + ip.toString()
+        )
 
-        val log = Logs(0,currentDate+" "+temp[0], productName.toString(),"1", ip.toString())
+        val log = Logs(0, currentDate + " " + temp[0], productName.toString(), "1", ip.toString())
         db?.logsDao()?.insertAll(log)
         isBuy = false;
     }
