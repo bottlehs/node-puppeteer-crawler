@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_airplane.*
 import kotlinx.android.synthetic.main.activity_log.*
 import kotlinx.android.synthetic.main.activity_log.toolbar
 import web.macro.app.service.FloatingClickService
-import web.macro.app.service.autoClickService
 
 class AirplaneActivity: AppCompatActivity() {
     private val TAG = AirplaneActivity::class.qualifiedName
@@ -24,6 +24,7 @@ class AirplaneActivity: AppCompatActivity() {
     private var serviceIntent: Intent? = null
 
     private val PERMISSION_CODE = 110
+    private val PERMISSION_AIRPLANE_CODE = 111
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +47,12 @@ class AirplaneActivity: AppCompatActivity() {
         btnStart.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
                 || Settings.canDrawOverlays(this)) {
-                App.prefs.airplaneMode = "1";
-                serviceIntent = Intent(this@AirplaneActivity,
-                    FloatingClickService::class.java)
+
+                airplaneMode()
+                serviceIntent = Intent(
+                    this@AirplaneActivity,
+                    FloatingClickService::class.java
+                )
                 startService(serviceIntent)
                 // onBackPressed()
             } else {
@@ -74,6 +78,30 @@ class AirplaneActivity: AppCompatActivity() {
         */
     }
 
+    private fun airplaneMode() {
+        App.prefs.airplaneMode = "1";
+
+        val display = windowManager.defaultDisplay // in case of Activity
+        val size = Point()
+        display.getRealSize(size) // or getSize(size)
+        val width = size.x
+        val height = size.y
+        Log.d(TAG, "heightheightheightheight :::" + height);
+
+        var bottomBarHeight = 0
+        val resourceIdBottom = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceIdBottom > 0) bottomBarHeight =
+            resources.getDimensionPixelSize(resourceIdBottom)
+
+        Log.d(TAG,"bottomBarHeightbottomBarHeight:::::::::::: "+bottomBarHeight)
+
+        val sizeX = height - (bottomBarHeight/2);
+        App.prefs.backButtonSizeX = sizeX.toString();
+
+        val intent = Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS)
+        startActivity(intent)
+    }
+
     private fun checkAccess(): Boolean {
         val string = getString(R.string.accessibility_service_id)
         val manager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -91,13 +119,13 @@ class AirplaneActivity: AppCompatActivity() {
         val hasPermission = checkAccess()
         "has access? $hasPermission".logd()
         if (!hasPermission) {
-            Log.d(TAG,"권한 받기 실행1");
+            Log.d(TAG, "권한 받기 실행1");
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && !Settings.canDrawOverlays(this)) {
             askPermission()
-            Log.d(TAG,"권한 받기 실행2");
+            Log.d(TAG, "권한 받기 실행2");
         }
     }
 
@@ -105,7 +133,8 @@ class AirplaneActivity: AppCompatActivity() {
     private fun askPermission() {
         val intent = Intent(
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:$packageName"))
+            Uri.parse("package:$packageName")
+        )
         startActivityForResult(intent, PERMISSION_CODE)
     }
 
@@ -123,6 +152,12 @@ class AirplaneActivity: AppCompatActivity() {
             autoClickService = null
         }
         */
+    }
+
+    override fun onBackPressed() {
+        Log.d(TAG, "onBackPressedonBackPressed");
+        App.prefs.airplaneMode = "0";
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
