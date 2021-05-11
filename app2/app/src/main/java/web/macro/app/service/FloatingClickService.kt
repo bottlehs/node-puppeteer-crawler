@@ -68,7 +68,7 @@ class FloatingClickService : Service() {
             timer?.cancel()
         } else {
             timer = fixedRateTimer(initialDelay = 0,
-                period = 200) {
+                period = 10000) {
                 view.getLocationOnScreen(location)
                 autoClickService?.click(location[0] + view.right + 10,
                     location[1] + view.bottom + 10)
