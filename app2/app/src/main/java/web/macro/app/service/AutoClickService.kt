@@ -48,23 +48,27 @@ class AutoClickService : AccessibilityService() {
         if ( 0 < airplaneMode ) {
             Log.d("AutoClickService", "airplaneModeairplaneMode click ::::::: 클릭")
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return
-            val path = Path()
 
             if ( airplaneMode < 3 ) {
                 airplaneMode = airplaneMode + 1;
+
+                val path = Path()
                 path.moveTo(x.toFloat(), y.toFloat())
+
+                App.prefs.airplaneMode = airplaneMode.toString();
+
+                val builder = GestureDescription.Builder()
+                val gestureDescription = builder
+                    .addStroke(GestureDescription.StrokeDescription(path, 10, 10))
+                    .build()
+                dispatchGesture(gestureDescription, null, null)
             } else {
                 airplaneMode = 0;
+
+                App.prefs.airplaneMode = airplaneMode.toString();
+
                 service.performGlobalAction(1)
             }
-
-            App.prefs.airplaneMode = airplaneMode.toString();
-
-            val builder = GestureDescription.Builder()
-            val gestureDescription = builder
-                .addStroke(GestureDescription.StrokeDescription(path, 10, 10))
-                .build()
-            dispatchGesture(gestureDescription, null, null)
         } else {
             Log.d("AutoClickService", "airplaneModeairplaneMode click ::::::: 클릭 하지 않음")
         }

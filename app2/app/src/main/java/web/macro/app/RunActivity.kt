@@ -355,7 +355,13 @@ class RunActivity : AppCompatActivity() {
                 }
             }
         } else {
-            stop()
+            Log.d(TAG,"pageFinishedAction hello hello 0")
+            if ( actionStep < actions.length() ) {
+                Log.d(TAG,"pageFinishedAction hello hello 1")
+            } else {
+                Log.d(TAG,"pageFinishedAction hello hello 2")
+                stop()
+            }
         }
     }
 
