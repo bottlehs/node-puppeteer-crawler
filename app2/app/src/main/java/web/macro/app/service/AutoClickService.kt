@@ -17,6 +17,7 @@ var autoClickService: AutoClickService? = null
 class AutoClickService : AccessibilityService() {
 
     internal val events = mutableListOf<Event>()
+    val service = this;
 
     override fun onInterrupt() {
         // NO-OP
@@ -54,7 +55,7 @@ class AutoClickService : AccessibilityService() {
                 path.moveTo(x.toFloat(), y.toFloat())
             } else {
                 airplaneMode = 0;
-                path.moveTo(x.toFloat(), backButtonSizeX)
+                service.performGlobalAction(1)
             }
 
             App.prefs.airplaneMode = airplaneMode.toString();
