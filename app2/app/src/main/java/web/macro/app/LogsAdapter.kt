@@ -45,6 +45,15 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
             view.date.text = item.strDate;
             view.product.text = item.strProduct;
             view.purchase.text = item.strPurchase;
+            view.search.text = item.strSearch;
+            view.address.text = "";
+            if ( 0 < item.strAddress.length ) {
+                val strAddress = item.strAddress.split(",");
+                if ( !strAddress.isEmpty() ) {
+                    view.address.text = strAddress.get(0);
+                }
+            }
+            view.ip.text = item.strIp;
         }
     }
 }

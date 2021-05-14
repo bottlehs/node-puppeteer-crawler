@@ -8,5 +8,7 @@ data class Logs(
     var strDate: String,
     var strProduct: String,
     var strPurchase: String,
-    var strIp: String
+    var strIp: String,
+    var strAddress: String,
+    var strSearch: String
 )
