@@ -51,7 +51,7 @@ class RunActivity : AppCompatActivity() {
     var isProgress = false;
     var isBuy = false;
     var actionStep = 0
-    val actions = JSONArray()
+    var actions = JSONArray()
     val timeMillis = 1000L
     var currentUrl = ""
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
@@ -71,9 +71,7 @@ class RunActivity : AppCompatActivity() {
     var second = 0;
 
     var search : ArrayList<String> = ArrayList();
-    var searchPosition = App.prefs.searchPosition.toString().toInt();
     var address : ArrayList<String> = ArrayList();
-    var addressPosition = App.prefs.addressPosition.toString().toInt();
 
     var playDate = App.prefs.playDate.toString();
     var nextAuto = App.prefs.nextAuto.toString();
@@ -790,28 +788,37 @@ class RunActivity : AppCompatActivity() {
                 return
             }
 
+            var searchPosition = App.prefs.searchPosition.toString().toInt();
+            var addressPosition = App.prefs.addressPosition.toString().toInt();
+
             if ( search.size <= searchPosition ) {
                 searchPosition = 0;
+                App.prefs.searchPosition = searchPosition.toString();
             }
 
-            var useAddress : ArrayList<String> = ArrayList();
             if ( address.size <= addressPosition ) {
                 addressPosition = 0;
+                App.prefs.addressPosition = addressPosition.toString();
             }
-
-            App.prefs.searchPosition = searchPosition.toString();
-            App.prefs.addressPosition = addressPosition.toString();
 
             Log.d(TAG, "searchPosition : " + searchPosition)
             Log.d(TAG, "addressPosition : " + addressPosition)
 
-            address.get(0).split(",").forEach{ row ->
+            var useAddress : ArrayList<String> = ArrayList();
+            address.get(addressPosition).split(",").forEach{ row ->
                 useAddress.add(row);
             }
+
+            search.forEach{ row ->
+                Log.d(TAG,"search row : "+row)
+            }
+
+            Log.d(TAG,"searchPosition123 : "+searchPosition+"/"+search.get(searchPosition))
 
             /*
             action : actions 에 추가할 json object 선언
              */
+            actions = JSONArray()
             var action = JSONObject()
             /*
             name : 동작명
@@ -1238,12 +1245,6 @@ class RunActivity : AppCompatActivity() {
             action.put("buy", true)
             action.put("next", false)
             actions.put(action)
-
-            searchPosition++;
-            addressPosition++;
-
-            App.prefs.searchPosition = searchPosition.toString();
-            App.prefs.addressPosition = addressPosition.toString();
         }
     }
 
@@ -1390,12 +1391,33 @@ class RunActivity : AppCompatActivity() {
         val temp = currentTime.split(".");
         var ip = getIp()
 
+        Log.d(TAG,"searchPosition, addressPosition update")
+        var searchPosition = App.prefs.searchPosition.toString().toInt();
+        var addressPosition = App.prefs.addressPosition.toString().toInt();
+        var strSearch = search.get(searchPosition);
+        var strAddress = address.get(addressPosition);
+
+        Log.d(TAG,"searchPosition, addressPosition update searchPosition 1 : "+searchPosition)
+        Log.d(TAG,"searchPosition, addressPosition update addressPosition 1 : "+addressPosition)
+
+        searchPosition++;
+        addressPosition++;
+
+        Log.d(TAG,"searchPosition, addressPosition update searchPosition 2 : "+searchPosition)
+        Log.d(TAG,"searchPosition, addressPosition update addressPosition 2 : "+addressPosition)
+
+        App.prefs.searchPosition = searchPosition.toString();
+        App.prefs.addressPosition = addressPosition.toString();
+
+        Log.d(TAG,"searchPosition, addressPosition update searchPosition 3 : "+App.prefs.searchPosition)
+        Log.d(TAG,"searchPosition, addressPosition update addressPosition 3 : "+App.prefs.addressPosition)
+
         Log.d(
             TAG,
             "insertLog : " + currentDate + " " + temp[0] + " / " + productName.toString() + " / " + ip.toString()
         )
 
-        val log = Logs(0, currentDate + " " + temp[0], productName.toString(), "1", ip.toString())
+        val log = Logs(0, currentDate + " " + temp[0], productName.toString(), "1", ip.toString(), strAddress, strSearch)
         db?.logsDao()?.insertAll(log)
         isBuy = false;
         airplaneMode()
