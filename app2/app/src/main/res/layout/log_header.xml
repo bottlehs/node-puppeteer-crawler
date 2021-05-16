@@ -19,6 +19,7 @@
         android:textColor="@color/colorWhite"
         android:text="@string/activity_logs_item_product_label"/>
     <TextView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

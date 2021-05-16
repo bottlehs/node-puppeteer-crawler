@@ -1,10 +1,16 @@
 <resources>
-    <string name="app_name">Macro App</string>
+    <string name="app_name">Macro</string>
+
+    <string name="accessibility_service_description">Accessibility is used only to provide the following AutoClickService(Macro) features, and only when the user has specified then:\n\nAppContext:\n(when selected in Macro prefs)\n\nEvents:\nButton Widget Clicked\n\nActions:\nBack Button, Swipe\n\nVariables:\n%WIN, %NTITLE (older devices)</string>
+    <string name="accessibility_service_name">AutoClickService</string>
+    <string name="accessibility_service_id">web.macro.app/.service.AutoClickService</string>
+
     <string name="positive">Positive</string>
     <string name="negative">Negative</string>
     <string name="activity_main_require_label">(*)</string>
     <string name="activity_main_title">Setting</string>
     <string name="activity_main_hour_label">Time/Buy</string>
+    <string name="activity_main_count_label">Count</string>
     <string name="activity_main_queue_label">Queue(MIN/MAX)</string>
     <string name="activity_main_product_name_label">Product</string>
     <string name="activity_main_product_link_id_label">Product Link ID</string>
@@ -12,6 +18,8 @@
     <string name="activity_main_auto_label">Auto-Run Next Day</string>
     <string name="activity_main_auto_use">Enable</string>
     <string name="activity_main_auto_not_use">Disable</string>
+    <string name="activity_main_airplane_mode_label">Airplane Mode</string>
+    <string name="activity_main_airplane_mode_setting">Set airplane mode</string>
 
     <string name="activity_main_search_label">Search Keyword</string>
     <string name="activity_main_address_label">Address</string>
@@ -33,6 +41,8 @@
     <string name="activity_logs_item_buy_label">Buy</string>
 
     <string name="activity_run_title">Run</string>
+
+    <string name="activity_airplane_title">Airplane</string>
 
     <string name="activity_run_running_dialog_title">Running</string>
     <string name="activity_run_running_dialog_description">Currently running</string>

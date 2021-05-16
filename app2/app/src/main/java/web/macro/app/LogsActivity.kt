@@ -32,16 +32,16 @@ class LogsActivity: AppCompatActivity() {
         Log.i(TAG,""+savedLogs.size)
         if(savedLogs.isNotEmpty()){
             savedLogs.forEach{ row ->
-                logs.add(DataLogs(row.strDate,row.strProduct, row.strPurchase));
+                logs.add(DataLogs(row.strDate,row.strProduct, row.strPurchase, row.strIp, row.strAddress, row.strSearch));
             }
         }
 
         val adapter = LogsAdapter(logs)
         logs_list.adapter = adapter
 
-        /* insert
+        /*
         val log = Logs(0,"date","product","purchase")
-        db?.contactsDao()?.insertAll(log)
+        db?.logsDao()?.insertAll(log)
         */
     }
 

@@ -1,9 +1,13 @@
 package web.macro.app
 
+import android.accessibilityservice.GestureDescription
+import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Path
 import android.os.Bundle
+import android.os.Environment
 import android.text.InputType
 import android.util.Log
 import android.view.View
@@ -16,37 +20,62 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.*
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
 class MainActivity: AppCompatActivity() {
     private val TAG = MainActivity::class.qualifiedName
-    var db : AppDatabase? = null
     var checkTxt = true
+
+    private val filepath = "txtFileStorage"
+    private var appExternalFile: File?=null
+    private val isExternalStorageReadOnly: Boolean get() {
+        val extStorageState = Environment.getExternalStorageState()
+        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)
+    }
+    private val isExternalStorageAvailable: Boolean get() {
+        val extStorageState = Environment.getExternalStorageState()
+        return Environment.MEDIA_MOUNTED.equals(extStorageState)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 셋팅
-        val searchTxtFilePath = filesDir.path+"/search.txt"
-        writeSearchTextToFile(searchTxtFilePath)
-        readSearchTextFromFile(searchTxtFilePath)
-
-        val addressTxtFilePath = filesDir.path+"/address.txt"
-        writeAddressTextToFile(addressTxtFilePath)
-        readAddressTextFromFile(addressTxtFilePath)
-
-        Log.i(TAG,"checkTxt : "+checkTxt)
-
-        if ( !checkTxt ) {
-            Toast.makeText(this@MainActivity, "Please check search.txt, address.txt", Toast.LENGTH_SHORT).show()
+        if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
+            Toast.makeText(
+                this@MainActivity,
+                "Please check search.txt, address.txt",
+                Toast.LENGTH_SHORT
+            ).show()
             finish()
         }
 
+        // 셋팅
+        val searchTxtFilePath = "search.txt"
+        writeSearchTextToFile(searchTxtFilePath)
+        readSearchTextFromFile(searchTxtFilePath)
 
-        db = AppDatabase.getInstance(this)
-        val savedLogs = db!!.logsDao().getAll()
+        val addressTxtFilePath = "address.txt"
+        writeAddressTextToFile(addressTxtFilePath)
+        readAddressTextFromFile(addressTxtFilePath)
+
+        if ( !checkTxt ) {
+            Toast.makeText(
+                this@MainActivity,
+                "Please check search.txt, address.txt",
+                Toast.LENGTH_SHORT
+            ).show()
+            finish()
+        }
+
+        val airplaneMode: View = findViewById(R.id.airplaneMode);
+        airplaneMode.setOnClickListener(View.OnClickListener {
+            var intent = Intent(this, AirplaneActivity::class.java)
+            startActivity(intent)
+        })
 
         val btnSave: View = findViewById(R.id.btn_save);
         val btnRun: View = findViewById(R.id.btn_run);
@@ -62,7 +91,7 @@ class MainActivity: AppCompatActivity() {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
                     when (p1) {
                         DialogInterface.BUTTON_POSITIVE ->
-                            saveForm()
+                            saveForm(false)
                     }
                 }
             }
@@ -73,8 +102,6 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
         btnRun.setOnClickListener(View.OnClickListener {
-            run()
-            /*
             var builder = AlertDialog.Builder(this)
             builder.setTitle(R.string.activity_main_run_dialog_title)
             builder.setMessage(R.string.activity_main_run_dialog_description)
@@ -83,7 +110,7 @@ class MainActivity: AppCompatActivity() {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
                     when (p1) {
                         DialogInterface.BUTTON_POSITIVE ->
-                            run()
+                            saveForm(true)
                     }
                 }
             }
@@ -91,7 +118,6 @@ class MainActivity: AppCompatActivity() {
             builder.setPositiveButton(R.string.positive, listener)
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
-            */
         })
         btnLogs.setOnClickListener(View.OnClickListener {
             var intent = Intent(this, LogsActivity::class.java)
@@ -115,8 +141,6 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
-        Log.i(TAG, "hello1")
-        Log.i(TAG, App.prefs.productName)
 
         val time11 : TextView = findViewById(R.id.time11) as TextView;
         val time12 : TextView = findViewById(R.id.time12) as TextView;
@@ -170,11 +194,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime11(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time11.text.toString() != "-:-") {
+                val timeTemp = time11.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -186,11 +219,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime12(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time12.text.toString() != "-:-") {
+                val timeTemp = time12.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -202,11 +244,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime21(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time21.text.toString() != "-:-") {
+                val timeTemp = time21.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -218,11 +269,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime22(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time22.text.toString() != "-:-") {
+                val timeTemp = time22.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -234,11 +294,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime31(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time31.text.toString() != "-:-") {
+                val timeTemp = time31.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -250,11 +319,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime32(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time32.text.toString() != "-:-") {
+                val timeTemp = time32.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -266,11 +344,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime41(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time41.text.toString() != "-:-") {
+                val timeTemp = time41.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -282,11 +369,20 @@ class MainActivity: AppCompatActivity() {
                 cal.set(Calendar.MINUTE, minute)
                 setTime42(SimpleDateFormat("HH:mm").format(cal.time));
             }
+
+            var hour = cal.get(Calendar.HOUR_OF_DAY);
+            var minute = cal.get(Calendar.MINUTE);
+            if (time42.text.toString() != "-:-") {
+                val timeTemp = time42.text.toString().toString().split(":");
+                hour = timeTemp.get(0).toInt();
+                minute = timeTemp.get(1).toInt();
+            }
+
             TimePickerDialog(
                 this,
                 timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
+                hour,
+                minute,
                 true
             ).show()
         })
@@ -322,6 +418,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
+            if (purchase1.text.toString() != "-") {
+                input.setText(purchase1.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -338,6 +438,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
+            if (purchase2.text.toString() != "-") {
+                input.setText(purchase2.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -354,6 +458,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
+            if (purchase3.text.toString() != "-") {
+                input.setText(purchase3.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -370,6 +478,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle("Buy")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
+            if (purchase4.text.toString() != "-") {
+                input.setText(purchase4.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -398,10 +510,21 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle("Queue(MIN)")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
+            if (queue1.text.toString() != "-") {
+                input.setText(queue1.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
-            ) { dialog, which -> setQueue1(input.text.toString()) }
+            ) { dialog, which ->
+                var temp = input.text.toString();
+                if (5 <= temp.toInt() && temp.toInt() <= 30) {
+                    setQueue1(input.text.toString())
+                } else {
+                    Toast.makeText(this@MainActivity, "Failed: 5 ~ 30", Toast.LENGTH_SHORT).show()
+                }
+            }
             builder.setNegativeButton(
                 getString(R.string.negative)
             ) { dialog, which -> dialog.cancel() }
@@ -414,10 +537,21 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle("Queue(MAX)")
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_NUMBER
+            if (queue2.text.toString() != "-") {
+                input.setText(queue2.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
-            ) { dialog, which -> setQueue2(input.text.toString()) }
+            ) { dialog, which ->
+                var temp = input.text.toString();
+                if (5 <= temp.toInt() && temp.toInt() <= 30) {
+                    setQueue2(input.text.toString())
+                } else {
+                    Toast.makeText(this@MainActivity, "Failed: 5 ~ 30", Toast.LENGTH_SHORT).show()
+                }
+            }
             builder.setNegativeButton(
                 getString(R.string.negative)
             ) { dialog, which -> dialog.cancel() }
@@ -432,6 +566,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle(getString(R.string.activity_main_product_name_label))
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productName.text.toString() != "-") {
+                input.setText(productName.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -456,6 +594,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle(getString(R.string.activity_main_product_link_id_label))
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productId.text.toString() != "-") {
+                input.setText(productId.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -480,6 +622,10 @@ class MainActivity: AppCompatActivity() {
             builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_TEXT
+            if (purchaseId.text.toString() != "-") {
+                input.setText(purchaseId.text.toString())
+            }
+
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
@@ -508,6 +654,51 @@ class MainActivity: AppCompatActivity() {
         } else {
             nextAuto.isChecked = false;
         }
+    }
+
+    /*
+    fun execute(cmd: String?): Boolean {
+        try {
+            if (cmd != null && cmd.length > 0) {
+                val p = Runtime.getRuntime().exec("su")
+                val dos = DataOutputStream(p.outputStream)
+                dos.writeBytes(
+                    """
+                    $cmd
+                    
+                    """.trimIndent()
+                )
+                dos.writeBytes("exit\n")
+                dos.flush()
+                dos.close()
+                p.waitFor()
+            } else {
+                Log.e(TAG, "command is null or empty")
+            }
+        } catch (ex: IOException) {
+            Log.e(TAG, "IOException")
+            ex.printStackTrace()
+        } catch (ex: SecurityException) {
+            Log.e(TAG, "SecurityException")
+            ex.printStackTrace()
+        } catch (ex: java.lang.Exception) {
+            Log.e(TAG, "Generic Exception")
+            ex.printStackTrace()
+        }
+        return false
+    }
+    */
+
+    // (x, y) in screen coordinates
+    private fun createClick(x: Float, y: Float): GestureDescription? {
+        // for a single tap a duration of 1 ms is enough
+        val DURATION = 1
+        val clickPath = Path()
+        clickPath.moveTo(x, y)
+        val clickStroke = StrokeDescription(clickPath, 0, DURATION.toLong())
+        val clickBuilder = GestureDescription.Builder()
+        clickBuilder.addStroke(clickStroke)
+        return clickBuilder.build()
     }
 
     fun setTime11(value: String) {
@@ -646,8 +837,8 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    fun saveForm() {
-        Log.i(TAG,"productName.text.toString() : "+productName.text.toString())
+    fun saveForm(isRun: Boolean) {
+        Log.i(TAG, "productName.text.toString() : " + productName.text.toString())
 
         var isSaveValidation =  true;
         var time1Value = "";
@@ -667,7 +858,11 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "time1 시간 저장불가능")
             if ( time11.text.toString() != "-:-" || time12.text.toString() != "-:-" || purchase1.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The " + getString(R.string.activity_main_hour_label) + " field is required",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
         } else {
@@ -679,7 +874,11 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "time2 시간 저장불가능")
             if ( time21.text.toString() != "-:-" || time22.text.toString() != "-:-" || purchase2.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The " + getString(R.string.activity_main_hour_label) + " field is required",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
         } else {
@@ -690,7 +889,11 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "time3 시간 저장불가능")
             if ( time31.text.toString() != "-:-" || time32.text.toString() != "-:-" || purchase3.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The " + getString(R.string.activity_main_hour_label) + " field is required",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
         } else {
@@ -701,7 +904,11 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "time4 시간 저장불가능")
             if ( time41.text.toString() != "-:-" || time42.text.toString() != "-:-" || purchase4.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_hour_label)+" field is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The " + getString(R.string.activity_main_hour_label) + " field is required",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
         } else {
@@ -713,7 +920,11 @@ class MainActivity: AppCompatActivity() {
             Log.i(TAG, "queue 저장불가능")
             if ( queue1.text.toString() != "-" || queue2.text.toString() != "-" ) {
                 isSaveValidation = false;
-                Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_queue_label)+" field is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The " + getString(R.string.activity_main_queue_label) + " field is required",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
         } else {
@@ -722,7 +933,11 @@ class MainActivity: AppCompatActivity() {
         if ( productName.text.toString().length == 0 || productName.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "productName 저장불가능")
-            Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_name_label)+" field is required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "The " + getString(R.string.activity_main_product_name_label) + " field is required",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         } else {
             productNameValue = productName.text.toString();
@@ -731,7 +946,11 @@ class MainActivity: AppCompatActivity() {
         if ( productId.text.toString().length == 0 || productId.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "productId 저장불가능")
-            Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "The " + getString(R.string.activity_main_product_link_id_label) + " field is required",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         } else {
             productIdValue = productId.text.toString();
@@ -740,7 +959,11 @@ class MainActivity: AppCompatActivity() {
         if ( purchaseId.text.toString().length == 0 || purchaseId.text.toString() == "-" ) {
             isSaveValidation = false;
             Log.i(TAG, "purchaseId 저장불가능")
-            Toast.makeText(this@MainActivity, "The "+getString(R.string.activity_main_product_buy_link_id_label)+" field is required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "The " + getString(R.string.activity_main_product_buy_link_id_label) + " field is required",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         } else {
             purchaseIdValue = purchaseId.text.toString();
@@ -783,69 +1006,76 @@ class MainActivity: AppCompatActivity() {
             }
 
             Toast.makeText(this@MainActivity, "Save Success", Toast.LENGTH_SHORT).show()
+
+            if ( isRun ) {
+                run()
+            }
         } else {
             Toast.makeText(this@MainActivity, "Save failed", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun writeSearchTextToFile(path: String) {
-        val file = File(path)
-        if ( !file.exists() ) {
-            Log.d(TAG,"writeSearchTextToFile 파일이 없으므로 파일을 생성 합니다.")
-            val fileWriter = FileWriter(file, false)
-            val bufferedWriter = BufferedWriter(fileWriter)
-            bufferedWriter.append("해운대,부산,서울,대구,제주도,호수공원")
-            bufferedWriter.close()
+        appExternalFile = File(getExternalFilesDir(filepath), path)
+        try {
+            val fileOutPutStream = FileOutputStream(appExternalFile)
+            fileOutPutStream.write("해운대,부산,서울,대구,제주도,호수공원".toByteArray())
+            fileOutPutStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
     fun readSearchTextFromFile(path: String) {
-        val file = File(path)
-        val fileReader = FileReader(file)
-        val bufferedReader = BufferedReader(fileReader)
-        var txt = "";
-        bufferedReader.readLines().forEach() {
-            Log.d(TAG, it)
-            txt = txt+it;
+        appExternalFile = File(getExternalFilesDir(filepath), path)
+
+        var fileInputStream =FileInputStream(appExternalFile)
+        var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
+        val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
+        val stringBuilder: StringBuilder = StringBuilder()
+        var text: String? = null
+        while ({ text = bufferedReader.readLine(); text }() != null) {
+            stringBuilder.append(text)
         }
-        searchTxt.setText(txt)
-        if ( txt.trim().length == 0) {
+        fileInputStream.close()
+        if ( stringBuilder.toString().trim().length == 0 ) {
             checkTxt = false;
         }
     }
 
     fun writeAddressTextToFile(path: String) {
-        val file = File(path)
-        if ( !file.exists() ) {
-            Log.d(TAG,"writeAddressTextToFile 파일이 없으므로 파일을 생성 합니다.")
-            val fileWriter = FileWriter(file, false)
-            val bufferedWriter = BufferedWriter(fileWriter)
-            bufferedWriter.append("신나라,신사동 536-9,1,017-0000-0001,ergjeorgj@test.com")
-            bufferedWriter.newLine()
-            bufferedWriter.append("신나라,신사동 536-9,1,017-0000-0001,ergjeorgj@test.com")
-            bufferedWriter.close()
+        appExternalFile = File(getExternalFilesDir(filepath), path)
+        try {
+            val fileOutPutStream = FileOutputStream(appExternalFile)
+            fileOutPutStream.write("신나라1,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
+            fileOutPutStream.write("신나라2,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
+            fileOutPutStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
     fun readAddressTextFromFile(path: String) {
-        val file = File(path)
-        val fileReader = FileReader(file)
-        val bufferedReader = BufferedReader(fileReader)
-        var txt = "";
-        bufferedReader.readLines().forEach() {
-            Log.d(TAG, it)
-            if ( it.trim().length != 0 ) {
-                txt = txt+"\n"+it;
-            }
-        }
-        addressTxt.setText(txt)
+        appExternalFile = File(getExternalFilesDir(filepath), path)
 
-        if ( txt.trim().length == 0) {
+        var fileInputStream =FileInputStream(appExternalFile)
+        var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
+        val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
+        val stringBuilder: StringBuilder = StringBuilder()
+        var text: String? = null
+        while ({ text = bufferedReader.readLine(); text }() != null) {
+            stringBuilder.append(text)
+        }
+        fileInputStream.close()
+        if ( stringBuilder.toString().trim().length == 0 ) {
             checkTxt = false;
         }
     }
 
     fun run () {
+        val current = LocalDateTime.now()
+        val currentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        App.prefs.playDate = currentDate
         var intent = Intent(this, RunActivity::class.java)
         startActivity(intent)
     }
