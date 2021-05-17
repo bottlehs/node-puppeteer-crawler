@@ -339,7 +339,7 @@ class RunActivity : AppCompatActivity() {
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
                 if ( obj.has("delay") ) {
-                    delay(10000L)
+                    delay(15000L)
                 } else {
                     delay(timeMillis)
                 }
@@ -1073,7 +1073,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 5)
+            action.put("delay", 10)
             action.put("next", true)
             actions.put(action)
 
