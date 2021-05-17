@@ -1018,9 +1018,16 @@ class MainActivity: AppCompatActivity() {
     fun writeSearchTextToFile(path: String) {
         appExternalFile = File(getExternalFilesDir(filepath), path)
         try {
-            val fileOutPutStream = FileOutputStream(appExternalFile)
-            fileOutPutStream.write("해운대,부산,서울,대구,제주도,호수공원".toByteArray())
-            fileOutPutStream.close()
+            val file = File(getExternalFilesDir(filepath), path)
+            if (file.exists()) {
+                Log.d(TAG,"writeSearchTextToFile 파일이 존재 한다.");
+                //Do something
+            } else {
+                Log.d(TAG,"writeSearchTextToFile 파일이 존재 안한다.");
+                val fileOutPutStream = FileOutputStream(appExternalFile)
+                fileOutPutStream.write("해운대,부산,서울,대구,제주도,호수공원".toByteArray())
+                fileOutPutStream.close()
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -1046,10 +1053,17 @@ class MainActivity: AppCompatActivity() {
     fun writeAddressTextToFile(path: String) {
         appExternalFile = File(getExternalFilesDir(filepath), path)
         try {
-            val fileOutPutStream = FileOutputStream(appExternalFile)
-            fileOutPutStream.write("신나라1,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
-            fileOutPutStream.write("신나라2,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
-            fileOutPutStream.close()
+            val file = File(getExternalFilesDir(filepath), path)
+            if (file.exists()) {
+                Log.d(TAG,"writeAddressTextToFile 파일이 존재 한다.");
+                //Do something
+            } else {
+                Log.d(TAG,"writeAddressTextToFile 파일이 존재 안한다.");
+                val fileOutPutStream = FileOutputStream(appExternalFile)
+                fileOutPutStream.write("신나라1,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
+                fileOutPutStream.write("신나라2,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
+                fileOutPutStream.close()
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
