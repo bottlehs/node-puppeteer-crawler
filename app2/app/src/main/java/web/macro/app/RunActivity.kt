@@ -1289,8 +1289,9 @@ class RunActivity : AppCompatActivity() {
         val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
         var text: String? = null
         while ({ text = bufferedReader.readLine(); text }() != null) {
-            Log.d(TAG, "address stringBuilder" + text.toString())
-            address.add(text.toString())
+            if ( text.toString().split(",").size == 7 ) {
+                address.add(text.toString())
+            }
         }
         fileInputStream.close()
     }
