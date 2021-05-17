@@ -1060,8 +1060,8 @@ class MainActivity: AppCompatActivity() {
             } else {
                 Log.d(TAG,"writeAddressTextToFile 파일이 존재 안한다.");
                 val fileOutPutStream = FileOutputStream(appExternalFile)
-                fileOutPutStream.write("신나라1,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
-                fileOutPutStream.write("신나라2,6035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
+                fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
+                fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
                 fileOutPutStream.close()
             }
         } catch (e: IOException) {
