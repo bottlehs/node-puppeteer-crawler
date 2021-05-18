@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
@@ -339,7 +340,7 @@ class RunActivity : AppCompatActivity() {
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
                 if ( obj.has("delay") ) {
-                    delay(10000L)
+                    delay(15000L)
                 } else {
                     delay(timeMillis)
                 }
@@ -353,11 +354,11 @@ class RunActivity : AppCompatActivity() {
                 }
             }
         } else {
-            Log.d(TAG,"pageFinishedAction hello hello 0")
+            Log.d(TAG, "pageFinishedAction hello hello 0")
             if ( actionStep < actions.length() ) {
-                Log.d(TAG,"pageFinishedAction hello hello 1")
+                Log.d(TAG, "pageFinishedAction hello hello 1")
             } else {
-                Log.d(TAG,"pageFinishedAction hello hello 2")
+                Log.d(TAG, "pageFinishedAction hello hello 2")
                 stop()
             }
         }
@@ -554,6 +555,29 @@ class RunActivity : AppCompatActivity() {
         second = 0;
     }
 
+    fun clearCookies(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            Log.d(
+                TAG,
+                "Using clearCookies code for API >=" + Build.VERSION_CODES.LOLLIPOP_MR1.toString()
+            )
+            CookieManager.getInstance().removeAllCookies(null)
+            CookieManager.getInstance().flush()
+        } else {
+            Log.d(
+                TAG,
+                "Using clearCookies code for API <" + Build.VERSION_CODES.LOLLIPOP_MR1.toString()
+            )
+            val cookieSyncMngr = CookieSyncManager.createInstance(context)
+            cookieSyncMngr.startSync()
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.removeAllCookie()
+            cookieManager.removeSessionCookie()
+            cookieSyncMngr.stopSync()
+            cookieSyncMngr.sync()
+        }
+    }
+
     fun play() {
         val ip = getIp()
         Log.d(TAG, "play isProgress : " + isProgress)
@@ -572,6 +596,7 @@ class RunActivity : AppCompatActivity() {
             Log.d(TAG, "play : 6")
             val temp = currentDate.toString().split("-")
             Log.d(TAG, "play : 8")
+            clearCookies(this)
             timeBuy.clear()
 
             if ( 0 < App.prefs.time1.toString().length && 0 < App.prefs.purchase1.toString().length ) {
@@ -810,10 +835,10 @@ class RunActivity : AppCompatActivity() {
             }
 
             search.forEach{ row ->
-                Log.d(TAG,"search row : "+row)
+                Log.d(TAG, "search row : " + row)
             }
 
-            Log.d(TAG,"searchPosition123 : "+searchPosition+"/"+search.get(searchPosition))
+            Log.d(TAG, "searchPosition123 : " + searchPosition + "/" + search.get(searchPosition))
 
             /*
             action : actions 에 추가할 json object 선언
@@ -1073,7 +1098,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 5)
+            action.put("delay", 10)
             action.put("next", true)
             actions.put(action)
 
@@ -1289,8 +1314,9 @@ class RunActivity : AppCompatActivity() {
         val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
         var text: String? = null
         while ({ text = bufferedReader.readLine(); text }() != null) {
-            Log.d(TAG, "address stringBuilder" + text.toString())
-            address.add(text.toString())
+            if ( text.toString().split(",").size == 7 ) {
+                address.add(text.toString())
+            }
         }
         fileInputStream.close()
     }
@@ -1351,7 +1377,7 @@ class RunActivity : AppCompatActivity() {
         if (resourceIdBottom > 0) bottomBarHeight =
             resources.getDimensionPixelSize(resourceIdBottom)
 
-        Log.d(TAG,"bottomBarHeightbottomBarHeight:::::::::::: "+bottomBarHeight)
+        Log.d(TAG, "bottomBarHeightbottomBarHeight:::::::::::: " + bottomBarHeight)
 
         val sizeX = height - (bottomBarHeight/2);
         App.prefs.backButtonSizeX = sizeX.toString();
@@ -1391,33 +1417,47 @@ class RunActivity : AppCompatActivity() {
         val temp = currentTime.split(".");
         var ip = getIp()
 
-        Log.d(TAG,"searchPosition, addressPosition update")
+        Log.d(TAG, "searchPosition, addressPosition update")
         var searchPosition = App.prefs.searchPosition.toString().toInt();
         var addressPosition = App.prefs.addressPosition.toString().toInt();
         var strSearch = search.get(searchPosition);
         var strAddress = address.get(addressPosition);
 
-        Log.d(TAG,"searchPosition, addressPosition update searchPosition 1 : "+searchPosition)
-        Log.d(TAG,"searchPosition, addressPosition update addressPosition 1 : "+addressPosition)
+        Log.d(TAG, "searchPosition, addressPosition update searchPosition 1 : " + searchPosition)
+        Log.d(TAG, "searchPosition, addressPosition update addressPosition 1 : " + addressPosition)
 
         searchPosition++;
         addressPosition++;
 
-        Log.d(TAG,"searchPosition, addressPosition update searchPosition 2 : "+searchPosition)
-        Log.d(TAG,"searchPosition, addressPosition update addressPosition 2 : "+addressPosition)
+        Log.d(TAG, "searchPosition, addressPosition update searchPosition 2 : " + searchPosition)
+        Log.d(TAG, "searchPosition, addressPosition update addressPosition 2 : " + addressPosition)
 
         App.prefs.searchPosition = searchPosition.toString();
         App.prefs.addressPosition = addressPosition.toString();
 
-        Log.d(TAG,"searchPosition, addressPosition update searchPosition 3 : "+App.prefs.searchPosition)
-        Log.d(TAG,"searchPosition, addressPosition update addressPosition 3 : "+App.prefs.addressPosition)
+        Log.d(
+            TAG,
+            "searchPosition, addressPosition update searchPosition 3 : " + App.prefs.searchPosition
+        )
+        Log.d(
+            TAG,
+            "searchPosition, addressPosition update addressPosition 3 : " + App.prefs.addressPosition
+        )
 
         Log.d(
             TAG,
             "insertLog : " + currentDate + " " + temp[0] + " / " + productName.toString() + " / " + ip.toString()
         )
 
-        val log = Logs(0, currentDate + " " + temp[0], productName.toString(), "1", ip.toString(), strAddress, strSearch)
+        val log = Logs(
+            0,
+            currentDate + " " + temp[0],
+            productName.toString(),
+            "1",
+            ip.toString(),
+            strAddress,
+            strSearch
+        )
         db?.logsDao()?.insertAll(log)
         isBuy = false;
         airplaneMode()
