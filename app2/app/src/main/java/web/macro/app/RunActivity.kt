@@ -478,7 +478,7 @@ class RunActivity : AppCompatActivity() {
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
                             "for ( var i = 0; i < item.length; i++ ) {" +
-                            "window.scrollTo(0, document.body.scrollHeight);" +
+                            "window.scrollTo(0, Number(item[i].offsetTop));" +
                             "if ( Number(item[i].getAttribute('data-i')) == " + obj.getString("data_i") + " ) {" +
                             // "alert('" + obj.getString("data_i") + "');" +
                             "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
@@ -501,12 +501,12 @@ class RunActivity : AppCompatActivity() {
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
-                            "window.scrollTo(0, document.body.scrollHeight);" +
                             "var productSearch = function () {" +
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
                             "var selectProduct = false;" +
                             "for ( var i = 0; i < item.length; i++ ) {" +
+                            "window.scrollTo(0, Number(item[i].offsetTop));" +
                             "if ( Number(item[i].getAttribute('data-i')) ==  " + obj.getString("data_i") + " ) {" +
                             "console.log('있다1');" +
                             "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
