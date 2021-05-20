@@ -219,7 +219,9 @@ class RunActivity : AppCompatActivity() {
                         webView.post(Runnable {
                             webView.loadUrl(
                                 "javascript:(function(){" +
+                                        "setTimeout(function() {" +
                                         "window.scrollTo(0, document.body.scrollHeight);" +
+                                        "}, 3000);" +
                                         "})()"
                             )
                         });
@@ -466,6 +468,10 @@ class RunActivity : AppCompatActivity() {
                 )
             });
         } else if ( obj.getString("action") == "listSearchClick" ) {
+            /*
+            TODO
+            찾기시 스크롤을 한칸씩 내리도록 수정할 필요가 있음.
+             */
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
@@ -488,6 +494,10 @@ class RunActivity : AppCompatActivity() {
                 )
             });
         } else if ( obj.getString("action") == "productListSearchClick" ) {
+            /*
+            TODO
+            찾기시 스크롤을 한칸씩 내리도록 수정할 필요가 있음.
+             */
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
@@ -512,9 +522,9 @@ class RunActivity : AppCompatActivity() {
                             "console.log('없다없다12');" +
                             "window.scrollTo(0, document.body.scrollHeight);" +
                             "productSearch()" +
-                            "}, 500);" +
+                            "}, 1500);" +
                             "};" +
-                            "}, 2000);" +
+                            "}, 2500);" +
                             "};" +
                             "productSearch();" +
                             "})()"
