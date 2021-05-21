@@ -215,11 +215,13 @@ class RunActivity : AppCompatActivity() {
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
 
-                    if (obj.getString("action") != "detailClick") {
+                    if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString("action") != "listSearchClick" ) {
                         webView.post(Runnable {
                             webView.loadUrl(
                                 "javascript:(function(){" +
+                                        "setTimeout(function() {" +
                                         "window.scrollTo(0, document.body.scrollHeight);" +
+                                        "}, 1000);" +
                                         "})()"
                             )
                         });
@@ -466,37 +468,58 @@ class RunActivity : AppCompatActivity() {
                 )
             });
         } else if ( obj.getString("action") == "listSearchClick" ) {
+            /*
+            TODO
+            찾기시 스크롤을 한칸씩 내리도록 수정할 필요가 있음.
+             */
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
+                            "var productSearch = function () {" +
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
+                            "var selectProduct = false;" +
                             "for ( var i = 0; i < item.length; i++ ) {" +
-                            "window.scrollTo(0, document.body.scrollHeight);" +
+                            "window.scrollTo(0, Number(item[i].offsetTop));" +
                             "if ( Number(item[i].getAttribute('data-i')) == " + obj.getString("data_i") + " ) {" +
+                            "console.log('있다111');" +
                             // "alert('" + obj.getString("data_i") + "');" +
                             "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
                             "window.scrollTo(0, document.body.scrollHeight);" +
+                            "selectProduct = true;" +
                             "item[i].click();" +
                             "break;" +
                             // "alert(item[i].getAttribute('href'));"+
                             //"item[i].click();"+
                             "}" +
                             "}" +
+                            "if ( !selectProduct ) {" +
+                            "setTimeout(() => {" +
+                            "console.log('없다없다1212');" +
+                            "window.scrollTo(0, document.body.scrollHeight);" +
+                            "productSearch()" +
+                            "}, 1500);" +
+                            "}" +
                             "}, 2000);" +
+                            "};" +
+                            "productSearch();" +
                             "})()"
                 )
             });
         } else if ( obj.getString("action") == "productListSearchClick" ) {
+            /*
+            TODO
+            찾기시 스크롤을 한칸씩 내리도록 수정할 필요가 있음.
+             */
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
-                            "window.scrollTo(0, document.body.scrollHeight);" +
                             "var productSearch = function () {" +
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
                             "var selectProduct = false;" +
                             "for ( var i = 0; i < item.length; i++ ) {" +
+                            "window.scrollTo(0, Number(item[i].offsetTop));" +
                             "if ( Number(item[i].getAttribute('data-i')) ==  " + obj.getString("data_i") + " ) {" +
                             "console.log('있다1');" +
                             "if ( item[i].getAttribute('target') == '_blank') { item[i].setAttribute('target','_self') };" +
@@ -512,9 +535,9 @@ class RunActivity : AppCompatActivity() {
                             "console.log('없다없다12');" +
                             "window.scrollTo(0, document.body.scrollHeight);" +
                             "productSearch()" +
-                            "}, 500);" +
+                            "}, 1500);" +
                             "};" +
-                            "}, 2000);" +
+                            "}, 2500);" +
                             "};" +
                             "productSearch();" +
                             "})()"
