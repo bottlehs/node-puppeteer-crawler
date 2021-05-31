@@ -1307,6 +1307,21 @@ class RunActivity : AppCompatActivity() {
             action.put("buy", true)
             action.put("next", false)
             actions.put(action)
+
+            val startCurrentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+            val startCurrentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
+            val startTemp = startCurrentTime.split(".");
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"_start") {
+                param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+                param("Name", productName.toString())
+                param("Date", startCurrentDate + " " + startTemp[0])
+                param("IpAddress", ip.toString())
+                param("Address", address.get(addressPosition))
+                param("Search", search.get(searchPosition))
+                param("productId", productId.toString())
+                param("purchaseId", purchaseId.toString())
+                param("productIdUrl", productIdUrl)
+            }
         }
     }
 
@@ -1496,6 +1511,19 @@ class RunActivity : AppCompatActivity() {
             strSearch
         )
         db?.logsDao()?.insertAll(log)
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"end") {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param("Name", productName.toString())
+            param("Date", currentDate + " " + temp[0])
+            param("IpAddress", ip.toString())
+            param("Address", strAddress)
+            param("Search", strSearch)
+            param("productId", productId.toString())
+            param("purchaseId", purchaseId.toString())
+            param("productIdUrl", productIdUrl)
+        }
+
         isBuy = false;
         airplaneMode()
     }

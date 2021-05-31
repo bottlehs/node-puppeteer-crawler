@@ -28,8 +28,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+/**
+ * Copyright 2021. BH Macro App All Rights Reserved
+ * Apache License
+ */
 
 class MainActivity: AppCompatActivity() {
+
     private val TAG = MainActivity::class.qualifiedName
     var checkTxt = true
 
