@@ -51,13 +51,6 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // firebase
-        firebaseAnalytics = Firebase.analytics
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
-            param(FirebaseAnalytics.Param.SCREEN_NAME, "설정")
-        }
-
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@MainActivity,
@@ -667,6 +660,13 @@ class MainActivity: AppCompatActivity() {
             }
         } else {
             nextAuto.isChecked = false;
+        }
+
+        // firebase
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "설정")
         }
     }
 

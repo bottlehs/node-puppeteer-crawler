@@ -3,10 +3,18 @@ package web.macro.app
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_log.*
 
 class LogsActivity: AppCompatActivity() {
     private val TAG = LogsActivity::class.qualifiedName
+
+    // firebase
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     var db : AppDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +51,13 @@ class LogsActivity: AppCompatActivity() {
         val log = Logs(0,"date","product","purchase")
         db?.logsDao()?.insertAll(log)
         */
+
+        // firebase
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "로그")
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

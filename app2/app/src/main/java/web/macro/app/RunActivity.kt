@@ -111,14 +111,6 @@ class RunActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
-
-        // firebase
-        firebaseAnalytics = Firebase.analytics
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
-            param(FirebaseAnalytics.Param.SCREEN_NAME, "실행")
-        }
-
         db = AppDatabase.getInstance(this)
 
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
@@ -333,6 +325,13 @@ class RunActivity : AppCompatActivity() {
         timer.schedule(TT, 0, 1000); //Timer 실행
 
         play()
+
+        // firebase
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "실행")
+        }
     }
 
     override fun onDestroy() {
