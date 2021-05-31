@@ -17,6 +17,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.*
 import java.text.SimpleDateFormat
@@ -28,6 +32,9 @@ import java.util.*
 class MainActivity: AppCompatActivity() {
     private val TAG = MainActivity::class.qualifiedName
     var checkTxt = true
+
+    // firebase
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private val filepath = "txtFileStorage"
     private var appExternalFile: File?=null
@@ -43,6 +50,13 @@ class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // firebase
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "설정")
+        }
 
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
