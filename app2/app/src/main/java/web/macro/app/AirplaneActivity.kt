@@ -13,6 +13,10 @@ import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_airplane.*
 import kotlinx.android.synthetic.main.activity_log.*
 import kotlinx.android.synthetic.main.activity_log.toolbar
@@ -20,6 +24,9 @@ import web.macro.app.service.FloatingClickService
 
 class AirplaneActivity: AppCompatActivity() {
     private val TAG = AirplaneActivity::class.qualifiedName
+
+    // firebase
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private var serviceIntent: Intent? = null
 
@@ -76,6 +83,13 @@ class AirplaneActivity: AppCompatActivity() {
             btn_start.setImageDrawable(getDrawable(R.drawable.ic_play))
         }
         */
+
+        // firebase
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "비행기모드")
+        }
     }
 
     private fun airplaneMode() {

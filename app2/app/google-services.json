@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "361337420223",
+    "project_id": "web-macro-app",
+    "storage_bucket": "web-macro-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361337420223:android:b185b7be3af992c130c90a",
+        "android_client_info": {
+          "package_name": "web.macro.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361337420223-ee3m3ekf5fddtoclsa1e2a3bo4r919r3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv7VeEtmIqeaBZeNASeyMNNBN1Krl7c_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361337420223-ee3m3ekf5fddtoclsa1e2a3bo4r919r3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

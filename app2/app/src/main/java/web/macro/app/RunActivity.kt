@@ -20,6 +20,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_log.toolbar
 import kotlinx.android.synthetic.main.activity_run.*
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +45,10 @@ import kotlin.random.Random
 
 class RunActivity : AppCompatActivity() {
     private val TAG = RunActivity::class.qualifiedName
+
+    // firebase
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     var db : AppDatabase? = null
 
     /*
@@ -103,7 +111,6 @@ class RunActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
-
         db = AppDatabase.getInstance(this)
 
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
@@ -318,6 +325,13 @@ class RunActivity : AppCompatActivity() {
         timer.schedule(TT, 0, 1000); //Timer 실행
 
         play()
+
+        // firebase
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "실행")
+        }
     }
 
     override fun onDestroy() {
@@ -1293,6 +1307,21 @@ class RunActivity : AppCompatActivity() {
             action.put("buy", true)
             action.put("next", false)
             actions.put(action)
+
+            val startCurrentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
+            val startCurrentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
+            val startTemp = startCurrentTime.split(".");
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"_start") {
+                param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+                param("Name", productName.toString())
+                param("Date", startCurrentDate + " " + startTemp[0])
+                param("IpAddress", ip.toString())
+                param("Address", address.get(addressPosition))
+                param("Search", search.get(searchPosition))
+                param("productId", productId.toString())
+                param("purchaseId", purchaseId.toString())
+                param("productIdUrl", productIdUrl)
+            }
         }
     }
 
@@ -1482,6 +1511,19 @@ class RunActivity : AppCompatActivity() {
             strSearch
         )
         db?.logsDao()?.insertAll(log)
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"end") {
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param("Name", productName.toString())
+            param("Date", currentDate + " " + temp[0])
+            param("IpAddress", ip.toString())
+            param("Address", strAddress)
+            param("Search", strSearch)
+            param("productId", productId.toString())
+            param("purchaseId", purchaseId.toString())
+            param("productIdUrl", productIdUrl)
+        }
+
         isBuy = false;
         airplaneMode()
     }
