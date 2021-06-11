@@ -36,6 +36,8 @@ class LogsActivity: AppCompatActivity() {
         db = AppDatabase.getInstance(this)
         val logs = ArrayList<DataLogs>()
 
+        Log.d(TAG,db!!.logsDao().toString());
+
         val savedLogs = db!!.logsDao().getAll()
         Log.i(TAG,""+savedLogs.size)
         if(savedLogs.isNotEmpty()){

@@ -1147,7 +1147,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(1))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1159,7 +1159,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(2))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1171,7 +1171,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(3))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1184,7 +1184,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddressTel.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1196,7 +1196,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddressTel.get(1))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1208,7 +1208,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddressTel.get(2))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1221,7 +1221,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddressEmail.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1233,7 +1233,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddressEmail.get(1))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1245,7 +1245,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", buyPassword)
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1257,7 +1257,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", buyPassword)
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1269,7 +1269,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(6))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1281,7 +1281,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1292,7 +1292,7 @@ class RunActivity : AppCompatActivity() {
             action.put("selector", "#allAgree")
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 3)
+            action.put("delay", 5)
             action.put("next", true)
             actions.put(action)
 
@@ -1303,7 +1303,7 @@ class RunActivity : AppCompatActivity() {
             action.put("selector", "#btn_payment")
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 0)
+            action.put("delay", 5)
             action.put("buy", true)
             action.put("next", false)
             actions.put(action)
