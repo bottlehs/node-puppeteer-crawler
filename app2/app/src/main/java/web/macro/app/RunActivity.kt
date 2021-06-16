@@ -324,14 +324,14 @@ class RunActivity : AppCompatActivity() {
 
         timer.schedule(TT, 0, 1000); //Timer 실행
 
-        play()
-
         // firebase
         firebaseAnalytics = Firebase.analytics
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
             param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
             param(FirebaseAnalytics.Param.SCREEN_NAME, "실행")
         }
+
+        play()
     }
 
     override fun onDestroy() {
