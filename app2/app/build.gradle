@@ -11,7 +11,7 @@ android {
         applicationId "web.macro.app"
         minSdkVersion 26
         targetSdkVersion 29
-        versionCode 4
+        versionCode 5
         versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
