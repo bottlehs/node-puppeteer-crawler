@@ -223,7 +223,10 @@ class RunActivity : AppCompatActivity() {
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
 
-                    if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString("action") != "listSearchClick" ) {
+                    if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString(
+                            "action"
+                        ) != "listSearchClick"
+                    ) {
                         webView.post(Runnable {
                             webView.loadUrl(
                                 "javascript:(function(){" +
@@ -262,6 +265,18 @@ class RunActivity : AppCompatActivity() {
                 return false
             }
             */
+
+            override fun onJsAlert(view: WebView, url: String, message: String, result: JsResult): Boolean {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                result.cancel()
+                return true
+            }
+
+            override fun onJsConfirm(view: WebView, url: String, message: String, result: JsResult): Boolean {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                result.cancel()
+                return true
+            }
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 Log.i(TAG, "onProgressChanged : " + newProgress)
@@ -1322,7 +1337,7 @@ class RunActivity : AppCompatActivity() {
             val startCurrentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val startCurrentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
             val startTemp = startCurrentTime.split(".");
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"_start") {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE + "_start") {
                 param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
                 param("Name", productName.toString())
                 param("Date", startCurrentDate + " " + startTemp[0])
@@ -1523,7 +1538,7 @@ class RunActivity : AppCompatActivity() {
         )
         db?.logsDao()?.insertAll(log)
 
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"end") {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE + "end") {
             param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
             param("Name", productName.toString())
             param("Date", currentDate + " " + temp[0])
