@@ -63,6 +63,7 @@ class RunActivity : AppCompatActivity() {
     var actions = JSONArray()
     val timeMillis = 1000L
     var currentUrl = ""
+    var globalIp = ""
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
     val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
@@ -314,6 +315,7 @@ class RunActivity : AppCompatActivity() {
 
                     second = 0;
                     runOnUiThread {
+                        // 문제가 있어 재실행이 필요한 경우
                         play()
                     }
                 } else {
@@ -356,7 +358,7 @@ class RunActivity : AppCompatActivity() {
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
                 if ( obj.has("delay") ) {
-                    delay(15000L)
+                    delay(50000L)
                 } else {
                     delay(timeMillis)
                 }
@@ -619,7 +621,16 @@ class RunActivity : AppCompatActivity() {
         val ip = getIp()
         Log.d(TAG, "play isProgress : " + isProgress)
         Log.d(TAG, "ip toString : " + ip.toString())
+
+        if ( globalIp == ip.toString() ) {
+            // 마지막 IP 와 동일한 경우 airplanMode 실행
+            this.airplaneMode()
+            return
+        }
+
         if ( !isProgress && 0 < ip.toString().length ) {
+           this.globalIp = ip.toString();
+
             Log.d(TAG, "play : 1")
             web_view.clearCache(true)
             Log.d(TAG, "play : 2")
@@ -1135,7 +1146,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 10)
+            action.put("delay", 30)
             action.put("next", true)
             actions.put(action)
 
