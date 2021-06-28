@@ -63,6 +63,7 @@ class RunActivity : AppCompatActivity() {
     var actions = JSONArray()
     val timeMillis = 1000L
     var currentUrl = ""
+    var globalIp = ""
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
     val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
@@ -222,7 +223,10 @@ class RunActivity : AppCompatActivity() {
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
 
-                    if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString("action") != "listSearchClick" ) {
+                    if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString(
+                            "action"
+                        ) != "listSearchClick"
+                    ) {
                         webView.post(Runnable {
                             webView.loadUrl(
                                 "javascript:(function(){" +
@@ -261,6 +265,18 @@ class RunActivity : AppCompatActivity() {
                 return false
             }
             */
+
+            override fun onJsAlert(view: WebView, url: String, message: String, result: JsResult): Boolean {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                result.cancel()
+                return true
+            }
+
+            override fun onJsConfirm(view: WebView, url: String, message: String, result: JsResult): Boolean {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                result.cancel()
+                return true
+            }
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 Log.i(TAG, "onProgressChanged : " + newProgress)
@@ -314,6 +330,7 @@ class RunActivity : AppCompatActivity() {
 
                     second = 0;
                     runOnUiThread {
+                        // 문제가 있어 재실행이 필요한 경우
                         play()
                     }
                 } else {
@@ -324,14 +341,14 @@ class RunActivity : AppCompatActivity() {
 
         timer.schedule(TT, 0, 1000); //Timer 실행
 
-        play()
-
         // firebase
         firebaseAnalytics = Firebase.analytics
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
             param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
             param(FirebaseAnalytics.Param.SCREEN_NAME, "실행")
         }
+
+        play()
     }
 
     override fun onDestroy() {
@@ -356,7 +373,7 @@ class RunActivity : AppCompatActivity() {
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
                 if ( obj.has("delay") ) {
-                    delay(15000L)
+                    delay(50000L)
                 } else {
                     delay(timeMillis)
                 }
@@ -619,7 +636,16 @@ class RunActivity : AppCompatActivity() {
         val ip = getIp()
         Log.d(TAG, "play isProgress : " + isProgress)
         Log.d(TAG, "ip toString : " + ip.toString())
+
+        if ( globalIp == ip.toString() ) {
+            // 마지막 IP 와 동일한 경우 airplanMode 실행
+            this.airplaneMode()
+            return
+        }
+
         if ( !isProgress && 0 < ip.toString().length ) {
+           this.globalIp = ip.toString();
+
             Log.d(TAG, "play : 1")
             web_view.clearCache(true)
             Log.d(TAG, "play : 2")
@@ -1135,7 +1161,7 @@ class RunActivity : AppCompatActivity() {
             action.put("value", useAddress.get(0))
             action.put("function", "element")
             action.put("index", 0)
-            action.put("delay", 10)
+            action.put("delay", 30)
             action.put("next", true)
             actions.put(action)
 
@@ -1311,7 +1337,7 @@ class RunActivity : AppCompatActivity() {
             val startCurrentDate = current.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val startCurrentTime = current.format(DateTimeFormatter.ISO_LOCAL_TIME)
             val startTemp = startCurrentTime.split(".");
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"_start") {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE + "_start") {
                 param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
                 param("Name", productName.toString())
                 param("Date", startCurrentDate + " " + startTemp[0])
@@ -1512,7 +1538,7 @@ class RunActivity : AppCompatActivity() {
         )
         db?.logsDao()?.insertAll(log)
 
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE+"end") {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE + "end") {
             param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
             param("Name", productName.toString())
             param("Date", currentDate + " " + temp[0])
