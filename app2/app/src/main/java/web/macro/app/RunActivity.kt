@@ -34,6 +34,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
 import java.net.NetworkInterface
+import java.security.SecureRandom
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -59,6 +60,7 @@ class RunActivity : AppCompatActivity() {
     */
     var isProgress = false;
     var isBuy = false;
+    var isLoop = false;
     var actionStep = 0
     var actions = JSONArray()
     val timeMillis = 1000L
@@ -67,10 +69,16 @@ class RunActivity : AppCompatActivity() {
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
     val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
-    val productName = App.prefs.productName;
-    val productId = App.prefs.productId;
-    val purchaseId = App.prefs.purchaseId;
-    val productIdUrl = "https://msearch.shopping.naver.com/catalog/"+productId+"/products";
+    var productName = "";
+    var productId = "";
+    var purchaseId = "";
+    var productIdUrl = "";
+
+    var productNames : ArrayList<String> = ArrayList();
+    var productIds : ArrayList<String> = ArrayList();
+    var purchaseIds : ArrayList<String> = ArrayList();
+    val productIdUrls : ArrayList<String> = ArrayList();
+    var productIdx = 0;
 
     var timeBuy : ArrayList<String> = ArrayList();
     var timeBuy1 : ArrayList<String> = ArrayList();
@@ -80,7 +88,6 @@ class RunActivity : AppCompatActivity() {
     var queue = 5;
     var second = 0;
 
-    var search : ArrayList<String> = ArrayList();
     var address : ArrayList<String> = ArrayList();
 
     var playDate = App.prefs.playDate.toString();
@@ -114,6 +121,42 @@ class RunActivity : AppCompatActivity() {
         setContentView(R.layout.activity_run)
         db = AppDatabase.getInstance(this)
 
+        /*
+        var productName : ArrayList<String> = ArrayList();
+        var productId : ArrayList<String> = ArrayList();
+        var purchaseId : ArrayList<String> = ArrayList();
+        val productIdUrl : ArrayList<String> = ArrayList();
+
+        val productName = App.prefs.productName;
+        val productId = App.prefs.productId;
+        val purchaseId = App.prefs.purchaseId;
+        val productIdUrl = "https://msearch.shopping.naver.com/catalog/"+productId+"/products";
+        */
+
+        // product 1
+        if ( !App.prefs.productName1.equals("") && !App.prefs.productId1.equals("") && !App.prefs.purchaseId1.equals("") ) {
+            productNames.add(App.prefs.productName1.toString())
+            productIds.add(App.prefs.productId1.toString())
+            purchaseIds.add(App.prefs.purchaseId1.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId1.toString()+"/products")
+        }
+
+        // product 2
+        if ( !App.prefs.productName2.equals("") && !App.prefs.productId2.equals("") && !App.prefs.purchaseId2.equals("") ) {
+            productNames.add(App.prefs.productName2.toString())
+            productIds.add(App.prefs.productId2.toString())
+            purchaseIds.add(App.prefs.purchaseId2.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId2.toString()+"/products")
+        }
+
+        // product 3
+        if ( !App.prefs.productName3.equals("") && !App.prefs.productId3.equals("") && !App.prefs.purchaseId3.equals("") ) {
+            productNames.add(App.prefs.productName3.toString())
+            productIds.add(App.prefs.productId3.toString())
+            purchaseIds.add(App.prefs.purchaseId3.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId3.toString()+"/products")
+        }
+
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@RunActivity,
@@ -124,16 +167,13 @@ class RunActivity : AppCompatActivity() {
         }
 
         // 셋팅
-        val searchTxtFilePath = "search.txt"
-        readSearchTextFromFile(searchTxtFilePath)
-
         val addressTxtFilePath = "address.txt"
         readAddressTextFromFile(addressTxtFilePath)
 
-        if ( search.size == 0 || address.size == 0 ) {
+        if ( address.size == 0 ) {
             Toast.makeText(
                 this@RunActivity,
-                "Please check search.txt, address.txt",
+                "Please address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
@@ -222,6 +262,7 @@ class RunActivity : AppCompatActivity() {
                     Log.d(TAG, "newSingleThreadScheduledExecutor isBuy : " + isBuy);
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
+                    Log.d(TAG, "macro onPageFinished actionStep : " + actionStep)
 
                     if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString(
                             "action"
@@ -324,6 +365,8 @@ class RunActivity : AppCompatActivity() {
         val TT: TimerTask = object : TimerTask() {
             override fun run() {
                 // 반복실행할 구문
+                Log.d(TAG,"TimerTask isLoop : "+isLoop);
+                Log.d(TAG,"TimerTask : "+actionStep);
                 Log.d(TAG, "second : " + second)
                 if ( 100 <= second ) {
                     stop()
@@ -334,7 +377,9 @@ class RunActivity : AppCompatActivity() {
                         play()
                     }
                 } else {
-                    second++
+                    if ( !isLoop ) {
+                        second++
+                    }
                 }
             }
         }
@@ -365,10 +410,17 @@ class RunActivity : AppCompatActivity() {
         Log.i(TAG, "actionStep.length() : " + actions.length())
         Log.i(TAG, "actionStep.currentUrl : " + currentUrl)
         Log.i(TAG, "actionStep.url.toString() : " + url.toString())
-
         if ( actionStep < actions.length() && currentUrl != url.toString() )  {
             currentUrl = url.toString()
             val obj = actions.getJSONObject(actionStep);
+
+            isLoop = false;
+            if ( obj.has("isLoop") ) {
+                if ( obj.getBoolean("isLoop") ) {
+                    isLoop = true;
+                }
+            }
+
             obj.put("step", actionStep)
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
@@ -413,6 +465,13 @@ class RunActivity : AppCompatActivity() {
     }
     fun elementAction(obj: JSONObject, webView: WebView) {
         Log.d(TAG, "elementAction" + obj.getString("action"))
+        isLoop = false;
+        if ( obj.has("isLoop") ) {
+            if ( obj.getBoolean("isLoop") ) {
+                isLoop = true;
+            }
+        }
+
         if ( obj.getString("action") == "focus" ) {
             webView.post(Runnable {
                 webView.loadUrl(
@@ -542,6 +601,13 @@ class RunActivity : AppCompatActivity() {
             TODO
             찾기시 스크롤을 한칸씩 내리도록 수정할 필요가 있음.
              */
+            Log.d(TAG, "elementAction obj.has(\"loop\") " + obj.has("isLoop") )
+            if ( obj.has("isLoop") ) {
+                if ( obj.getBoolean("isLoop") ) {
+                    isLoop = true;
+                }
+            }
+
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
@@ -633,6 +699,15 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun play() {
+        Log.d(TAG, "macro actionStep : " + actionStep)
+        // product 0 ~ n setting
+        val secureRandom = SecureRandom()
+        productIdx = secureRandom.nextInt(productIds.size)
+        productName = productNames.get(productIdx);
+        productId = productIds.get(productIdx);
+        purchaseId = purchaseIds.get(productIdx);
+        productIdUrl = productIdUrls.get(productIdx);
+
         val ip = getIp()
         Log.d(TAG, "play isProgress : " + isProgress)
         Log.d(TAG, "ip toString : " + ip.toString())
@@ -876,32 +951,19 @@ class RunActivity : AppCompatActivity() {
                 return
             }
 
-            var searchPosition = App.prefs.searchPosition.toString().toInt();
             var addressPosition = App.prefs.addressPosition.toString().toInt();
-
-            if ( search.size <= searchPosition ) {
-                searchPosition = 0;
-                App.prefs.searchPosition = searchPosition.toString();
-            }
 
             if ( address.size <= addressPosition ) {
                 addressPosition = 0;
                 App.prefs.addressPosition = addressPosition.toString();
             }
 
-            Log.d(TAG, "searchPosition : " + searchPosition)
             Log.d(TAG, "addressPosition : " + addressPosition)
 
             var useAddress : ArrayList<String> = ArrayList();
             address.get(addressPosition).split(",").forEach{ row ->
                 useAddress.add(row);
             }
-
-            search.forEach{ row ->
-                Log.d(TAG, "search row : " + row)
-            }
-
-            Log.d(TAG, "searchPosition123 : " + searchPosition + "/" + search.get(searchPosition))
 
             /*
             action : actions 에 추가할 json object 선언
@@ -931,114 +993,6 @@ class RunActivity : AppCompatActivity() {
             next : 페이지 이동 없이 한 화면에서 다음 동작 수행 ( true or false )
             */
 
-            // 검색 포커스
-            action = JSONObject()
-            action.put("name", "검색 포커스")
-            action.put("action", "focus")
-            action.put("selector", "#MM_SEARCH_FAKE")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 입력
-            action = JSONObject()
-            action.put("name", "검색어 입력")
-            action.put("action", "value")
-            action.put("selector", "#query")
-            action.put("value", search.get(searchPosition))
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 폼 전송
-            action = JSONObject()
-            action.put("name", "검색어 폼 전송")
-            action.put("action", "click")
-            action.put("selector", ".sch_btn_search")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색어 결과 클릭
-            action = JSONObject()
-            action.put("name", "검색어 결과 클릭")
-            action.put("action", "click")
-            action.put("selector", ".sp_nreview .total_sub+.total_tit")
-            action.put("function", "element")
-            action.put("index", "random")
-            action.put("next", false)
-            actions.put(action)
-
-            // 뒤로가기
-            action = JSONObject()
-            action.put("name", "뒤로가기")
-            action.put("action", "back")
-            action.put("function", "webview")
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색어 결과 클릭
-            action = JSONObject()
-            action.put("name", "검색어 결과 클릭")
-            action.put("action", "click")
-            action.put("selector", ".sp_nreview .total_sub+.total_tit")
-            action.put("function", "element")
-            action.put("index", "random")
-            action.put("next", false)
-            actions.put(action)
-
-            // 뒤로가기
-            action = JSONObject()
-            action.put("name", "뒤로가기")
-            action.put("action", "back")
-            action.put("function", "webview")
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색 포커스
-            action = JSONObject()
-            action.put("name", "검색 포커스")
-            action.put("action", "focus")
-            action.put("selector", "#nx_query")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 입력
-            action = JSONObject()
-            action.put("name", "검색어 입력")
-            action.put("action", "value")
-            action.put("selector", "#nx_query")
-            action.put("value", productName)
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 폼 전송
-            action = JSONObject()
-            action.put("name", "검색어 폼 전송")
-            action.put("action", "click")
-            action.put("selector", ".btn_search")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색어 결과 쇼핑 클릭
-            action = JSONObject()
-            action.put("name", "검색어 결과 쇼핑 클릭")
-            action.put("action", "click")
-            action.put("selector", ".type_white .sch_tab .lst_sch .bx a")
-            action.put("function", "element")
-            action.put("index", 1)
-            action.put("next", false)
-            actions.put(action)
-
             // 쇼핑홈으로 이동
             action = JSONObject()
             action.put("name", "쇼핑홈으로 이동")
@@ -1047,7 +1001,6 @@ class RunActivity : AppCompatActivity() {
             action.put("url", rootShopUrl)
             actions.put(action)
 
-            /**/
             // 검색 클릭
             action = JSONObject()
             action.put("name", "검색 클릭")
@@ -1093,6 +1046,8 @@ class RunActivity : AppCompatActivity() {
             action = JSONObject()
             action.put("name", "쇼핑 검색어 결과 상품 찾기후 클릭")
             action.put("action", "productListSearchClick")
+            action.put("isLoop", true)
+            action.put("next", false)
             action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
             action.put("function", "element")
             action.put("data_i", productId)
@@ -1100,6 +1055,7 @@ class RunActivity : AppCompatActivity() {
             actions.put(action)
 
             // 쇼핑 상세보기 에서 전체 판매처 보러가기
+            /* 쇼핑 카테고리가 없음
             action = JSONObject()
             action.put("name", "쇼핑 상세보기 에서 전체 판매처 보러가기")
             action.put("action", "detailClick")
@@ -1129,12 +1085,13 @@ class RunActivity : AppCompatActivity() {
             action.put("data_i", purchaseId)
             action.put("next", false)
             actions.put(action)
+            */
 
             // 구매하기 화면 - 구매하기
             action = JSONObject()
             action.put("name", "구매하기 화면 - 구매하기")
             action.put("action", "click")
-            action.put("selector", "#fixedActionButton .ec-base-button.gColumn  a.btnStrong")
+            action.put("selector", "#fixedActionButton .btnArea a.btnSubmit")
             action.put("function", "element")
             action.put("index", 0)
             action.put("next", false)
@@ -1287,6 +1244,16 @@ class RunActivity : AppCompatActivity() {
             action.put("next", true)
             actions.put(action)
 
+            // 구매하기 화면 - 비회원구매 - 결제방식 선택 - 무통장 입금
+            action = JSONObject()
+            action.put("name", "구매하기 화면 - 비회원구매 - 결제방식 선택 - 무통장 입금")
+            action.put("action", "click")
+            action.put("selector", "#addr_paymethod2")
+            action.put("function", "element")
+            action.put("index", 0)
+            action.put("next", true)
+            actions.put(action)
+
             // 구매하기 화면 - 비회원구매 - 입금은행
             action = JSONObject()
             action.put("name", "구매하기 화면 - 비회원구매 - 입금은행")
@@ -1311,11 +1278,33 @@ class RunActivity : AppCompatActivity() {
             action.put("next", true)
             actions.put(action)
 
-            // 구매하기 화면 - 비회원구매 - 모든 약관 동의
+            // 구매하기 화면 - 비회원구매 - 쇼핑몰 이용약관 동의
             action = JSONObject()
-            action.put("name", "구매하기 화면 - 비회원구매 - 모든 약관 동의")
+            action.put("name", "구매하기 화면 - 비회원구매 - 쇼핑몰 이용약관 동의")
             action.put("action", "click")
-            action.put("selector", "#allAgree")
+            action.put("selector", "#mallAgree")
+            action.put("function", "element")
+            action.put("index", 0)
+            action.put("delay", 5)
+            action.put("next", true)
+            actions.put(action)
+
+            // 구매하기 화면 - 비회원구매 - 비회원 개인정보 취급방침 동의
+            action = JSONObject()
+            action.put("name", "구매하기 화면 - 비회원구매 - 비회원 개인정보 취급방침 동의")
+            action.put("action", "click")
+            action.put("selector", "#personAgree")
+            action.put("function", "element")
+            action.put("index", 0)
+            action.put("delay", 5)
+            action.put("next", true)
+            actions.put(action)
+
+            // 구매하기 화면 - 비회원구매 - 결제정보를 확인하였으며, 구매진행에 동의합니다.
+            action = JSONObject()
+            action.put("name", "구매하기 화면 - 비회원구매 - 결제정보를 확인하였으며, 구매진행에 동의합니다.")
+            action.put("action", "click")
+            action.put("selector", "#chk_purchase_agreement0")
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 5)
@@ -1343,7 +1332,6 @@ class RunActivity : AppCompatActivity() {
                 param("Date", startCurrentDate + " " + startTemp[0])
                 param("IpAddress", ip.toString())
                 param("Address", address.get(addressPosition))
-                param("Search", search.get(searchPosition))
                 param("productId", productId.toString())
                 param("purchaseId", purchaseId.toString())
                 param("productIdUrl", productIdUrl)
@@ -1362,26 +1350,6 @@ class RunActivity : AppCompatActivity() {
 
         isProgress = false
         btn_run.setImageDrawable(getDrawable(R.drawable.ic_play))
-    }
-
-    fun readSearchTextFromFile(path: String) {
-        appExternalFile = File(getExternalFilesDir(filepath), path)
-
-        var fileInputStream = FileInputStream(appExternalFile)
-        var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
-        val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
-        val stringBuilder: StringBuilder = StringBuilder()
-        var text: String? = null
-        while ({ text = bufferedReader.readLine(); text }() != null) {
-            stringBuilder.append(text)
-        }
-        fileInputStream.close()
-        if ( stringBuilder.toString().trim().length != 0 ) {
-            stringBuilder.toString().split(",").forEach{ row ->
-                Log.d(TAG, "search stringBuilder" + row)
-                search.add(row)
-            }
-        }
     }
 
     fun readAddressTextFromFile(path: String) {
@@ -1495,31 +1463,21 @@ class RunActivity : AppCompatActivity() {
         val temp = currentTime.split(".");
         var ip = getIp()
 
-        Log.d(TAG, "searchPosition, addressPosition update")
-        var searchPosition = App.prefs.searchPosition.toString().toInt();
+        Log.d(TAG, "addressPosition update")
         var addressPosition = App.prefs.addressPosition.toString().toInt();
-        var strSearch = search.get(searchPosition);
         var strAddress = address.get(addressPosition);
 
-        Log.d(TAG, "searchPosition, addressPosition update searchPosition 1 : " + searchPosition)
-        Log.d(TAG, "searchPosition, addressPosition update addressPosition 1 : " + addressPosition)
+        Log.d(TAG, "addressPosition update addressPosition 1 : " + addressPosition)
 
-        searchPosition++;
         addressPosition++;
 
-        Log.d(TAG, "searchPosition, addressPosition update searchPosition 2 : " + searchPosition)
-        Log.d(TAG, "searchPosition, addressPosition update addressPosition 2 : " + addressPosition)
+        Log.d(TAG, "addressPosition update addressPosition 2 : " + addressPosition)
 
-        App.prefs.searchPosition = searchPosition.toString();
         App.prefs.addressPosition = addressPosition.toString();
 
         Log.d(
             TAG,
-            "searchPosition, addressPosition update searchPosition 3 : " + App.prefs.searchPosition
-        )
-        Log.d(
-            TAG,
-            "searchPosition, addressPosition update addressPosition 3 : " + App.prefs.addressPosition
+            "addressPosition update addressPosition 3 : " + App.prefs.addressPosition
         )
 
         Log.d(
@@ -1534,7 +1492,7 @@ class RunActivity : AppCompatActivity() {
             "1",
             ip.toString(),
             strAddress,
-            strSearch
+            ""
         )
         db?.logsDao()?.insertAll(log)
 
@@ -1544,7 +1502,6 @@ class RunActivity : AppCompatActivity() {
             param("Date", currentDate + " " + temp[0])
             param("IpAddress", ip.toString())
             param("Address", strAddress)
-            param("Search", strSearch)
             param("productId", productId.toString())
             param("purchaseId", purchaseId.toString())
             param("productIdUrl", productIdUrl)
