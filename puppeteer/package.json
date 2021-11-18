@@ -15,9 +15,13 @@
   "author": "bottlehs",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.24.0",
     "babel-preset-env": "^1.7.0",
+    "cheerio": "^1.0.0-rc.10",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
+    "mariadb": "^2.5.5",
+    "node-cron": "^3.0.0",
     "puppeteer": "^5.5.0"
   }
 }
