@@ -494,34 +494,6 @@ class RunActivity : AppCompatActivity() {
                     ) + "].value='" + obj.getString("value") + "'})()"
                 )
             });
-            /*
-            if ( obj.has("delay") ) {
-                webView.post(Runnable {
-                    webView.loadUrl(
-                        "javascript:(function(){" +
-                                "setTimeout(function() {" +
-                                "document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value='" + obj.getString(
-                            "value"
-                        ) + "';" +
-                                "console.log(document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value);" +
-                                "}, 500);" +
-                                "})()"
-                    )
-                });
-            } else {
-                webView.post(Runnable {
-                    webView.loadUrl(
-                        "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value='" + obj.getString("value") + "'})()"
-                    )
-                });
-            }
-            */
         } else if ( obj.getString("action") == "function" ) {
             webView.post(Runnable {
                 webView.loadUrl(
@@ -623,6 +595,8 @@ class RunActivity : AppCompatActivity() {
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
+                            "console.log('처음한번 스크롤 내리기');" +
+                            "window.scrollTo(0, document.body.scrollHeight);" +
                             "var productSearch = function () {" +
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
@@ -644,9 +618,9 @@ class RunActivity : AppCompatActivity() {
                             "console.log('없다없다12');" +
                             "window.scrollTo(0, document.body.scrollHeight);" +
                             "productSearch()" +
-                            "}, 1500);" +
+                            "}, 5500);" +
                             "};" +
-                            "}, 2500);" +
+                            "}, 7500);" +
                             "};" +
                             "productSearch();" +
                             "})()"
@@ -731,7 +705,7 @@ class RunActivity : AppCompatActivity() {
         }
 
         if ( !isProgress && 0 < ip.toString().length ) {
-           this.globalIp = ip.toString();
+            this.globalIp = ip.toString();
 
             Log.d(TAG, "play : 1")
             web_view.clearCache(true)
