@@ -22,11 +22,13 @@ async function getHtml(url) {
 const insertExample = async (item) => {
   let conn;
   try {
+    console.log(item);
       conn = await pool.getConnection();
 
       const result = await conn.query('INSERT INTO company(corporate_name, representative, date_of_establishment, enterprise_type, capital, sales, the_number_of_employees, the_representative_call, homepage, business_hours, address, email) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
       [item.corporate_name, item.representative, item.date_of_establishment, item.enterprise_type, item.capital, item.sales, item.the_number_of_employees, item.the_representative_call, item.homepage, item.business_hours, item.address, item.email]);
       console.log(result);
+      conn.release();
   }
   catch (err) {
       throw err;
@@ -48,7 +50,7 @@ async function getRec() {
   let items = [];
   $("#dir_sch_list")
     .find(".cell")
-    .each(function(index, elem) {
+    .each(async function(index, elem) {
       // console.log(elem);
       let title = $(elem).find("a").attr("title");
       let comment = $(elem).find(".comment").text();
@@ -78,16 +80,30 @@ async function getRec() {
       });
       
       item.corporate_name = title;
-      insertExample(item);
+      item.representative = "";
+      item.date_of_establishment = "";
+      item.enterprise_type = "";
+      item.capital = "";             
+      item.sales = "";                      
+      item.the_number_of_employees = "";            
+      item.the_representative_call = "";
+      item.homepage = "";   
+      item.business_hours = "";   
+      item.address = "";         
+      item.email = 'email';        
+      
+      items.push(item);
     });
 
 
     console.log('=====결과====');
     console.log(items);
 
-    console.log(rec);
+    items.forEach(async item => {
+      await insertExample(item);
+    });
 
-  return rec;
+    console.log(rec);
 }
 
 getRec();
