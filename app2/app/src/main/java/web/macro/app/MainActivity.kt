@@ -65,10 +65,17 @@ class MainActivity: AppCompatActivity() {
             finish()
         }
 
-        // 셋팅 (주소)
-        val addressTxtFilePath = "address.txt"
-        writeAddressTextToFile(addressTxtFilePath)
-        readAddressTextFromFile(addressTxtFilePath)
+        // 셋팅 (주소) - product 1
+        writeAddressTextToFile("product_1_address.txt")
+        readAddressTextFromFile("product_1_address.txt")
+
+        // 셋팅 (주소) - product 2
+        writeAddressTextToFile("product_2_address.txt")
+        readAddressTextFromFile("product_2_address.txt")
+
+        // 셋팅 (주소) - product 3
+        writeAddressTextToFile("product_3_address.txt")
+        readAddressTextFromFile("product_3_address.txt")
 
         if ( !checkTxt ) {
             Toast.makeText(
