@@ -542,34 +542,12 @@ class RunActivity : AppCompatActivity() {
                     ) + "].value='" + obj.getString("value") + "'})()"
                 )
             });
-            /*
-            if ( obj.has("delay") ) {
-                webView.post(Runnable {
-                    webView.loadUrl(
-                        "javascript:(function(){" +
-                                "setTimeout(function() {" +
-                                "document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value='" + obj.getString(
-                            "value"
-                        ) + "';" +
-                                "console.log(document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value);" +
-                                "}, 500);" +
-                                "})()"
-                    )
-                });
-            } else {
-                webView.post(Runnable {
-                    webView.loadUrl(
-                        "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value='" + obj.getString("value") + "'})()"
-                    )
-                });
-            }
-            */
+        } else if ( obj.getString("action") == "function" ) {
+            webView.post(Runnable {
+                webView.loadUrl(
+                    "javascript:(function(){ product_submit(1, '/exec/front/order/basket/', this) })()"
+                )
+            });
         } else if ( obj.getString("action") == "click" ) {
             if ( obj.getString("index") == "random" ) {
                 webView.post(Runnable {
@@ -580,6 +558,12 @@ class RunActivity : AppCompatActivity() {
                     )
                 });
             } else {
+                webView.post(Runnable {
+                    webView.loadUrl(
+                        "javascript:(function(){ console.log(document.querySelectorAll('" + obj.getString("selector") + "').length) })()"
+                    )
+                });
+
                 webView.post(Runnable {
                     webView.loadUrl(
                         "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
@@ -659,6 +643,8 @@ class RunActivity : AppCompatActivity() {
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
+                            "console.log('처음한번 스크롤 내리기');" +
+                            "window.scrollTo(0, document.body.scrollHeight);" +
                             "var productSearch = function () {" +
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
@@ -680,9 +666,9 @@ class RunActivity : AppCompatActivity() {
                             "console.log('없다없다12');" +
                             "window.scrollTo(0, document.body.scrollHeight);" +
                             "productSearch()" +
-                            "}, 1500);" +
+                            "}, 5500);" +
                             "};" +
-                            "}, 2500);" +
+                            "}, 7500);" +
                             "};" +
                             "productSearch();" +
                             "})()"
@@ -778,7 +764,7 @@ class RunActivity : AppCompatActivity() {
         }
 
         if ( !isProgress && 0 < ip.toString().length ) {
-           this.globalIp = ip.toString();
+            this.globalIp = ip.toString();
 
             Log.d(TAG, "play : 1")
             web_view.clearCache(true)
@@ -1146,17 +1132,28 @@ class RunActivity : AppCompatActivity() {
 
             // 구매하기 화면 - 구매하기
             action = JSONObject()
-            action.put("name", "구매하기 화면 - 구매하기")
+            action.put("name", "구매하기 화면 - 구매하기 0")
             action.put("action", "click")
-            action.put("selector", "#fixedActionButton .btnArea a.btnSubmit")
+            action.put("selector", "#fixedActionButton .ec-base-button.gColumn  a.btnStrong")
             action.put("function", "element")
             action.put("index", 0)
             action.put("next", false)
             actions.put(action)
 
+            // 구매하기 화면 - 구매하기
+            action = JSONObject()
+            action.put("name", "구매하기 화면 - 구매하기 1")
+            action.put("action", "click")
+            action.put("selector", "#fixedActionButton .ec-base-button.gColumn  a.btnStrong")
+            action.put("function", "element")
+            action.put("index", 0)
+            action.put("next", false)
+            actions.put(action)
+
+
             // 구매하기 화면 - 비회원구매
             action = JSONObject()
-            action.put("name", "구매하기 화면 - 구매하기")
+            action.put("name", "구매하기 화면 - 구매하기 2")
             action.put("action", "click")
             action.put("selector", ".btnEm")
             action.put("function", "element")
@@ -1301,16 +1298,6 @@ class RunActivity : AppCompatActivity() {
             action.put("next", true)
             actions.put(action)
 
-            // 구매하기 화면 - 비회원구매 - 결제방식 선택 - 무통장 입금
-            action = JSONObject()
-            action.put("name", "구매하기 화면 - 비회원구매 - 결제방식 선택 - 무통장 입금")
-            action.put("action", "click")
-            action.put("selector", "#addr_paymethod2")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
             // 구매하기 화면 - 비회원구매 - 입금은행
             action = JSONObject()
             action.put("name", "구매하기 화면 - 비회원구매 - 입금은행")
@@ -1335,33 +1322,11 @@ class RunActivity : AppCompatActivity() {
             action.put("next", true)
             actions.put(action)
 
-            // 구매하기 화면 - 비회원구매 - 쇼핑몰 이용약관 동의
+            // 구매하기 화면 - 비회원구매 - 모든 약관 동의
             action = JSONObject()
-            action.put("name", "구매하기 화면 - 비회원구매 - 쇼핑몰 이용약관 동의")
+            action.put("name", "구매하기 화면 - 비회원구매 - 모든 약관 동의")
             action.put("action", "click")
-            action.put("selector", "#mallAgree")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("delay", 5)
-            action.put("next", true)
-            actions.put(action)
-
-            // 구매하기 화면 - 비회원구매 - 비회원 개인정보 취급방침 동의
-            action = JSONObject()
-            action.put("name", "구매하기 화면 - 비회원구매 - 비회원 개인정보 취급방침 동의")
-            action.put("action", "click")
-            action.put("selector", "#personAgree")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("delay", 5)
-            action.put("next", true)
-            actions.put(action)
-
-            // 구매하기 화면 - 비회원구매 - 결제정보를 확인하였으며, 구매진행에 동의합니다.
-            action = JSONObject()
-            action.put("name", "구매하기 화면 - 비회원구매 - 결제정보를 확인하였으며, 구매진행에 동의합니다.")
-            action.put("action", "click")
-            action.put("selector", "#chk_purchase_agreement0")
+            action.put("selector", "#allAgree")
             action.put("function", "element")
             action.put("index", 0)
             action.put("delay", 5)
