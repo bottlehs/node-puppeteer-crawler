@@ -1360,8 +1360,20 @@ class MainActivity: AppCompatActivity() {
             } else {
                 Log.d(TAG,"writeAddressTextToFile 파일이 존재 안한다.");
                 val fileOutPutStream = FileOutputStream(appExternalFile)
-                fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr\n".toByteArray())
-                fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr".toByteArray())
+
+                if ( path.equals("product_1_address.txt") ) {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr".toByteArray())
+                } else if ( path.equals("product_2_address.txt") ) {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_04:265701-04-355542:신성수(애드닷컴):국민은행:www.kbstar.com\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_04:265701-04-355542:신성수(애드닷컴):국민은행:www.kbstar.com".toByteArray())
+                } else if ( path.equals("product_3_address.txt") ) {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300770404032:주식회사 아리상사:기업은행:www.ibk.co.kr\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300770404032:주식회사 아리상사:기업은행:www.ibk.co.kr".toByteArray())
+                } else {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr".toByteArray())
+                }
                 fileOutPutStream.close()
             }
         } catch (e: IOException) {

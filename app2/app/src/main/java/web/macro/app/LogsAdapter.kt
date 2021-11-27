@@ -18,7 +18,7 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
     override fun onBindViewHolder(holder: LogsAdapter.ViewHolder, position: Int) {
         val item = items[position]
         val listener = View.OnClickListener { it ->
-            Toast.makeText(it.context, "Clicked"+item.strProduct, Toast.LENGTH_SHORT).show()
+            Toast.makeText(it.context, "Clicked"+item.productName, Toast.LENGTH_SHORT).show()
         }
         holder.apply {
             bind(listener, item)
@@ -42,18 +42,18 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: DataLogs) {
-            view.date.text = item.strDate;
-            view.product.text = item.strProduct;
-            view.purchase.text = item.strPurchase;
-            view.search.text = item.strSearch;
+            view.date.text = item.date;
+            view.product.text = item.productName+"("+item.productId+")";
+            view.purchase.text = item.purchase.toString();
+            view.search.text = item.search;
             view.address.text = "";
-            if ( 0 < item.strAddress.length ) {
-                val strAddress = item.strAddress.split(",");
+            if ( 0 < item.address.length ) {
+                val strAddress = item.address.split(",");
                 if ( !strAddress.isEmpty() ) {
                     view.address.text = strAddress.get(0);
                 }
             }
-            view.ip.text = item.strIp;
+            view.ip.text = item.ip;
         }
     }
 }

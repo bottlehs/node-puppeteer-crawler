@@ -41,6 +41,7 @@ import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.random.Random
 
 
@@ -735,8 +736,30 @@ class RunActivity : AppCompatActivity() {
     fun play() {
         Log.d(TAG, "macro actionStep : " + actionStep)
         // product 0 ~ n setting
-        val secureRandom = SecureRandom()
-        productIdx = secureRandom.nextInt(productIds.size)
+        Log.d(TAG,db!!.logsDao().toString());
+        val savedLogs = db!!.logsDao().getAll()
+        Log.i(TAG,""+savedLogs.size)
+        Log.i(TAG,"========play init========");
+        if(savedLogs.isNotEmpty()){
+            val productsBuy : HashMap<Int, Int> = HashMap();
+            productIds.forEachIndexed{ index, id ->
+                val count = db!!.logsDao().getCountProductIdAll(id);
+                productsBuy.set(index, count);
+                Log.i(TAG,"========play productsBuy index========"+index);
+                Log.i(TAG,"========play productsBuy count========"+count);
+            }
+            // var temp = productsBuy.toList().sortedWith(compareBy({it.second}, {-it.first})).toMap()
+            val resultMap = productsBuy.entries.sortedBy { it.value }.associate { it.toPair() }
+            productIdx = resultMap.keys.toIntArray()[0].toInt();
+            Log.i(TAG,"========play productIdx 균등========"+productIdx);
+        } else {
+            val secureRandom = SecureRandom()
+            productIdx = secureRandom.nextInt(productIds.size)
+            Log.i(TAG,"========play productIdx 랜덤========"+productIdx);
+        }
+
+        Log.i(TAG,"========play productIdx ========"+productIdx);
+
         productName = productNames.get(productIdx);
         productId = productIds.get(productIdx);
         purchaseId = purchaseIds.get(productIdx);
@@ -1495,7 +1518,7 @@ class RunActivity : AppCompatActivity() {
 
         Log.d(TAG, "addressPosition update")
         var addressPosition = App.prefs.addressPosition.toString().toInt();
-        var strAddress = address.get(addressPosition);
+        var address = address.get(addressPosition);
 
         Log.d(TAG, "addressPosition update addressPosition 1 : " + addressPosition)
 
@@ -1515,13 +1538,22 @@ class RunActivity : AppCompatActivity() {
             "insertLog : " + currentDate + " " + temp[0] + " / " + productName.toString() + " / " + ip.toString()
         )
 
+        Log.d(TAG,"log insert : "+currentDate + " " + temp[0])
+        Log.d(TAG,"log insert : "+productId)
+        Log.d(TAG,"log insert : "+purchaseId)
+        Log.d(TAG,"log insert : "+productName)
+        Log.d(TAG,"log insert : "+ip.toString())
+        Log.d(TAG,"log insert : "+address)
+
         val log = Logs(
             0,
             currentDate + " " + temp[0],
-            productName.toString(),
+            productId,
+            purchaseId,
+            productName,
             "1",
             ip.toString(),
-            strAddress,
+            address,
             ""
         )
         db?.logsDao()?.insertAll(log)
@@ -1531,7 +1563,7 @@ class RunActivity : AppCompatActivity() {
             param("Name", productName.toString())
             param("Date", currentDate + " " + temp[0])
             param("IpAddress", ip.toString())
-            param("Address", strAddress)
+            param("Address", address)
             param("productId", productId.toString())
             param("purchaseId", purchaseId.toString())
             param("productIdUrl", productIdUrl)
