@@ -892,6 +892,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hour_height"
                 android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="@dimen/hour_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_app_version_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:minHeight="@dimen/hour_height"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@id/startTime"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/appVersion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_app_version_label"></TextView>
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

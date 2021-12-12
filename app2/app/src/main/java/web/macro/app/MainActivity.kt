@@ -38,6 +38,10 @@ class MainActivity: AppCompatActivity() {
     private val TAG = MainActivity::class.qualifiedName
     var checkTxt = true
 
+    // version
+    var versionCode: Int = BuildConfig.VERSION_CODE
+    var versionName = BuildConfig.VERSION_NAME
+
     // firebase
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
@@ -85,6 +89,9 @@ class MainActivity: AppCompatActivity() {
             ).show()
             finish()
         }
+
+        val appVersion: TextView = findViewById(R.id.appVersion);
+        appVersion.setText(versionName+"("+versionCode+")");
 
         val airplaneMode: View = findViewById(R.id.airplaneMode);
         airplaneMode.setOnClickListener(View.OnClickListener {

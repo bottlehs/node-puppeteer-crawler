@@ -17,6 +17,9 @@ interface LogsDao {
     @Query("SELECT count(*) FROM table_store_product_buy_logs WHERE productId = :productId ORDER BY date DESC")
     fun getCountProductIdAll(productId: String): Int
 
+    @Query("SELECT count(*) FROM table_store_product_buy_logs WHERE purchaseId = :purchaseId ORDER BY date DESC")
+    fun getCountPurchaseIdAll(purchaseId: String): Int
+
     @Query("SELECT * FROM table_store_product_buy_logs WHERE date BETWEEN strftime('%Y-%m-%d %H:%M:%S',:startDate) AND strftime('%Y-%m-%d %H:%M:%S',:endDate)")
     fun getDateAll(startDate: String, endDate: String): List<Logs>
 

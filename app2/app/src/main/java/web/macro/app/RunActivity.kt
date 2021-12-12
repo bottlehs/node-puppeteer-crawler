@@ -743,13 +743,21 @@ class RunActivity : AppCompatActivity() {
         if(savedLogs.isNotEmpty()){
             val productsBuy : HashMap<Int, Int> = HashMap();
             productIds.forEachIndexed{ index, id ->
-                val count = db!!.logsDao().getCountProductIdAll(id);
+                val count = db!!.logsDao().getCountPurchaseIdAll(purchaseIds.get(index));
                 productsBuy.set(index, count);
-                Log.i(TAG,"========play productsBuy index========"+index);
-                Log.i(TAG,"========play productsBuy count========"+count);
+                Log.i(TAG,"========play purchaseBuy index========"+index);
+                Log.i(TAG,"========play purchaseBuy count========"+count);
+                Log.i(TAG,"========play purchaseBuy productId========"+id);
             }
             // var temp = productsBuy.toList().sortedWith(compareBy({it.second}, {-it.first})).toMap()
             val resultMap = productsBuy.entries.sortedBy { it.value }.associate { it.toPair() }
+
+            resultMap.forEach{ row ->
+                Log.i(TAG,"========play purchaseBuy resultMap index========"+row.key);
+                Log.i(TAG,"========play purchaseBuy resultMap count========"+row.value);
+                Log.i(TAG,"========play purchaseBuy resultMap purchaseId========"+purchaseIds.get(row.key));
+            }
+
             productIdx = resultMap.keys.toIntArray()[0].toInt();
             Log.i(TAG,"========play productIdx 균등========"+productIdx);
         } else {

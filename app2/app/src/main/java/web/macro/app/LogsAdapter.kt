@@ -43,8 +43,9 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: DataLogs) {
             view.date.text = item.date;
-            view.product.text = item.productName+"("+item.productId+")";
-            view.purchase.text = item.purchase.toString();
+            view.product.text = item.productName;
+            view.productId.text = item.productId
+            view.purchaseId.text = item.purchaseId
             view.search.text = item.search;
             view.address.text = "";
             if ( 0 < item.address.length ) {

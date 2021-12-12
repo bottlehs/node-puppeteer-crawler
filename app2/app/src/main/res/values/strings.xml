@@ -20,6 +20,7 @@
     <string name="activity_main_auto_not_use">Disable</string>
     <string name="activity_main_airplane_mode_label">Airplane Mode</string>
     <string name="activity_main_airplane_mode_setting">Set airplane mode</string>
+    <string name="activity_main_app_version_label">App Version</string>
 
     <string name="activity_main_search_label">Search Keyword</string>
     <string name="activity_main_address_label">Address</string>
