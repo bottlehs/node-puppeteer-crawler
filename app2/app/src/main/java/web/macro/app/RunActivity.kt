@@ -742,6 +742,7 @@ class RunActivity : AppCompatActivity() {
         Log.i(TAG,"========play init========");
         if(savedLogs.isNotEmpty()){
             val productsBuy : HashMap<Int, Int> = HashMap();
+            /*
             productIds.forEachIndexed{ index, id ->
                 val count = db!!.logsDao().getCountPurchaseIdAll(purchaseIds.get(index));
                 productsBuy.set(index, count);
@@ -749,6 +750,14 @@ class RunActivity : AppCompatActivity() {
                 Log.i(TAG,"========play purchaseBuy count========"+count);
                 Log.i(TAG,"========play purchaseBuy productId========"+id);
             }
+            */
+            purchaseIds.forEachIndexed{ index, id ->
+                val count = db!!.logsDao().getCountPurchaseIdAll(id);
+                productsBuy.set(index, count);
+                Log.i(TAG,"========play productsBuy index========"+index);
+                Log.i(TAG,"========play productsBuy count========"+count);
+            }
+
             // var temp = productsBuy.toList().sortedWith(compareBy({it.second}, {-it.first})).toMap()
             val resultMap = productsBuy.entries.sortedBy { it.value }.associate { it.toPair() }
 
