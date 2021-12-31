@@ -103,7 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
-.opgg_rank/
-.opgg_ranking/
-.opgg_ranking_complete_dev/
-.opgg_ranking_complete_opr/
+opgg_rank/
+opgg_ranking/
+opgg_ranking_complete_dev/
+opgg_ranking_complete_opr/
