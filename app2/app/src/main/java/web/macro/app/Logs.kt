@@ -6,6 +6,7 @@ import androidx.room.*
 data class Logs(
     @PrimaryKey(autoGenerate = true) val id:Long,
     var date: String,
+    var executionCdoe: String,
     var productId: String,
     var purchaseId: String,
     var productName: String,
