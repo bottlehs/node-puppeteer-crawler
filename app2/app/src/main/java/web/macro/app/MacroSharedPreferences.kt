@@ -52,6 +52,11 @@ class MacroSharedPreferences(context: Context) {
      */
     private val prefs : SharedPreferences = context.getSharedPreferences(prefsFilename, 0)
 
+    // 실행 코드
+    var executionCdoe: String?
+        get() = prefs.getString("prefsKeyExecutionCdoe","")
+        set(value) = prefs.edit().putString("prefsKeyExecutionCdoe", value).apply()
+
     // 시간대/구매 ~ 4
     var time1: String?
         get() = prefs.getString("prefsKeyTime1","")

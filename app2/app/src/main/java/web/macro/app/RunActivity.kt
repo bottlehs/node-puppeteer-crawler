@@ -70,6 +70,8 @@ class RunActivity : AppCompatActivity() {
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
     val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
+    var executionCdoe = "";
+
     var productName = "";
     var productId = "";
     var purchaseId = "";
@@ -152,6 +154,11 @@ class RunActivity : AppCompatActivity() {
         readAddressTextFromFile("product_1_address.txt",1)
         readAddressTextFromFile("product_2_address.txt",2)
         readAddressTextFromFile("product_3_address.txt",3)
+
+        // executionCdoe
+        if ( !App.prefs.executionCdoe.equals("") ) {
+            executionCdoe = App.prefs.productName2.toString();
+        }
 
         // product 1
         if ( !App.prefs.productName1.equals("") && !App.prefs.productId1.equals("") && !App.prefs.purchaseId1.equals("") ) {
@@ -752,7 +759,7 @@ class RunActivity : AppCompatActivity() {
             }
             */
             purchaseIds.forEachIndexed{ index, id ->
-                val count = db!!.logsDao().getCountPurchaseIdAll(id);
+                val count = db!!.logsDao().getCountPurchaseIdAndExecutionCdoeAll(id, executionCdoe);
                 productsBuy.set(index, count);
                 Log.i(TAG,"========play productsBuy index========"+index);
                 Log.i(TAG,"========play productsBuy count========"+count);
@@ -1565,6 +1572,7 @@ class RunActivity : AppCompatActivity() {
         val log = Logs(
             0,
             currentDate + " " + temp[0],
+            executionCdoe,
             productId,
             purchaseId,
             productName,
@@ -1577,6 +1585,7 @@ class RunActivity : AppCompatActivity() {
 
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE + "end") {
             param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param("ExecutionCdoe", executionCdoe.toString())
             param("Name", productName.toString())
             param("Date", currentDate + " " + temp[0])
             param("IpAddress", ip.toString())

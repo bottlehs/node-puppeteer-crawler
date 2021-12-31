@@ -99,6 +99,27 @@ class MainActivity: AppCompatActivity() {
             startActivity(intent)
         })
 
+        val btnExecutionCdoeGenerate: View = findViewById(R.id.btn_execution_cdoe_generate);
+        btnExecutionCdoeGenerate.setOnClickListener(View.OnClickListener {
+            var builder = AlertDialog.Builder(this)
+            builder.setTitle("Execution Code")
+            builder.setMessage("Do you want to create an execution code?")
+
+            var listener = object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    when (p1) {
+                        DialogInterface.BUTTON_POSITIVE ->
+                            saveExecutionCdoe();
+                    }
+                }
+            }
+
+            builder.setPositiveButton(R.string.positive, listener)
+            builder.setNegativeButton(R.string.negative, listener)
+
+            builder.show()
+        })
+
         val btnSave: View = findViewById(R.id.btn_save);
         val btnRun: View = findViewById(R.id.btn_run);
         val btnLogs: View = findViewById(R.id.btn_logs);
@@ -163,6 +184,12 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
+
+        if ( 0 < App.prefs.executionCdoe.toString().length ) {
+            setExecutionCdoe(App.prefs.executionCdoe.toString())
+        } else {
+            setExecutionCdoe("-")
+        }
 
         val time11 : TextView = findViewById(R.id.time11) as TextView;
         val time12 : TextView = findViewById(R.id.time12) as TextView;
@@ -904,6 +931,22 @@ class MainActivity: AppCompatActivity() {
         return clickBuilder.build()
     }
 
+    fun saveExecutionCdoe() {
+        val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
+        var code = (1..5)
+            .map { charset.random() }
+            .joinToString("");
+
+    }
+
+    fun setExecutionCdoe(value: String) {
+        if ( 0 < value.length ) {
+            time11.setText(value)
+        } else {
+            time11.setText("-:-")
+        }
+    }
+
     fun setTime11(value: String) {
         if ( 0 < value.length ) {
             time11.setText(value)
@@ -1103,6 +1146,8 @@ class MainActivity: AppCompatActivity() {
     fun saveForm(isRun: Boolean) {
         Log.i(TAG, "productName.text.toString() : " + productName1.text.toString())
 
+        var executionCdoeValue = "";
+
         var isSaveValidation =  true;
         var time1Value = "";
         var time2Value = "";
@@ -1128,6 +1173,14 @@ class MainActivity: AppCompatActivity() {
         var productName3Value = ""
         var productId3Value = ""
         var purchaseId3Value = ""
+
+        // executionCdoe
+        var isExecutionCdoe = true;
+        if ( executionCdoe.text.toString().length == 0 || executionCdoe.text.toString() == "-" ) {
+            isExecutionCdoe = false;
+        } else {
+            executionCdoeValue = executionCdoe.text.toString();
+        }
 
         if ( (0 == time11.text.toString().length || time11.text.toString() == "-:-") || (0 == time12.text.toString().length || time12.text.toString() == "-:-") || purchase1.text.toString() == "-" ) {
             Log.i(TAG, "time1 시간 저장불가능")
@@ -1266,7 +1319,7 @@ class MainActivity: AppCompatActivity() {
             purchaseId3Value = purchaseId3.text.toString();
         }
 
-        if ( (isProduct1 || isProduct2 || isProduct3) && isSaveValidation ) {
+        if ( (isProduct1 || isProduct2 || isProduct3) && isSaveValidation && isExecutionCdoe ) {
             isSaveValidation = true;
         } else {
             Toast.makeText(
@@ -1279,6 +1332,10 @@ class MainActivity: AppCompatActivity() {
 
         // isSaveValidation
         if ( isSaveValidation ) {
+            if ( 0 < executionCdoeValue.length) {
+                App.prefs.executionCdoe = executionCdoeValue
+            }
+
             if ( 0 < time1Value.length && 0 < purchase1Value.length ) {
                 App.prefs.time1 = time1Value
                 App.prefs.purchase1 = purchase1Value

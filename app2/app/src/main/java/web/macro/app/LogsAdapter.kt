@@ -43,6 +43,7 @@ class LogsAdapter (private val items: ArrayList<DataLogs>) : RecyclerView.Adapte
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: DataLogs) {
             view.date.text = item.date;
+            view.executionCdoe.text = item.executionCdoe;
             view.product.text = item.productName;
             view.productId.text = item.productId
             view.purchaseId.text = item.purchaseId
