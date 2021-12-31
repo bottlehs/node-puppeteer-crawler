@@ -20,6 +20,53 @@
                 android:background="@drawable/bottom_line"
                 android:padding="10dp">
                 <LinearLayout
+                    android:id="@id/label"
+                    android:layout_width="@dimen/hour_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_execution_code_label"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_require_label"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/label"
+                    android:layout_marginRight="@dimen/hour_margin">
+                    <TextView
+                        android:id="@+id/executionCdoe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:layout_marginRight="@dimen/hour_margin"
+                        android:text="AA"/>
+                    <Button
+                        android:id="@+id/btn_execution_cdoe_generate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/hour_height"
+                        android:gravity="center"
+                        android:text="@string/activity_main_execution_code_button" />
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hour_height"
+                android:background="#eee"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_line"
+                android:padding="10dp">
+                <LinearLayout
                     android:id="@+id/label"
                     android:layout_width="@dimen/hour_width"
                     android:layout_height="wrap_content"

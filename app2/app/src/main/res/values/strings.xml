@@ -5,6 +5,9 @@
     <string name="accessibility_service_name">AutoClickService</string>
     <string name="accessibility_service_id">web.macro.app/.service.AutoClickService</string>
 
+    <string name="activity_main_execution_code_label">Execution Code</string>
+    <string name="activity_main_execution_code_button">Generate</string>
+
     <string name="positive">Positive</string>
     <string name="negative">Negative</string>
     <string name="activity_main_require_label">(*)</string>
