@@ -63,13 +63,11 @@ async function getSummoner() {
     if ( summonerResponse ) {
       if ( summonerResponse.status == 200 ) {
         summonerResponseStatus = summonerResponse.status;
-        /*
         id = summonerResponse.data.id;
         const gameResponse = await apiPutCall(`http://api.jangin.io/api/game/summoner/${id}`);
         if ( gameResponse ) {
           gameResponseStatus = gameResponse.status
         }
-        */
       }
     }
 
