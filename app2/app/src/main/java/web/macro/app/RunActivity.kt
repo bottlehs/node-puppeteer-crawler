@@ -1057,6 +1057,42 @@ class RunActivity : AppCompatActivity() {
                 useAddress.add(row);
             }
 
+            //  균등분배 주소 로직 추가
+            val addressBuy : HashMap<Int, Int> = HashMap();
+            address.forEachIndexed { index, row ->
+                val count = db!!.logsDao().getCountPurchaseIdAndExecutionCdoeAndAddressAll(purchaseId, executionCdoe, row);
+                addressBuy.set(index, count);
+
+                Log.i(TAG,"========play addressBuy index========"+index);
+                Log.i(TAG,"========play addressBuy count========"+count);
+                Log.i(TAG,"========play addressBuy productId========"+purchaseId);
+            }
+
+            // var temp = productsBuy.toList().sortedWith(compareBy({it.second}, {-it.first})).toMap()
+            val resultMap = addressBuy.entries.sortedBy { it.value }.associate { it.toPair() }
+            resultMap.forEach{ row ->
+                Log.i(TAG,"========play addressBuy resultMap index========"+row.key);
+                Log.i(TAG,"========play addressBuy resultMap count========"+row.value);
+            }
+
+            var addressIdx = resultMap.keys.toIntArray()[0].toInt();
+            useAddress.clear();
+            address.get(addressIdx).split(",").forEach{ row ->
+                useAddress.add(row);
+            }
+
+            /*
+            var name = "";
+            val savedLogs = db!!.logsDao().getPurchaseIdAndExecutionCdoeAll(purchaseId, executionCdoe);
+            Log.i(TAG,""+savedLogs.size)
+            if(savedLogs.isNotEmpty()){
+                savedLogs.forEach{ row ->
+                    var temp = row.address.split(",");
+                    name = temp.get(0);
+                }
+            }
+            */
+
             /*
             action : actions 에 추가할 json object 선언
              */

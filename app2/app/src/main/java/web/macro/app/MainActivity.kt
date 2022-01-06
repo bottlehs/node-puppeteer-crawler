@@ -188,7 +188,7 @@ class MainActivity: AppCompatActivity() {
         if ( 0 < App.prefs.executionCdoe.toString().length ) {
             setExecutionCdoe(App.prefs.executionCdoe.toString())
         } else {
-            setExecutionCdoe("-")
+            this.saveExecutionCdoe();
         }
 
         val time11 : TextView = findViewById(R.id.time11) as TextView;
@@ -937,13 +937,14 @@ class MainActivity: AppCompatActivity() {
             .map { charset.random() }
             .joinToString("");
 
+        executionCdoe.setText(code)
     }
 
     fun setExecutionCdoe(value: String) {
         if ( 0 < value.length ) {
-            time11.setText(value)
+            executionCdoe.setText(value)
         } else {
-            time11.setText("-:-")
+            executionCdoe.setText("-")
         }
     }
 
