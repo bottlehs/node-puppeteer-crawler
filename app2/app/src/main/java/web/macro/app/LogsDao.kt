@@ -23,7 +23,7 @@ interface LogsDao {
     @Query("SELECT count(*) FROM table_store_product_buy_logs WHERE purchaseId = :purchaseId and executionCdoe = :executionCdoe ORDER BY date DESC")
     fun getCountPurchaseIdAndExecutionCdoeAll(purchaseId: String, executionCdoe: String): Int
 
-    @Query("SELECT count(*) FROM table_store_product_buy_logs WHERE purchaseId = :purchaseId and executionCdoe = :executionCdoe and :address LIKE :address ORDER BY date DESC")
+    @Query("SELECT count(*) FROM table_store_product_buy_logs WHERE purchaseId = :purchaseId and executionCdoe = :executionCdoe and address = :address ORDER BY date DESC")
     fun getCountPurchaseIdAndExecutionCdoeAndAddressAll(purchaseId: String, executionCdoe: String, address: String): Int
 
     @Query("SELECT * FROM table_store_product_buy_logs WHERE purchaseId = :purchaseId and executionCdoe = :executionCdoe ORDER BY date DESC LIMIT 1")

@@ -305,6 +305,9 @@ class RunActivity : AppCompatActivity() {
                 if ( url.toString().contains("order_result") || isBuy ) {
                     Log.d(TAG, "최종 완료");
                     insertLog()
+                } else {
+                    Log.d(TAG, "최종 임시 등록");
+                    // insertLog();
                 }
 
                 progressBar.isVisible = false
@@ -1063,6 +1066,7 @@ class RunActivity : AppCompatActivity() {
                 val count = db!!.logsDao().getCountPurchaseIdAndExecutionCdoeAndAddressAll(purchaseId, executionCdoe, row);
                 addressBuy.set(index, count);
 
+                Log.i(TAG,"========play addressBuy row========"+row);
                 Log.i(TAG,"========play addressBuy index========"+index);
                 Log.i(TAG,"========play addressBuy count========"+count);
                 Log.i(TAG,"========play addressBuy productId========"+purchaseId);
