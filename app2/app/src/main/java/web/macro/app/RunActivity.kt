@@ -163,6 +163,7 @@ class RunActivity : AppCompatActivity() {
         // product 1
         if ( !App.prefs.productName1.equals("") && !App.prefs.productId1.equals("") && !App.prefs.purchaseId1.equals("") ) {
             val jsonObject = JSONObject()
+            Log.d(TAG,"========play addressBuy address address1========"+address1)
             jsonObject.put("position", 0);
             jsonObject.put("value",address1)
             productAddress.add(jsonObject)
@@ -260,7 +261,7 @@ class RunActivity : AppCompatActivity() {
         btnRun (View) : 실행 버튼 ( res/layout/activity_main.xml btn_run 을 참조함 )
         webView (WebView) : 웹뷰 ( res/layout/activity_main.xml web_view 을 참조함 )
         rootUrl : 첫 홈페이지
-        rootShopUrl : 쇼핑 홈페이지                
+        rootShopUrl : 쇼핑 홈페이지
         */
         val btnRun: View = findViewById(R.id.btn_run);
         val progressBar: ProgressBar = findViewById(R.id.progress_bar);
@@ -795,10 +796,12 @@ class RunActivity : AppCompatActivity() {
 
         Log.i(TAG,"========play========");
         val len: Int = temp.length() - 1;
+        Log.i(TAG,"========play addressBuy address len========"+len);
         address.clear();
         for(i in 0..len) {
-           var jsonObj = temp.getJSONObject(i);
+            var jsonObj = temp.getJSONObject(i);
             jsonObj.getString("value");
+            Log.i(TAG,"========play addressBuy address value========"+jsonObj.getString("value"));
             Log.i(TAG,jsonObj.getString("value"))
             address.add(jsonObj.getString("value"))
         }
@@ -806,8 +809,9 @@ class RunActivity : AppCompatActivity() {
         val ip = getIp()
         Log.d(TAG, "play isProgress : " + isProgress)
         Log.d(TAG, "ip toString : " + ip.toString())
+        Log.d(TAG, "ip toString : " + this.globalIp)
 
-        if ( globalIp == ip.toString() ) {
+        if ( this.globalIp == ip.toString() ) {
             // 마지막 IP 와 동일한 경우 airplanMode 실행
             this.airplaneMode()
             return
@@ -1046,20 +1050,6 @@ class RunActivity : AppCompatActivity() {
                 return
             }
 
-            var addressPosition = App.prefs.addressPosition.toString().toInt();
-
-            if ( address.size <= addressPosition ) {
-                addressPosition = 0;
-                App.prefs.addressPosition = addressPosition.toString();
-            }
-
-            Log.d(TAG, "addressPosition : " + addressPosition)
-
-            var useAddress : ArrayList<String> = ArrayList();
-            address.get(addressPosition).split(",").forEach{ row ->
-                useAddress.add(row);
-            }
-
             //  균등분배 주소 로직 추가
             val addressBuy : HashMap<Int, Int> = HashMap();
             address.forEachIndexed { index, row ->
@@ -1079,9 +1069,12 @@ class RunActivity : AppCompatActivity() {
                 Log.i(TAG,"========play addressBuy resultMap count========"+row.value);
             }
 
-            var addressIdx = resultMap.keys.toIntArray()[0].toInt();
-            useAddress.clear();
-            address.get(addressIdx).split(",").forEach{ row ->
+            var addressPosition = resultMap.keys.toIntArray()[0].toInt();
+            Log.i(TAG,"========play addressBuy addressPosition========"+addressPosition);
+
+            App.prefs.addressPosition = addressPosition.toString();
+            var useAddress : ArrayList<String> = ArrayList();
+            address.get(addressPosition).split(",").forEach{ row ->
                 useAddress.add(row);
             }
 
@@ -1583,19 +1576,7 @@ class RunActivity : AppCompatActivity() {
         Log.d(TAG, "addressPosition update")
         var addressPosition = App.prefs.addressPosition.toString().toInt();
         var address = address.get(addressPosition);
-
         Log.d(TAG, "addressPosition update addressPosition 1 : " + addressPosition)
-
-        addressPosition++;
-
-        Log.d(TAG, "addressPosition update addressPosition 2 : " + addressPosition)
-
-        App.prefs.addressPosition = addressPosition.toString();
-
-        Log.d(
-            TAG,
-            "addressPosition update addressPosition 3 : " + App.prefs.addressPosition
-        )
 
         Log.d(
             TAG,
