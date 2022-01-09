@@ -38,6 +38,10 @@ class MainActivity: AppCompatActivity() {
     private val TAG = MainActivity::class.qualifiedName
     var checkTxt = true
 
+    // version
+    var versionCode: Int = BuildConfig.VERSION_CODE
+    var versionName = BuildConfig.VERSION_NAME
+
     // firebase
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
@@ -59,34 +63,61 @@ class MainActivity: AppCompatActivity() {
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@MainActivity,
-                "Please check search.txt, address.txt",
+                "Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
         }
 
-        // 셋팅
-        val searchTxtFilePath = "search.txt"
-        writeSearchTextToFile(searchTxtFilePath)
-        readSearchTextFromFile(searchTxtFilePath)
+        // 셋팅 (주소) - product 1
+        writeAddressTextToFile("product_1_address.txt")
+        readAddressTextFromFile("product_1_address.txt")
 
-        val addressTxtFilePath = "address.txt"
-        writeAddressTextToFile(addressTxtFilePath)
-        readAddressTextFromFile(addressTxtFilePath)
+        // 셋팅 (주소) - product 2
+        writeAddressTextToFile("product_2_address.txt")
+        readAddressTextFromFile("product_2_address.txt")
+
+        // 셋팅 (주소) - product 3
+        writeAddressTextToFile("product_3_address.txt")
+        readAddressTextFromFile("product_3_address.txt")
 
         if ( !checkTxt ) {
             Toast.makeText(
                 this@MainActivity,
-                "Please check search.txt, address.txt",
+                "Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
         }
+
+        val appVersion: TextView = findViewById(R.id.appVersion);
+        appVersion.setText(versionName+"("+versionCode+")");
 
         val airplaneMode: View = findViewById(R.id.airplaneMode);
         airplaneMode.setOnClickListener(View.OnClickListener {
             var intent = Intent(this, AirplaneActivity::class.java)
             startActivity(intent)
+        })
+
+        val btnExecutionCdoeGenerate: View = findViewById(R.id.btn_execution_cdoe_generate);
+        btnExecutionCdoeGenerate.setOnClickListener(View.OnClickListener {
+            var builder = AlertDialog.Builder(this)
+            builder.setTitle("Execution Code")
+            builder.setMessage("Do you want to create an execution code?")
+
+            var listener = object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    when (p1) {
+                        DialogInterface.BUTTON_POSITIVE ->
+                            saveExecutionCdoe();
+                    }
+                }
+            }
+
+            builder.setPositiveButton(R.string.positive, listener)
+            builder.setNegativeButton(R.string.negative, listener)
+
+            builder.show()
         })
 
         val btnSave: View = findViewById(R.id.btn_save);
@@ -153,6 +184,12 @@ class MainActivity: AppCompatActivity() {
             builder.setNegativeButton(R.string.negative, listener)
             builder.show()
         })
+
+        if ( 0 < App.prefs.executionCdoe.toString().length ) {
+            setExecutionCdoe(App.prefs.executionCdoe.toString())
+        } else {
+            this.saveExecutionCdoe();
+        }
 
         val time11 : TextView = findViewById(R.id.time11) as TextView;
         val time12 : TextView = findViewById(R.id.time12) as TextView;
@@ -571,21 +608,25 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
 
-        val productName : TextView = findViewById(R.id.productName) as TextView;
+        // productName
+        val productName1 : TextView = findViewById(R.id.productName1) as TextView;
+        val productName2 : TextView = findViewById(R.id.productName2) as TextView;
+        val productName3 : TextView = findViewById(R.id.productName3) as TextView;
 
-        productName.setOnClickListener(View.OnClickListener {
+        // productName > productName1
+        productName1.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.activity_main_product_name_label))
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_TEXT
-            if (productName.text.toString() != "-") {
-                input.setText(productName.text.toString())
+            if (productName1.text.toString() != "-") {
+                input.setText(productName1.text.toString())
             }
 
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
-            ) { dialog, which -> setProductName(input.text.toString()) }
+            ) { dialog, which -> setProductName1(input.text.toString()) }
             builder.setNegativeButton(
                 getString(R.string.negative)
             ) { dialog, which -> dialog.cancel() }
@@ -593,27 +634,85 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
 
-        if ( 0 < App.prefs.productName.toString().length ) {
-            setProductName(App.prefs.productName.toString())
+        if ( 0 < App.prefs.productName1.toString().length ) {
+            setProductName1(App.prefs.productName1.toString())
         } else {
-            setProductName("-")
+            setProductName1("-")
         }
 
-        val productId : TextView = findViewById(R.id.productId) as TextView;
+        // productName > productName2
+        productName2.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_name_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productName2.text.toString() != "-") {
+                input.setText(productName2.text.toString())
+            }
 
-        productId.setOnClickListener(View.OnClickListener {
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductName2(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productName2.toString().length ) {
+            setProductName2(App.prefs.productName2.toString())
+        } else {
+            setProductName2("-")
+        }
+
+        // productName > productName3
+        productName3.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_name_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productName3.text.toString() != "-") {
+                input.setText(productName3.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductName3(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productName3.toString().length ) {
+            setProductName3(App.prefs.productName3.toString())
+        } else {
+            setProductName3("-")
+        }
+
+        // productId
+        val productId1 : TextView = findViewById(R.id.productId1) as TextView;
+        val productId2 : TextView = findViewById(R.id.productId2) as TextView;
+        val productId3 : TextView = findViewById(R.id.productId3) as TextView;
+
+        // productId > productId1
+        productId1.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.activity_main_product_link_id_label))
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_TEXT
-            if (productId.text.toString() != "-") {
-                input.setText(productId.text.toString())
+            if (productId1.text.toString() != "-") {
+                input.setText(productId1.text.toString())
             }
 
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
-            ) { dialog, which -> setProductId(input.text.toString()) }
+            ) { dialog, which -> setProductId1(input.text.toString()) }
             builder.setNegativeButton(
                 getString(R.string.negative)
             ) { dialog, which -> dialog.cancel() }
@@ -621,27 +720,85 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
 
-        if ( 0 < App.prefs.productId.toString().length ) {
-            setProductId(App.prefs.productId.toString())
+        if ( 0 < App.prefs.productId1.toString().length ) {
+            setProductId1(App.prefs.productId1.toString())
         } else {
-            setProductId("-")
+            setProductId1("-")
         }
 
-        val purchaseId : TextView = findViewById(R.id.purchaseId) as TextView;
+        // productId > productId2
+        productId2.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productId2.text.toString() != "-") {
+                input.setText(productId2.text.toString())
+            }
 
-        purchaseId.setOnClickListener(View.OnClickListener {
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductId2(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productId2.toString().length ) {
+            setProductId2(App.prefs.productId2.toString())
+        } else {
+            setProductId2("-")
+        }
+
+        // productId > productId3
+        productId3.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productId3.text.toString() != "-") {
+                input.setText(productId3.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductId3(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productId3.toString().length ) {
+            setProductId3(App.prefs.productId3.toString())
+        } else {
+            setProductId3("-")
+        }
+
+        // purchaseId
+        val purchaseId1 : TextView = findViewById(R.id.purchaseId1) as TextView;
+        val purchaseId2 : TextView = findViewById(R.id.purchaseId2) as TextView;
+        val purchaseId3 : TextView = findViewById(R.id.purchaseId3) as TextView;
+
+        // purchaseId > purchaseId1
+        purchaseId1.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
             val input = EditText(this)
             input.inputType = InputType.TYPE_CLASS_TEXT
-            if (purchaseId.text.toString() != "-") {
-                input.setText(purchaseId.text.toString())
+            if (purchaseId1.text.toString() != "-") {
+                input.setText(purchaseId1.text.toString())
             }
 
             builder.setView(input)
             builder.setPositiveButton(
                 getString(R.string.positive)
-            ) { dialog, which -> setPurchaseId(input.text.toString()) }
+            ) { dialog, which -> setPurchaseId1(input.text.toString()) }
             builder.setNegativeButton(
                 getString(R.string.negative)
             ) { dialog, which -> dialog.cancel() }
@@ -649,10 +806,64 @@ class MainActivity: AppCompatActivity() {
             builder.show()
         })
 
-        if ( 0 < App.prefs.purchaseId.toString().length ) {
-            setPurchaseId(App.prefs.purchaseId.toString())
+        if ( 0 < App.prefs.purchaseId1.toString().length ) {
+            setPurchaseId1(App.prefs.purchaseId1.toString())
         } else {
-            setPurchaseId("-")
+            setPurchaseId1("-")
+        }
+
+        // purchaseId > purchaseId2
+        purchaseId2.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (purchaseId2.text.toString() != "-") {
+                input.setText(purchaseId2.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setPurchaseId2(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.purchaseId2.toString().length ) {
+            setPurchaseId2(App.prefs.purchaseId2.toString())
+        } else {
+            setPurchaseId2("-")
+        }
+
+        // purchaseId > purchaseId3
+        purchaseId3.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (purchaseId3.text.toString() != "-") {
+                input.setText(purchaseId3.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setPurchaseId3(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.purchaseId3.toString().length ) {
+            setPurchaseId3(App.prefs.purchaseId3.toString())
+        } else {
+            setPurchaseId3("-")
         }
 
         val nextAuto : CheckBox = findViewById(R.id.nextAuto) as CheckBox;
@@ -718,6 +929,23 @@ class MainActivity: AppCompatActivity() {
         val clickBuilder = GestureDescription.Builder()
         clickBuilder.addStroke(clickStroke)
         return clickBuilder.build()
+    }
+
+    fun saveExecutionCdoe() {
+        val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
+        var code = (1..5)
+            .map { charset.random() }
+            .joinToString("");
+
+        executionCdoe.setText(code)
+    }
+
+    fun setExecutionCdoe(value: String) {
+        if ( 0 < value.length ) {
+            executionCdoe.setText(value)
+        } else {
+            executionCdoe.setText("-")
+        }
     }
 
     fun setTime11(value: String) {
@@ -832,32 +1060,94 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    fun setProductName(value: String) {
+    // setProductName
+    // setProductName > setProductName1
+    fun setProductName1(value: String) {
         if ( 0 < value.length ) {
-            productName.setText(value)
+            productName1.setText(value)
         } else {
-            productName.setText("-")
+            productName1.setText("-")
         }
     }
 
-    fun setProductId(value: String) {
+    // setProductName > setProductName2
+    fun setProductName2(value: String) {
         if ( 0 < value.length ) {
-            productId.setText(value)
+            productName2.setText(value)
         } else {
-            productId.setText("-")
+            productName2.setText("-")
         }
     }
 
-    fun setPurchaseId(value: String) {
+    // setProductName > setProductName3
+    fun setProductName3(value: String) {
         if ( 0 < value.length ) {
-            purchaseId.setText(value)
+            productName3.setText(value)
         } else {
-            purchaseId.setText("-")
+            productName3.setText("-")
+        }
+    }
+
+    // setProductId
+    // setProductId > setProductId1
+    fun setProductId1(value: String) {
+        if ( 0 < value.length ) {
+            productId1.setText(value)
+        } else {
+            productId1.setText("-")
+        }
+    }
+
+    // setProductId > setProductId2
+    fun setProductId2(value: String) {
+        if ( 0 < value.length ) {
+            productId2.setText(value)
+        } else {
+            productId2.setText("-")
+        }
+    }
+
+    // setProductId > setProductId3
+    fun setProductId3(value: String) {
+        if ( 0 < value.length ) {
+            productId3.setText(value)
+        } else {
+            productId3.setText("-")
+        }
+    }
+
+    // setPurchaseId
+    // setPurchaseId > setPurchaseId1
+    fun setPurchaseId1(value: String) {
+        if ( 0 < value.length ) {
+            purchaseId1.setText(value)
+        } else {
+            purchaseId1.setText("-")
+        }
+    }
+
+    // setPurchaseId > setPurchaseId1
+    fun setPurchaseId2(value: String) {
+        if ( 0 < value.length ) {
+            purchaseId2.setText(value)
+        } else {
+            purchaseId2.setText("-")
+        }
+    }
+
+    // setPurchaseId > setPurchaseId1
+    fun setPurchaseId3(value: String) {
+        if ( 0 < value.length ) {
+            purchaseId3.setText(value)
+        } else {
+            purchaseId3.setText("-")
         }
     }
 
     fun saveForm(isRun: Boolean) {
-        Log.i(TAG, "productName.text.toString() : " + productName.text.toString())
+        Log.i(TAG, "productName.text.toString() : " + productName1.text.toString())
+
+        var executionCdoeValue = "";
 
         var isSaveValidation =  true;
         var time1Value = "";
@@ -869,9 +1159,29 @@ class MainActivity: AppCompatActivity() {
         var purchase3Value = ""
         var purchase4Value = ""
         var queueValue = ""
-        var productNameValue = ""
-        var productIdValue = ""
-        var purchaseIdValue = ""
+
+        // product 1
+        var productName1Value = ""
+        var productId1Value = ""
+        var purchaseId1Value = ""
+
+        // product 2
+        var productName2Value = ""
+        var productId2Value = ""
+        var purchaseId2Value = ""
+
+        // product 3
+        var productName3Value = ""
+        var productId3Value = ""
+        var purchaseId3Value = ""
+
+        // executionCdoe
+        var isExecutionCdoe = true;
+        if ( executionCdoe.text.toString().length == 0 || executionCdoe.text.toString() == "-" ) {
+            isExecutionCdoe = false;
+        } else {
+            executionCdoeValue = executionCdoe.text.toString();
+        }
 
         if ( (0 == time11.text.toString().length || time11.text.toString() == "-:-") || (0 == time12.text.toString().length || time12.text.toString() == "-:-") || purchase1.text.toString() == "-" ) {
             Log.i(TAG, "time1 시간 저장불가능")
@@ -949,46 +1259,84 @@ class MainActivity: AppCompatActivity() {
         } else {
             queueValue = queue1.text.toString()+"/"+queue2.text.toString();
         }
-        if ( productName.text.toString().length == 0 || productName.text.toString() == "-" ) {
-            isSaveValidation = false;
-            Log.i(TAG, "productName 저장불가능")
+
+        // product 1
+        var isProduct1 = true;
+        if ( productName1.text.toString().length == 0 || productName1.text.toString() == "-" ) {
+            isProduct1 = false;
+        } else {
+            productName1Value = productName1.text.toString();
+        }
+
+        if ( productId1.text.toString().length == 0 || productId1.text.toString() == "-" ) {
+            isProduct1 = false;
+        } else {
+            productId1Value = productId1.text.toString();
+        }
+
+        if ( purchaseId1.text.toString().length == 0 || purchaseId1.text.toString() == "-" ) {
+            isProduct1 = false;
+        } else {
+            purchaseId1Value = purchaseId1.text.toString();
+        }
+
+        // product 2
+        var isProduct2 = true;
+        if ( productName2.text.toString().length == 0 || productName2.text.toString() == "-" ) {
+            isProduct2 = false;
+        } else {
+            productName2Value = productName2.text.toString();
+        }
+
+        if ( productId2.text.toString().length == 0 || productId2.text.toString() == "-" ) {
+            isProduct2 = false;
+        } else {
+            productId2Value = productId2.text.toString();
+        }
+
+        if ( purchaseId2.text.toString().length == 0 || purchaseId2.text.toString() == "-" ) {
+            isProduct2 = false;
+        } else {
+            purchaseId2Value = purchaseId2.text.toString();
+        }
+
+        // product 3
+        var isProduct3 = true;
+        if ( productName3.text.toString().length == 0 || productName3.text.toString() == "-" ) {
+            isProduct3 = false;
+        } else {
+            productName3Value = productName3.text.toString();
+        }
+
+        if ( productId3.text.toString().length == 0 || productId3.text.toString() == "-" ) {
+            isProduct3 = false;
+        } else {
+            productId3Value = productId3.text.toString();
+        }
+
+        if ( purchaseId3.text.toString().length == 0 || purchaseId3.text.toString() == "-" ) {
+            isProduct3 = false;
+        } else {
+            purchaseId3Value = purchaseId3.text.toString();
+        }
+
+        if ( (isProduct1 || isProduct2 || isProduct3) && isSaveValidation && isExecutionCdoe ) {
+            isSaveValidation = true;
+        } else {
             Toast.makeText(
                 this@MainActivity,
                 "The " + getString(R.string.activity_main_product_name_label) + " field is required",
                 Toast.LENGTH_SHORT
             ).show()
             return
-        } else {
-            productNameValue = productName.text.toString();
         }
 
-        if ( productId.text.toString().length == 0 || productId.text.toString() == "-" ) {
-            isSaveValidation = false;
-            Log.i(TAG, "productId 저장불가능")
-            Toast.makeText(
-                this@MainActivity,
-                "The " + getString(R.string.activity_main_product_link_id_label) + " field is required",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        } else {
-            productIdValue = productId.text.toString();
-        }
-
-        if ( purchaseId.text.toString().length == 0 || purchaseId.text.toString() == "-" ) {
-            isSaveValidation = false;
-            Log.i(TAG, "purchaseId 저장불가능")
-            Toast.makeText(
-                this@MainActivity,
-                "The " + getString(R.string.activity_main_product_buy_link_id_label) + " field is required",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        } else {
-            purchaseIdValue = purchaseId.text.toString();
-        }
-
+        // isSaveValidation
         if ( isSaveValidation ) {
+            if ( 0 < executionCdoeValue.length) {
+                App.prefs.executionCdoe = executionCdoeValue
+            }
+
             if ( 0 < time1Value.length && 0 < purchase1Value.length ) {
                 App.prefs.time1 = time1Value
                 App.prefs.purchase1 = purchase1Value
@@ -1008,14 +1356,47 @@ class MainActivity: AppCompatActivity() {
             if ( 0 < queueValue.length ) {
                 App.prefs.queue = queueValue
             }
-            if ( 0 < productNameValue.length ) {
-                App.prefs.productName = productNameValue
+
+            // product 1
+            App.prefs.productName1 = "";
+            App.prefs.productId1 = ""
+            App.prefs.purchaseId1 = ""
+            if ( 0 < productName1Value.length ) {
+                App.prefs.productName1 = productName1Value
             }
-            if ( 0 < productIdValue.length ) {
-                App.prefs.productId = productIdValue
+            if ( 0 < productId1Value.length ) {
+                App.prefs.productId1 = productId1Value
             }
-            if ( 0 < purchaseIdValue.length ) {
-                App.prefs.purchaseId = purchaseIdValue
+            if ( 0 < purchaseId1Value.length ) {
+                App.prefs.purchaseId1 = purchaseId1Value
+            }
+
+            // product 2
+            App.prefs.productName2 = "";
+            App.prefs.productId2 = ""
+            App.prefs.purchaseId2 = ""
+            if ( 0 < productName2Value.length ) {
+                App.prefs.productName2 = productName2Value
+            }
+            if ( 0 < productId2Value.length ) {
+                App.prefs.productId2 = productId2Value
+            }
+            if ( 0 < purchaseId2Value.length ) {
+                App.prefs.purchaseId2 = purchaseId2Value
+            }
+
+            // product 3
+            App.prefs.productName3 = "";
+            App.prefs.productId3 = ""
+            App.prefs.purchaseId3 = ""
+            if ( 0 < productName3Value.length ) {
+                App.prefs.productName3 = productName3Value
+            }
+            if ( 0 < productId3Value.length ) {
+                App.prefs.productId3 = productId3Value
+            }
+            if ( 0 < purchaseId3Value.length ) {
+                App.prefs.purchaseId3 = purchaseId3Value
             }
 
             if ( nextAuto.isChecked ) {
@@ -1034,41 +1415,6 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    fun writeSearchTextToFile(path: String) {
-        appExternalFile = File(getExternalFilesDir(filepath), path)
-        try {
-            val file = File(getExternalFilesDir(filepath), path)
-            if (file.exists()) {
-                Log.d(TAG,"writeSearchTextToFile 파일이 존재 한다.");
-                //Do something
-            } else {
-                Log.d(TAG,"writeSearchTextToFile 파일이 존재 안한다.");
-                val fileOutPutStream = FileOutputStream(appExternalFile)
-                fileOutPutStream.write("해운대,부산,서울,대구,제주도,호수공원".toByteArray())
-                fileOutPutStream.close()
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun readSearchTextFromFile(path: String) {
-        appExternalFile = File(getExternalFilesDir(filepath), path)
-
-        var fileInputStream =FileInputStream(appExternalFile)
-        var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
-        val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
-        val stringBuilder: StringBuilder = StringBuilder()
-        var text: String? = null
-        while ({ text = bufferedReader.readLine(); text }() != null) {
-            stringBuilder.append(text)
-        }
-        fileInputStream.close()
-        if ( stringBuilder.toString().trim().length == 0 ) {
-            checkTxt = false;
-        }
-    }
-
     fun writeAddressTextToFile(path: String) {
         appExternalFile = File(getExternalFilesDir(filepath), path)
         try {
@@ -1079,8 +1425,20 @@ class MainActivity: AppCompatActivity() {
             } else {
                 Log.d(TAG,"writeAddressTextToFile 파일이 존재 안한다.");
                 val fileOutPutStream = FileOutputStream(appExternalFile)
-                fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com\n".toByteArray())
-                fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_81:010-714471-56107:오미라:하나은행:www.hanabank.com".toByteArray())
+
+                if ( path.equals("product_1_address.txt") ) {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr".toByteArray())
+                } else if ( path.equals("product_2_address.txt") ) {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_04:265701-04-355542:신성수(애드닷컴):국민은행:www.kbstar.com\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_04:265701-04-355542:신성수(애드닷컴):국민은행:www.kbstar.com".toByteArray())
+                } else if ( path.equals("product_3_address.txt") ) {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300770404032:주식회사 아리상사:기업은행:www.ibk.co.kr\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300770404032:주식회사 아리상사:기업은행:www.ibk.co.kr".toByteArray())
+                } else {
+                    fileOutPutStream.write("신나라1,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr\n".toByteArray())
+                    fileOutPutStream.write("신나라2,06035,서울특별시 강남구 가로수길 9 (신사동),없음,017-0000-0001,ergjeorgj@test.com,bank_03:92300708301012:유현목:기업은행:www.ibk.co.kr".toByteArray())
+                }
                 fileOutPutStream.close()
             }
         } catch (e: IOException) {
