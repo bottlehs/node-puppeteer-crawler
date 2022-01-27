@@ -3,7 +3,7 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 
 let html = "";
-let page = 1000;
+let page = 1;
 
 async function getHtml(url) {
   try {
@@ -39,7 +39,7 @@ async function getRec() {
 
     console.log(rec);
 
-    if ( page < 2000 ) {
+    if ( page < 100 ) {
       page++;
       const time = Math.floor(Math.random() * 1000) + 500;
       console.log(time);

@@ -2,15 +2,15 @@ const axios = require("axios");
 const fs = require("fs");
 
 let html = "";
-let page = 1000;
-let max_page = 1250;
+let page = 1;
+let max_page = 8;
 let items = [];
 let complteItems = [];
 
 async function getJson() {
   try {
     if ( page < max_page ) {
-      const temp = fs.readFileSync(`opgg_ranking/page.${page}.json`,'utf-8');
+      const temp = fs.readFileSync(`opgg_ranking/${page}.json`,'utf-8');
       const summoners = JSON.parse(temp);
       summoners.forEach(summoner => {
         items.push(summoner);
@@ -64,14 +64,12 @@ async function getSummoner() {
     let id = 0;
     if ( summonerResponse ) {
       if ( summonerResponse.status == 200 ) {
-        /*
         summonerResponseStatus = summonerResponse.status;
         id = summonerResponse.data.id;
         const gameResponse = await apiPutCall(`http://api.jangin.io/api/game/summoner/${id}`);
         if ( gameResponse ) {
           gameResponseStatus = gameResponse.status
         }
-        */
       }
     }
 
