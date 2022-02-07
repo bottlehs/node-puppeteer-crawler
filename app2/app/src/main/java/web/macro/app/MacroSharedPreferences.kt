@@ -136,6 +136,54 @@ class MacroSharedPreferences(context: Context) {
         get() = prefs.getString("prefsKeyPurchaseId3","")
         set(value) = prefs.edit().putString("prefsKeyPurchaseId3", value).apply()
 
+    // product 4
+    // 상품명
+    var productName4: String?
+        get() = prefs.getString("prefsKeyProductName4","")
+        set(value) = prefs.edit().putString("prefsKeyProductName4", value).apply()
+
+    // 상품링크 ID
+    var productId4: String?
+        get() = prefs.getString("prefsKeyProductId4","")
+        set(value) = prefs.edit().putString("prefsKeyProductId4", value).apply()
+
+    // 구매 링크 ID
+    var purchaseId4: String?
+        get() = prefs.getString("prefsKeyPurchaseId4","")
+        set(value) = prefs.edit().putString("prefsKeyPurchaseId4", value).apply()
+
+    // product 5
+    // 상품명
+    var productName5: String?
+        get() = prefs.getString("prefsKeyProductName5","")
+        set(value) = prefs.edit().putString("prefsKeyProductName5", value).apply()
+
+    // 상품링크 ID
+    var productId5: String?
+        get() = prefs.getString("prefsKeyProductId5","")
+        set(value) = prefs.edit().putString("prefsKeyProductId5", value).apply()
+
+    // 구매 링크 ID
+    var purchaseId5: String?
+        get() = prefs.getString("prefsKeyPurchaseId5","")
+        set(value) = prefs.edit().putString("prefsKeyPurchaseId5", value).apply()
+
+    // product 6
+    // 상품명
+    var productName6: String?
+        get() = prefs.getString("prefsKeyProductName6","")
+        set(value) = prefs.edit().putString("prefsKeyProductName6", value).apply()
+
+    // 상품링크 ID
+    var productId6: String?
+        get() = prefs.getString("prefsKeyProductId6","")
+        set(value) = prefs.edit().putString("prefsKeyProductId6", value).apply()
+
+    // 구매 링크 ID
+    var purchaseId6: String?
+        get() = prefs.getString("prefsKeyPurchaseId6","")
+        set(value) = prefs.edit().putString("prefsKeyPurchaseId6", value).apply()
+
     // 익일 자동실행
     var nextAuto: String?
         get() = prefs.getString("prefsKeyNextAuto","N")

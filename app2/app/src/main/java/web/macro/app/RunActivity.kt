@@ -96,6 +96,9 @@ class RunActivity : AppCompatActivity() {
     var address1 = JSONArray()
     var address2 = JSONArray()
     var address3 = JSONArray()
+    var address4 = JSONArray()
+    var address5 = JSONArray()
+    var address6 = JSONArray()
 
     var playDate = App.prefs.playDate.toString();
     var nextAuto = App.prefs.nextAuto.toString();
@@ -154,6 +157,9 @@ class RunActivity : AppCompatActivity() {
         readAddressTextFromFile("product_1_address.txt",1)
         readAddressTextFromFile("product_2_address.txt",2)
         readAddressTextFromFile("product_3_address.txt",3)
+        readAddressTextFromFile("product_4_address.txt",4)
+        readAddressTextFromFile("product_5_address.txt",5)
+        readAddressTextFromFile("product_6_address.txt",6)
 
         // executionCdoe
         if ( !App.prefs.executionCdoe.equals("") ) {
@@ -218,6 +224,72 @@ class RunActivity : AppCompatActivity() {
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId3.toString()+"/products")
 
             if ( address3.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 4
+        if ( !App.prefs.productName4.equals("") && !App.prefs.productId4.equals("") && !App.prefs.purchaseId4.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address4)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName4.toString())
+            productIds.add(App.prefs.productId4.toString())
+            purchaseIds.add(App.prefs.purchaseId4.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId4.toString()+"/products")
+
+            if ( address4.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 5
+        if ( !App.prefs.productName5.equals("") && !App.prefs.productId5.equals("") && !App.prefs.purchaseId5.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address5)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName5.toString())
+            productIds.add(App.prefs.productId5.toString())
+            purchaseIds.add(App.prefs.purchaseId5.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId5.toString()+"/products")
+
+            if ( address5.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 6
+        if ( !App.prefs.productName6.equals("") && !App.prefs.productId6.equals("") && !App.prefs.purchaseId6.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address6)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName6.toString())
+            productIds.add(App.prefs.productId6.toString())
+            purchaseIds.add(App.prefs.purchaseId6.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId6.toString()+"/products")
+
+            if ( address6.length() == 0 ) {
                 Toast.makeText(
                     this@RunActivity,
                     "Please address.txt",
