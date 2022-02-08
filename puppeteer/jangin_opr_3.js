@@ -2,15 +2,15 @@ const axios = require("axios");
 const fs = require("fs");
 
 let html = "";
-let page = 1500;
-let max_page = 1750;
+let page = 3;
+let max_page = 4;
 let items = [];
 let complteItems = [];
 
 async function getJson() {
   try {
     if ( page < max_page ) {
-      const temp = fs.readFileSync(`opgg_ranking/page.${page}.json`,'utf-8');
+      const temp = fs.readFileSync(`opgg_ranking/${page}.json`,'utf-8');
       const summoners = JSON.parse(temp);
       summoners.forEach(summoner => {
         items.push(summoner);
