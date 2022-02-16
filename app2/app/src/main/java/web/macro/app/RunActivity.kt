@@ -147,7 +147,7 @@ class RunActivity : AppCompatActivity() {
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@RunActivity,
-                "Please check address.txt",
+                "11Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
@@ -239,6 +239,8 @@ class RunActivity : AppCompatActivity() {
             jsonObject.put("position", 0);
             jsonObject.put("value",address4)
             productAddress.add(jsonObject)
+            Log.d(TAG,"App.prefs.productName4 : "+App.prefs.productName4)
+            Log.d(TAG,address4.toString())
 
             productNames.add(App.prefs.productName4.toString())
             productIds.add(App.prefs.productId4.toString())
@@ -1543,6 +1545,12 @@ class RunActivity : AppCompatActivity() {
                     address2.put(temp)
                 } else if ( num == 3 ) {
                     address3.put(temp)
+                } else if ( num == 4 ) {
+                    address4.put(temp)
+                } else if ( num == 5 ) {
+                    address5.put(temp)
+                } else if ( num == 6 ) {
+                    address6.put(temp)
                 }
             }
         }

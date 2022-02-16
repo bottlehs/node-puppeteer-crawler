@@ -63,7 +63,7 @@ class MainActivity: AppCompatActivity() {
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@MainActivity,
-                "Please check address.txt",
+                "1Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
@@ -96,7 +96,7 @@ class MainActivity: AppCompatActivity() {
         if ( !checkTxt ) {
             Toast.makeText(
                 this@MainActivity,
-                "Please check address.txt",
+                "2Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()

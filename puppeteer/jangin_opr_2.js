@@ -3,7 +3,7 @@ const fs = require("fs");
 
 let html = "";
 let page = 2;
-let max_page = 3;
+let max_page = 5;
 let items = [];
 let complteItems = [];
 

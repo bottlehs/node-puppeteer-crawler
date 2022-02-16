@@ -2,8 +2,8 @@ const axios = require("axios");
 const fs = require("fs");
 
 let html = "";
-let page = 4;
-let max_page = 8;
+let page = 9;
+let max_page = 12;
 let items = [];
 let complteItems = [];
 
