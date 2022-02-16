@@ -4,7 +4,7 @@ const fs = require("fs");
 
 let html = "";
 let page = 1;
-let max_page = 6;
+let max_page = 3;
 let items = [];
 let complteItems = [];
 let startDate = "2022-01-07";
@@ -146,13 +146,14 @@ async function getSummoner() {
 
     console.log(`요청 : paramsStartDate:${paramsStartDate} / paramsEndDate:${paramsEndDate}`);
 
-    const summonerResponse = await apiGetCall(`http://127.0.0.1:8080/api/summoner/${encodeURI(summonerName)}`);
+    const summonerResponse = await apiGetCall(`https://api.jangin.io/api/summoner/${encodeURI(summonerName)}`);
     let id = 0;
     if ( summonerResponse ) {
       if ( summonerResponse.status == 200 ) {
+        console.log(`요청 정상 : paramsStartDate:${paramsStartDate} / paramsEndDate:${paramsEndDate}`);
         summonerResponseStatus = summonerResponse.status;
         id = summonerResponse.data.id;
-        const gameResponse = await apiPutCall(`http://127.0.0.1:8080/api/game/data/summoner/${id}/${paramsStartDate}/${paramsEndDate}`);
+        const gameResponse = await apiPutCall(`https://api.jangin.io/api/game/data/summoner/${id}/${paramsStartDate}/${paramsEndDate}`);
         if ( gameResponse ) {
           gameResponseStatus = gameResponse.status
         }
