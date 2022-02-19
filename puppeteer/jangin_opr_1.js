@@ -4,7 +4,7 @@ const fs = require("fs");
 
 let html = "";
 let page = 1;
-let max_page = 3;
+let max_page = 2;
 let items = [];
 let complteItems = [];
 let startDate = "2022-01-07";

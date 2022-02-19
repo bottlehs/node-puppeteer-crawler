@@ -3,8 +3,8 @@ const { NodeWithChildren } = require("cheerio");
 const fs = require("fs");
 
 let html = "";
-let page = 10;
-let max_page = 12;
+let page = 4;
+let max_page = 5;
 let items = [];
 let complteItems = [];
 let startDate = "2022-01-07";
@@ -71,7 +71,7 @@ async function getJson() {
         console.log('종료 1');
       } else {
         console.log('날짜 변경후 재시작');
-        page = 1;
+        page = 4;
         calcDate();
         getJson();
       }
