@@ -150,11 +150,12 @@ async function getSummoner() {
     let id = 0;
     if ( summonerResponse ) {
       if ( summonerResponse.status == 200 ) {
-        console.log(`요청 정상 : paramsStartDate:${paramsStartDate} / paramsEndDate:${paramsEndDate}`);
+        console.log(`요청 정상 : https://api.jangin.io/api/summoner/${encodeURI(summonerName)}`);
         summonerResponseStatus = summonerResponse.status;
         id = summonerResponse.data.id;
         const gameResponse = await apiPutCall(`https://api.jangin.io/api/game/data/summoner/${id}/${paramsStartDate}/${paramsEndDate}`);
         if ( gameResponse ) {
+          console.log(`요청 정상 게임수집 : https://api.jangin.io/api/game/data/summoner/${id}/${paramsStartDate}/${paramsEndDate}`);          
           gameResponseStatus = gameResponse.status
         }
       }
