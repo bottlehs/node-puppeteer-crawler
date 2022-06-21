@@ -34,12 +34,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
 import java.net.NetworkInterface
+import java.security.SecureRandom
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.random.Random
 
 
@@ -59,6 +61,7 @@ class RunActivity : AppCompatActivity() {
     */
     var isProgress = false;
     var isBuy = false;
+    var isLoop = false;
     var actionStep = 0
     var actions = JSONArray()
     val timeMillis = 1000L
@@ -67,10 +70,21 @@ class RunActivity : AppCompatActivity() {
     val rootUrl = "https://m.naver.com" // 첫 홈페이지
     val rootShopUrl = "https://m.shopping.naver.com/home/m/index.nhn" // 쇼핑 홈페이지
 
-    val productName = App.prefs.productName;
-    val productId = App.prefs.productId;
-    val purchaseId = App.prefs.purchaseId;
-    val productIdUrl = "https://msearch.shopping.naver.com/catalog/"+productId+"/products";
+    var executionCdoe = "";
+
+    var productName = "";
+    var productId = "";
+    var purchaseId = "";
+    var productIdUrl = "";
+    var searchUrl = "";
+
+    var productNames : ArrayList<String> = ArrayList();
+    var productIds : ArrayList<String> = ArrayList();
+    var purchaseIds : ArrayList<String> = ArrayList();
+    val productIdUrls : ArrayList<String> = ArrayList();
+    val searchUrls : ArrayList<String> = ArrayList();
+    val productAddress : ArrayList<JSONObject> = ArrayList();
+    var productIdx = 0;
 
     var timeBuy : ArrayList<String> = ArrayList();
     var timeBuy1 : ArrayList<String> = ArrayList();
@@ -80,8 +94,13 @@ class RunActivity : AppCompatActivity() {
     var queue = 5;
     var second = 0;
 
-    var search : ArrayList<String> = ArrayList();
     var address : ArrayList<String> = ArrayList();
+    var address1 = JSONArray()
+    var address2 = JSONArray()
+    var address3 = JSONArray()
+    var address4 = JSONArray()
+    var address5 = JSONArray()
+    var address6 = JSONArray()
 
     var playDate = App.prefs.playDate.toString();
     var nextAuto = App.prefs.nextAuto.toString();
@@ -114,26 +133,186 @@ class RunActivity : AppCompatActivity() {
         setContentView(R.layout.activity_run)
         db = AppDatabase.getInstance(this)
 
+        /*
+        var productName : ArrayList<String> = ArrayList();
+        var productId : ArrayList<String> = ArrayList();
+        var purchaseId : ArrayList<String> = ArrayList();
+        val productIdUrl : ArrayList<String> = ArrayList();
+
+        val productName = App.prefs.productName;
+        val productId = App.prefs.productId;
+        val purchaseId = App.prefs.purchaseId;
+        val productIdUrl = "https://msearch.shopping.naver.com/catalog/"+productId+"/products";
+        */
+
+
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@RunActivity,
-                "Please check search.txt, address.txt",
+                "11Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
         }
 
         // 셋팅
-        val searchTxtFilePath = "search.txt"
-        readSearchTextFromFile(searchTxtFilePath)
+        readAddressTextFromFile("product_1_address.txt",1)
+        readAddressTextFromFile("product_2_address.txt",2)
+        readAddressTextFromFile("product_3_address.txt",3)
+        readAddressTextFromFile("product_4_address.txt",4)
+        readAddressTextFromFile("product_5_address.txt",5)
+        readAddressTextFromFile("product_6_address.txt",6)
 
-        val addressTxtFilePath = "address.txt"
-        readAddressTextFromFile(addressTxtFilePath)
+        // executionCdoe
+        if ( !App.prefs.executionCdoe.equals("") ) {
+            executionCdoe = App.prefs.productName2.toString();
+        }
 
-        if ( search.size == 0 || address.size == 0 ) {
+        // product 1
+        if ( !App.prefs.productName1.equals("") && !App.prefs.productId1.equals("") && !App.prefs.purchaseId1.equals("") ) {
+            val jsonObject = JSONObject()
+            Log.d(TAG,"========play addressBuy address address1========"+address1)
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address1)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName1.toString())
+            productIds.add(App.prefs.productId1.toString())
+            purchaseIds.add(App.prefs.purchaseId1.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId1.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
+
+            if ( address1.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 2
+        if ( !App.prefs.productName2.equals("") && !App.prefs.productId2.equals("") && !App.prefs.purchaseId2.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address2)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName2.toString())
+            productIds.add(App.prefs.productId2.toString())
+            purchaseIds.add(App.prefs.purchaseId2.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId2.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
+
+            if ( address2.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 3
+        if ( !App.prefs.productName3.equals("") && !App.prefs.productId3.equals("") && !App.prefs.purchaseId3.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address3)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName3.toString())
+            productIds.add(App.prefs.productId3.toString())
+            purchaseIds.add(App.prefs.purchaseId3.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId3.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
+
+            if ( address3.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 4
+        if ( !App.prefs.productName4.equals("") && !App.prefs.productId4.equals("") && !App.prefs.purchaseId4.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address4)
+            productAddress.add(jsonObject)
+            Log.d(TAG,"App.prefs.productName4 : "+App.prefs.productName4)
+            Log.d(TAG,address4.toString())
+
+            productNames.add(App.prefs.productName4.toString())
+            productIds.add(App.prefs.productId4.toString())
+            purchaseIds.add(App.prefs.purchaseId4.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId4.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
+
+            if ( address4.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 5
+        if ( !App.prefs.productName5.equals("") && !App.prefs.productId5.equals("") && !App.prefs.purchaseId5.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address5)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName5.toString())
+            productIds.add(App.prefs.productId5.toString())
+            purchaseIds.add(App.prefs.purchaseId5.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId5.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
+
+            if ( address5.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        // product 6
+        if ( !App.prefs.productName6.equals("") && !App.prefs.productId6.equals("") && !App.prefs.purchaseId6.equals("") ) {
+            val jsonObject = JSONObject()
+            jsonObject.put("position", 0);
+            jsonObject.put("value",address6)
+            productAddress.add(jsonObject)
+
+            productNames.add(App.prefs.productName6.toString())
+            productIds.add(App.prefs.productId6.toString())
+            purchaseIds.add(App.prefs.purchaseId6.toString())
+            productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId6.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
+
+            if ( address6.length() == 0 ) {
+                Toast.makeText(
+                    this@RunActivity,
+                    "Please address.txt",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
+        }
+
+        if ( productIds.size == 0 ) {
             Toast.makeText(
                 this@RunActivity,
-                "Please check search.txt, address.txt",
+                "Please product",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
@@ -164,7 +343,7 @@ class RunActivity : AppCompatActivity() {
         btnRun (View) : 실행 버튼 ( res/layout/activity_main.xml btn_run 을 참조함 )
         webView (WebView) : 웹뷰 ( res/layout/activity_main.xml web_view 을 참조함 )
         rootUrl : 첫 홈페이지
-        rootShopUrl : 쇼핑 홈페이지                
+        rootShopUrl : 쇼핑 홈페이지
         */
         val btnRun: View = findViewById(R.id.btn_run);
         val progressBar: ProgressBar = findViewById(R.id.progress_bar);
@@ -209,6 +388,9 @@ class RunActivity : AppCompatActivity() {
                 if ( url.toString().contains("order_result") || isBuy ) {
                     Log.d(TAG, "최종 완료");
                     insertLog()
+                } else {
+                    Log.d(TAG, "최종 임시 등록");
+                    // insertLog();
                 }
 
                 progressBar.isVisible = false
@@ -222,6 +404,7 @@ class RunActivity : AppCompatActivity() {
                     Log.d(TAG, "newSingleThreadScheduledExecutor isBuy : " + isBuy);
                     val obj = actions.getJSONObject(actionStep);
                     Log.d(TAG, "onPageFinished : 11")
+                    Log.d(TAG, "macro onPageFinished actionStep : " + actionStep)
 
                     if (obj.getString("action") != "detailClick" && obj.getString("action") != "productListSearchClick" && obj.getString(
                             "action"
@@ -324,6 +507,8 @@ class RunActivity : AppCompatActivity() {
         val TT: TimerTask = object : TimerTask() {
             override fun run() {
                 // 반복실행할 구문
+                Log.d(TAG,"TimerTask isLoop : "+isLoop);
+                Log.d(TAG,"TimerTask : "+actionStep);
                 Log.d(TAG, "second : " + second)
                 if ( 100 <= second ) {
                     stop()
@@ -334,7 +519,9 @@ class RunActivity : AppCompatActivity() {
                         play()
                     }
                 } else {
-                    second++
+                    if ( !isLoop ) {
+                        second++
+                    }
                 }
             }
         }
@@ -365,10 +552,17 @@ class RunActivity : AppCompatActivity() {
         Log.i(TAG, "actionStep.length() : " + actions.length())
         Log.i(TAG, "actionStep.currentUrl : " + currentUrl)
         Log.i(TAG, "actionStep.url.toString() : " + url.toString())
-
         if ( actionStep < actions.length() && currentUrl != url.toString() )  {
             currentUrl = url.toString()
             val obj = actions.getJSONObject(actionStep);
+
+            isLoop = false;
+            if ( obj.has("isLoop") ) {
+                if ( obj.getBoolean("isLoop") ) {
+                    isLoop = true;
+                }
+            }
+
             obj.put("step", actionStep)
             actionStep = actionStep + 1
             GlobalScope.launch(context = Dispatchers.Main) {
@@ -413,6 +607,13 @@ class RunActivity : AppCompatActivity() {
     }
     fun elementAction(obj: JSONObject, webView: WebView) {
         Log.d(TAG, "elementAction" + obj.getString("action"))
+        isLoop = false;
+        if ( obj.has("isLoop") ) {
+            if ( obj.getBoolean("isLoop") ) {
+                isLoop = true;
+            }
+        }
+
         if ( obj.getString("action") == "focus" ) {
             webView.post(Runnable {
                 webView.loadUrl(
@@ -435,34 +636,12 @@ class RunActivity : AppCompatActivity() {
                     ) + "].value='" + obj.getString("value") + "'})()"
                 )
             });
-            /*
-            if ( obj.has("delay") ) {
-                webView.post(Runnable {
-                    webView.loadUrl(
-                        "javascript:(function(){" +
-                                "setTimeout(function() {" +
-                                "document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value='" + obj.getString(
-                            "value"
-                        ) + "';" +
-                                "console.log(document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value);" +
-                                "}, 500);" +
-                                "})()"
-                    )
-                });
-            } else {
-                webView.post(Runnable {
-                    webView.loadUrl(
-                        "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
-                            "index"
-                        ) + "].value='" + obj.getString("value") + "'})()"
-                    )
-                });
-            }
-            */
+        } else if ( obj.getString("action") == "function" ) {
+            webView.post(Runnable {
+                webView.loadUrl(
+                    "javascript:(function(){ product_submit(1, '/exec/front/order/basket/', this) })()"
+                )
+            });
         } else if ( obj.getString("action") == "click" ) {
             if ( obj.getString("index") == "random" ) {
                 webView.post(Runnable {
@@ -473,6 +652,12 @@ class RunActivity : AppCompatActivity() {
                     )
                 });
             } else {
+                webView.post(Runnable {
+                    webView.loadUrl(
+                        "javascript:(function(){ console.log(document.querySelectorAll('" + obj.getString("selector") + "').length) })()"
+                    )
+                });
+
                 webView.post(Runnable {
                     webView.loadUrl(
                         "javascript:(function(){document.querySelectorAll('" + obj.getString("selector") + "')[" + obj.getInt(
@@ -542,9 +727,18 @@ class RunActivity : AppCompatActivity() {
             TODO
             찾기시 스크롤을 한칸씩 내리도록 수정할 필요가 있음.
              */
+            Log.d(TAG, "elementAction obj.has(\"loop\") " + obj.has("isLoop") )
+            if ( obj.has("isLoop") ) {
+                if ( obj.getBoolean("isLoop") ) {
+                    isLoop = true;
+                }
+            }
+
             webView.post(Runnable {
                 webView.loadUrl(
                     "javascript:(function(){" +
+                            "console.log('처음한번 스크롤 내리기');" +
+                            "window.scrollTo(0, document.body.scrollHeight);" +
                             "var productSearch = function () {" +
                             "setTimeout(function() {" +
                             "var item = document.querySelectorAll('" + obj.getString("selector") + "');" +
@@ -566,9 +760,9 @@ class RunActivity : AppCompatActivity() {
                             "console.log('없다없다12');" +
                             "window.scrollTo(0, document.body.scrollHeight);" +
                             "productSearch()" +
-                            "}, 1500);" +
+                            "}, 5500);" +
                             "};" +
-                            "}, 2500);" +
+                            "}, 7500);" +
                             "};" +
                             "productSearch();" +
                             "})()"
@@ -633,18 +827,81 @@ class RunActivity : AppCompatActivity() {
     }
 
     fun play() {
+        Log.d(TAG, "macro actionStep : " + actionStep)
+        // product 0 ~ n setting
+        Log.d(TAG,db!!.logsDao().toString());
+        val savedLogs = db!!.logsDao().getAll()
+        Log.i(TAG,""+savedLogs.size)
+        Log.i(TAG,"========play init========");
+        if(savedLogs.isNotEmpty()){
+            val productsBuy : HashMap<Int, Int> = HashMap();
+            /*
+            productIds.forEachIndexed{ index, id ->
+                val count = db!!.logsDao().getCountPurchaseIdAll(purchaseIds.get(index));
+                productsBuy.set(index, count);
+                Log.i(TAG,"========play purchaseBuy index========"+index);
+                Log.i(TAG,"========play purchaseBuy count========"+count);
+                Log.i(TAG,"========play purchaseBuy productId========"+id);
+            }
+            */
+            purchaseIds.forEachIndexed{ index, id ->
+                val count = db!!.logsDao().getCountPurchaseIdAndExecutionCdoeAll(id, executionCdoe);
+                productsBuy.set(index, count);
+                Log.i(TAG,"========play productsBuy index========"+index);
+                Log.i(TAG,"========play productsBuy count========"+count);
+            }
+
+            // var temp = productsBuy.toList().sortedWith(compareBy({it.second}, {-it.first})).toMap()
+            val resultMap = productsBuy.entries.sortedBy { it.value }.associate { it.toPair() }
+
+            resultMap.forEach{ row ->
+                Log.i(TAG,"========play purchaseBuy resultMap index========"+row.key);
+                Log.i(TAG,"========play purchaseBuy resultMap count========"+row.value);
+                Log.i(TAG,"========play purchaseBuy resultMap purchaseId========"+purchaseIds.get(row.key));
+            }
+
+            productIdx = resultMap.keys.toIntArray()[0].toInt();
+            Log.i(TAG,"========play productIdx 균등========"+productIdx);
+        } else {
+            val secureRandom = SecureRandom()
+            productIdx = secureRandom.nextInt(productIds.size)
+            Log.i(TAG,"========play productIdx 랜덤========"+productIdx);
+        }
+
+        Log.i(TAG,"========play productIdx ========"+productIdx);
+
+        productName = productNames.get(productIdx);
+        productId = productIds.get(productIdx);
+        purchaseId = purchaseIds.get(productIdx);
+        productIdUrl = productIdUrls.get(productIdx);
+        searchUrl = searchUrls.get(productIdx);
+        var temp = productAddress.get(productIdx).getJSONArray("value")
+
+        Log.i(TAG,"========play========");
+        val len: Int = temp.length() - 1;
+        Log.i(TAG,"========play addressBuy address len========"+len);
+        address.clear();
+        for(i in 0..len) {
+            var jsonObj = temp.getJSONObject(i);
+            jsonObj.getString("value");
+            Log.i(TAG,"========play addressBuy address value========"+jsonObj.getString("value"));
+            Log.i(TAG,jsonObj.getString("value"))
+            address.add(jsonObj.getString("value"))
+        }
+
         val ip = getIp()
         Log.d(TAG, "play isProgress : " + isProgress)
         Log.d(TAG, "ip toString : " + ip.toString())
+        Log.d(TAG, "ip toString : " + this.globalIp)
 
-        if ( globalIp == ip.toString() ) {
+        if ( this.globalIp == ip.toString() ) {
             // 마지막 IP 와 동일한 경우 airplanMode 실행
             this.airplaneMode()
             return
         }
 
         if ( !isProgress && 0 < ip.toString().length ) {
-           this.globalIp = ip.toString();
+            this.globalIp = ip.toString();
 
             Log.d(TAG, "play : 1")
             web_view.clearCache(true)
@@ -876,32 +1133,45 @@ class RunActivity : AppCompatActivity() {
                 return
             }
 
-            var searchPosition = App.prefs.searchPosition.toString().toInt();
-            var addressPosition = App.prefs.addressPosition.toString().toInt();
+            //  균등분배 주소 로직 추가
+            val addressBuy : HashMap<Int, Int> = HashMap();
+            address.forEachIndexed { index, row ->
+                val count = db!!.logsDao().getCountPurchaseIdAndExecutionCdoeAndAddressAll(purchaseId, executionCdoe, row);
+                addressBuy.set(index, count);
 
-            if ( search.size <= searchPosition ) {
-                searchPosition = 0;
-                App.prefs.searchPosition = searchPosition.toString();
+                Log.i(TAG,"========play addressBuy row========"+row);
+                Log.i(TAG,"========play addressBuy index========"+index);
+                Log.i(TAG,"========play addressBuy count========"+count);
+                Log.i(TAG,"========play addressBuy productId========"+purchaseId);
             }
 
-            if ( address.size <= addressPosition ) {
-                addressPosition = 0;
-                App.prefs.addressPosition = addressPosition.toString();
+            // var temp = productsBuy.toList().sortedWith(compareBy({it.second}, {-it.first})).toMap()
+            val resultMap = addressBuy.entries.sortedBy { it.value }.associate { it.toPair() }
+            resultMap.forEach{ row ->
+                Log.i(TAG,"========play addressBuy resultMap index========"+row.key);
+                Log.i(TAG,"========play addressBuy resultMap count========"+row.value);
             }
 
-            Log.d(TAG, "searchPosition : " + searchPosition)
-            Log.d(TAG, "addressPosition : " + addressPosition)
+            var addressPosition = resultMap.keys.toIntArray()[0].toInt();
+            Log.i(TAG,"========play addressBuy addressPosition========"+addressPosition);
 
+            App.prefs.addressPosition = addressPosition.toString();
             var useAddress : ArrayList<String> = ArrayList();
             address.get(addressPosition).split(",").forEach{ row ->
                 useAddress.add(row);
             }
 
-            search.forEach{ row ->
-                Log.d(TAG, "search row : " + row)
+            /*
+            var name = "";
+            val savedLogs = db!!.logsDao().getPurchaseIdAndExecutionCdoeAll(purchaseId, executionCdoe);
+            Log.i(TAG,""+savedLogs.size)
+            if(savedLogs.isNotEmpty()){
+                savedLogs.forEach{ row ->
+                    var temp = row.address.split(",");
+                    name = temp.get(0);
+                }
             }
-
-            Log.d(TAG, "searchPosition123 : " + searchPosition + "/" + search.get(searchPosition))
+            */
 
             /*
             action : actions 에 추가할 json object 선언
@@ -931,114 +1201,6 @@ class RunActivity : AppCompatActivity() {
             next : 페이지 이동 없이 한 화면에서 다음 동작 수행 ( true or false )
             */
 
-            // 검색 포커스
-            action = JSONObject()
-            action.put("name", "검색 포커스")
-            action.put("action", "focus")
-            action.put("selector", "#MM_SEARCH_FAKE")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 입력
-            action = JSONObject()
-            action.put("name", "검색어 입력")
-            action.put("action", "value")
-            action.put("selector", "#query")
-            action.put("value", search.get(searchPosition))
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 폼 전송
-            action = JSONObject()
-            action.put("name", "검색어 폼 전송")
-            action.put("action", "click")
-            action.put("selector", ".sch_btn_search")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색어 결과 클릭
-            action = JSONObject()
-            action.put("name", "검색어 결과 클릭")
-            action.put("action", "click")
-            action.put("selector", ".sp_nreview .total_sub+.total_tit")
-            action.put("function", "element")
-            action.put("index", "random")
-            action.put("next", false)
-            actions.put(action)
-
-            // 뒤로가기
-            action = JSONObject()
-            action.put("name", "뒤로가기")
-            action.put("action", "back")
-            action.put("function", "webview")
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색어 결과 클릭
-            action = JSONObject()
-            action.put("name", "검색어 결과 클릭")
-            action.put("action", "click")
-            action.put("selector", ".sp_nreview .total_sub+.total_tit")
-            action.put("function", "element")
-            action.put("index", "random")
-            action.put("next", false)
-            actions.put(action)
-
-            // 뒤로가기
-            action = JSONObject()
-            action.put("name", "뒤로가기")
-            action.put("action", "back")
-            action.put("function", "webview")
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색 포커스
-            action = JSONObject()
-            action.put("name", "검색 포커스")
-            action.put("action", "focus")
-            action.put("selector", "#nx_query")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 입력
-            action = JSONObject()
-            action.put("name", "검색어 입력")
-            action.put("action", "value")
-            action.put("selector", "#nx_query")
-            action.put("value", productName)
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", true)
-            actions.put(action)
-
-            // 검색어 폼 전송
-            action = JSONObject()
-            action.put("name", "검색어 폼 전송")
-            action.put("action", "click")
-            action.put("selector", ".btn_search")
-            action.put("function", "element")
-            action.put("index", 0)
-            action.put("next", false)
-            actions.put(action)
-
-            // 검색어 결과 쇼핑 클릭
-            action = JSONObject()
-            action.put("name", "검색어 결과 쇼핑 클릭")
-            action.put("action", "click")
-            action.put("selector", ".type_white .sch_tab .lst_sch .bx a")
-            action.put("function", "element")
-            action.put("index", 1)
-            action.put("next", false)
-            actions.put(action)
-
             // 쇼핑홈으로 이동
             action = JSONObject()
             action.put("name", "쇼핑홈으로 이동")
@@ -1047,7 +1209,6 @@ class RunActivity : AppCompatActivity() {
             action.put("url", rootShopUrl)
             actions.put(action)
 
-            /**/
             // 검색 클릭
             action = JSONObject()
             action.put("name", "검색 클릭")
@@ -1089,10 +1250,20 @@ class RunActivity : AppCompatActivity() {
             action.put("next", false)
             actions.put(action)
 
+            // 쇼핑 상세보기 에서 전체 판매처로 이동
+            action = JSONObject()
+            action.put("name", "검색결과 화면으로 이동")
+            action.put("action", "url")
+            action.put("function", "url")
+            action.put("url", searchUrl)
+            actions.put(action)
+
             // 쇼핑 검색어 결과 상품 찾기후 클릭
             action = JSONObject()
             action.put("name", "쇼핑 검색어 결과 상품 찾기후 클릭")
             action.put("action", "productListSearchClick")
+            action.put("isLoop", true)
+            action.put("next", false)
             action.put("selector", ".product_list_item__2tuKA a.product_info_main__1RU2S")
             action.put("function", "element")
             action.put("data_i", productId)
@@ -1132,7 +1303,7 @@ class RunActivity : AppCompatActivity() {
 
             // 구매하기 화면 - 구매하기
             action = JSONObject()
-            action.put("name", "구매하기 화면 - 구매하기")
+            action.put("name", "구매하기 화면 - 구매하기 0")
             action.put("action", "click")
             action.put("selector", "#fixedActionButton .ec-base-button.gColumn  a.btnStrong")
             action.put("function", "element")
@@ -1140,9 +1311,20 @@ class RunActivity : AppCompatActivity() {
             action.put("next", false)
             actions.put(action)
 
+            // 구매하기 화면 - 구매하기
+            action = JSONObject()
+            action.put("name", "구매하기 화면 - 구매하기 1")
+            action.put("action", "click")
+            action.put("selector", "#fixedActionButton .ec-base-button.gColumn  a.btnStrong")
+            action.put("function", "element")
+            action.put("index", 0)
+            action.put("next", false)
+            actions.put(action)
+
+
             // 구매하기 화면 - 비회원구매
             action = JSONObject()
-            action.put("name", "구매하기 화면 - 구매하기")
+            action.put("name", "구매하기 화면 - 구매하기 2")
             action.put("action", "click")
             action.put("selector", ".btnEm")
             action.put("function", "element")
@@ -1343,7 +1525,6 @@ class RunActivity : AppCompatActivity() {
                 param("Date", startCurrentDate + " " + startTemp[0])
                 param("IpAddress", ip.toString())
                 param("Address", address.get(addressPosition))
-                param("Search", search.get(searchPosition))
                 param("productId", productId.toString())
                 param("purchaseId", purchaseId.toString())
                 param("productIdUrl", productIdUrl)
@@ -1364,27 +1545,7 @@ class RunActivity : AppCompatActivity() {
         btn_run.setImageDrawable(getDrawable(R.drawable.ic_play))
     }
 
-    fun readSearchTextFromFile(path: String) {
-        appExternalFile = File(getExternalFilesDir(filepath), path)
-
-        var fileInputStream = FileInputStream(appExternalFile)
-        var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
-        val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
-        val stringBuilder: StringBuilder = StringBuilder()
-        var text: String? = null
-        while ({ text = bufferedReader.readLine(); text }() != null) {
-            stringBuilder.append(text)
-        }
-        fileInputStream.close()
-        if ( stringBuilder.toString().trim().length != 0 ) {
-            stringBuilder.toString().split(",").forEach{ row ->
-                Log.d(TAG, "search stringBuilder" + row)
-                search.add(row)
-            }
-        }
-    }
-
-    fun readAddressTextFromFile(path: String) {
+    fun readAddressTextFromFile(path: String, num: Int) {
         appExternalFile = File(getExternalFilesDir(filepath), path)
 
         var fileInputStream = FileInputStream(appExternalFile)
@@ -1393,7 +1554,21 @@ class RunActivity : AppCompatActivity() {
         var text: String? = null
         while ({ text = bufferedReader.readLine(); text }() != null) {
             if ( text.toString().split(",").size == 7 ) {
-                address.add(text.toString())
+                var temp = JSONObject();
+                temp.put("value",text.toString())
+                if ( num == 1 ) {
+                    address1.put(temp)
+                } else if ( num == 2 ) {
+                    address2.put(temp)
+                } else if ( num == 3 ) {
+                    address3.put(temp)
+                } else if ( num == 4 ) {
+                    address4.put(temp)
+                } else if ( num == 5 ) {
+                    address5.put(temp)
+                } else if ( num == 6 ) {
+                    address6.put(temp)
+                }
             }
         }
         fileInputStream.close()
@@ -1495,56 +1670,44 @@ class RunActivity : AppCompatActivity() {
         val temp = currentTime.split(".");
         var ip = getIp()
 
-        Log.d(TAG, "searchPosition, addressPosition update")
-        var searchPosition = App.prefs.searchPosition.toString().toInt();
+        Log.d(TAG, "addressPosition update")
         var addressPosition = App.prefs.addressPosition.toString().toInt();
-        var strSearch = search.get(searchPosition);
-        var strAddress = address.get(addressPosition);
-
-        Log.d(TAG, "searchPosition, addressPosition update searchPosition 1 : " + searchPosition)
-        Log.d(TAG, "searchPosition, addressPosition update addressPosition 1 : " + addressPosition)
-
-        searchPosition++;
-        addressPosition++;
-
-        Log.d(TAG, "searchPosition, addressPosition update searchPosition 2 : " + searchPosition)
-        Log.d(TAG, "searchPosition, addressPosition update addressPosition 2 : " + addressPosition)
-
-        App.prefs.searchPosition = searchPosition.toString();
-        App.prefs.addressPosition = addressPosition.toString();
-
-        Log.d(
-            TAG,
-            "searchPosition, addressPosition update searchPosition 3 : " + App.prefs.searchPosition
-        )
-        Log.d(
-            TAG,
-            "searchPosition, addressPosition update addressPosition 3 : " + App.prefs.addressPosition
-        )
+        var address = address.get(addressPosition);
+        Log.d(TAG, "addressPosition update addressPosition 1 : " + addressPosition)
 
         Log.d(
             TAG,
             "insertLog : " + currentDate + " " + temp[0] + " / " + productName.toString() + " / " + ip.toString()
         )
 
+        Log.d(TAG,"log insert : "+currentDate + " " + temp[0])
+        Log.d(TAG,"log insert : "+productId)
+        Log.d(TAG,"log insert : "+purchaseId)
+        Log.d(TAG,"log insert : "+productName)
+        Log.d(TAG,"log insert : "+ip.toString())
+        Log.d(TAG,"log insert : "+address)
+
         val log = Logs(
             0,
             currentDate + " " + temp[0],
-            productName.toString(),
+            executionCdoe,
+            productId,
+            purchaseId,
+            productName,
             "1",
             ip.toString(),
-            strAddress,
-            strSearch
+            address,
+            ""
         )
         db?.logsDao()?.insertAll(log)
 
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE + "end") {
             param(FirebaseAnalytics.Param.SCREEN_CLASS, TAG.toString())
+            param("ExecutionCdoe", executionCdoe.toString())
             param("Name", productName.toString())
             param("Date", currentDate + " " + temp[0])
             param("IpAddress", ip.toString())
-            param("Address", strAddress)
-            param("Search", strSearch)
+            param("Address", address)
             param("productId", productId.toString())
             param("purchaseId", purchaseId.toString())
             param("productIdUrl", productIdUrl)

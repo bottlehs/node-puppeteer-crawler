@@ -42,7 +42,7 @@ class LogsActivity: AppCompatActivity() {
         Log.i(TAG,""+savedLogs.size)
         if(savedLogs.isNotEmpty()){
             savedLogs.forEach{ row ->
-                logs.add(DataLogs(row.strDate,row.strProduct, row.strPurchase, row.strIp, row.strAddress, row.strSearch));
+                logs.add(DataLogs(row.date, row.executionCdoe, row.productId, row.purchaseId, row.productName, row.purchase, row.ip, row.address, row.search));
             }
         }
 
