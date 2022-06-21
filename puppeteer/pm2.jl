@@ -1,0 +1,1 @@
+pm2 start jangin_opr_1.js, jangin_opr_2.js, jangin_opr_3.js, jangin_opr_4.js, jangin_opr_5.js, jangin_opr_6.js, jangin_opr_7.js, jangin_opr_8.js, jangin_opr_9.js, jangin_opr_10.js, jangin_opr_11.js, jangin_opr_12.js

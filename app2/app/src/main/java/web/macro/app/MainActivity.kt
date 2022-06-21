@@ -63,7 +63,7 @@ class MainActivity: AppCompatActivity() {
         if (!isExternalStorageAvailable || isExternalStorageReadOnly) {
             Toast.makeText(
                 this@MainActivity,
-                "Please check address.txt",
+                "1Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
@@ -81,10 +81,22 @@ class MainActivity: AppCompatActivity() {
         writeAddressTextToFile("product_3_address.txt")
         readAddressTextFromFile("product_3_address.txt")
 
+        // 셋팅 (주소) - product 4
+        writeAddressTextToFile("product_4_address.txt")
+        readAddressTextFromFile("product_4_address.txt")
+
+        // 셋팅 (주소) - product 5
+        writeAddressTextToFile("product_5_address.txt")
+        readAddressTextFromFile("product_5_address.txt")
+
+        // 셋팅 (주소) - product 6
+        writeAddressTextToFile("product_6_address.txt")
+        readAddressTextFromFile("product_6_address.txt")
+
         if ( !checkTxt ) {
             Toast.makeText(
                 this@MainActivity,
-                "Please check address.txt",
+                "2Please check address.txt",
                 Toast.LENGTH_SHORT
             ).show()
             finish()
@@ -612,6 +624,9 @@ class MainActivity: AppCompatActivity() {
         val productName1 : TextView = findViewById(R.id.productName1) as TextView;
         val productName2 : TextView = findViewById(R.id.productName2) as TextView;
         val productName3 : TextView = findViewById(R.id.productName3) as TextView;
+        val productName4 : TextView = findViewById(R.id.productName4) as TextView;
+        val productName5 : TextView = findViewById(R.id.productName5) as TextView;
+        val productName6 : TextView = findViewById(R.id.productName6) as TextView;
 
         // productName > productName1
         productName1.setOnClickListener(View.OnClickListener {
@@ -694,10 +709,94 @@ class MainActivity: AppCompatActivity() {
             setProductName3("-")
         }
 
+        // productName > productName4
+        productName4.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_name_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productName4.text.toString() != "-") {
+                input.setText(productName4.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductName4(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productName4.toString().length ) {
+            setProductName4(App.prefs.productName4.toString())
+        } else {
+            setProductName4("-")
+        }
+
+        // productName > productName5
+        productName5.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_name_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productName5.text.toString() != "-") {
+                input.setText(productName5.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductName5(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productName5.toString().length ) {
+            setProductName5(App.prefs.productName5.toString())
+        } else {
+            setProductName5("-")
+        }
+
+        // productName > productName6
+        productName6.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_name_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productName6.text.toString() != "-") {
+                input.setText(productName6.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductName6(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productName6.toString().length ) {
+            setProductName6(App.prefs.productName6.toString())
+        } else {
+            setProductName6("-")
+        }
+
         // productId
         val productId1 : TextView = findViewById(R.id.productId1) as TextView;
         val productId2 : TextView = findViewById(R.id.productId2) as TextView;
         val productId3 : TextView = findViewById(R.id.productId3) as TextView;
+        val productId4 : TextView = findViewById(R.id.productId4) as TextView;
+        val productId5 : TextView = findViewById(R.id.productId5) as TextView;
+        val productId6 : TextView = findViewById(R.id.productId6) as TextView;
 
         // productId > productId1
         productId1.setOnClickListener(View.OnClickListener {
@@ -780,10 +879,94 @@ class MainActivity: AppCompatActivity() {
             setProductId3("-")
         }
 
+        // productId > productId4
+        productId4.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productId4.text.toString() != "-") {
+                input.setText(productId4.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductId4(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productId4.toString().length ) {
+            setProductId4(App.prefs.productId4.toString())
+        } else {
+            setProductId4("-")
+        }
+
+        // productId > productId5
+        productId5.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productId5.text.toString() != "-") {
+                input.setText(productId5.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductId5(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productId5.toString().length ) {
+            setProductId5(App.prefs.productId5.toString())
+        } else {
+            setProductId5("-")
+        }
+
+        // productId > productId6
+        productId6.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (productId6.text.toString() != "-") {
+                input.setText(productId6.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setProductId6(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.productId6.toString().length ) {
+            setProductId6(App.prefs.productId6.toString())
+        } else {
+            setProductId6("-")
+        }
+
         // purchaseId
         val purchaseId1 : TextView = findViewById(R.id.purchaseId1) as TextView;
         val purchaseId2 : TextView = findViewById(R.id.purchaseId2) as TextView;
         val purchaseId3 : TextView = findViewById(R.id.purchaseId3) as TextView;
+        val purchaseId4 : TextView = findViewById(R.id.purchaseId4) as TextView;
+        val purchaseId5 : TextView = findViewById(R.id.purchaseId5) as TextView;
+        val purchaseId6 : TextView = findViewById(R.id.purchaseId6) as TextView;
 
         // purchaseId > purchaseId1
         purchaseId1.setOnClickListener(View.OnClickListener {
@@ -864,6 +1047,87 @@ class MainActivity: AppCompatActivity() {
             setPurchaseId3(App.prefs.purchaseId3.toString())
         } else {
             setPurchaseId3("-")
+        }
+
+        // purchaseId > purchaseId4
+        purchaseId4.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (purchaseId4.text.toString() != "-") {
+                input.setText(purchaseId4.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setPurchaseId4(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.purchaseId4.toString().length ) {
+            setPurchaseId4(App.prefs.purchaseId4.toString())
+        } else {
+            setPurchaseId4("-")
+        }
+
+        // purchaseId > purchaseId5
+        purchaseId5.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (purchaseId5.text.toString() != "-") {
+                input.setText(purchaseId5.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setPurchaseId5(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.purchaseId5.toString().length ) {
+            setPurchaseId5(App.prefs.purchaseId5.toString())
+        } else {
+            setPurchaseId5("-")
+        }
+
+        // purchaseId > purchaseId6
+        purchaseId6.setOnClickListener(View.OnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.activity_main_product_buy_link_id_label))
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (purchaseId6.text.toString() != "-") {
+                input.setText(purchaseId6.text.toString())
+            }
+
+            builder.setView(input)
+            builder.setPositiveButton(
+                getString(R.string.positive)
+            ) { dialog, which -> setPurchaseId6(input.text.toString()) }
+            builder.setNegativeButton(
+                getString(R.string.negative)
+            ) { dialog, which -> dialog.cancel() }
+
+            builder.show()
+        })
+
+        if ( 0 < App.prefs.purchaseId6.toString().length ) {
+            setPurchaseId6(App.prefs.purchaseId6.toString())
+        } else {
+            setPurchaseId6("-")
         }
 
         val nextAuto : CheckBox = findViewById(R.id.nextAuto) as CheckBox;
@@ -1088,6 +1352,33 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+    // setProductName > setProductName4
+    fun setProductName4(value: String) {
+        if ( 0 < value.length ) {
+            productName4.setText(value)
+        } else {
+            productName4.setText("-")
+        }
+    }
+
+    // setProductName > setProductName5
+    fun setProductName5(value: String) {
+        if ( 0 < value.length ) {
+            productName5.setText(value)
+        } else {
+            productName5.setText("-")
+        }
+    }
+
+    // setProductName > setProductName6
+    fun setProductName6(value: String) {
+        if ( 0 < value.length ) {
+            productName6.setText(value)
+        } else {
+            productName6.setText("-")
+        }
+    }
+
     // setProductId
     // setProductId > setProductId1
     fun setProductId1(value: String) {
@@ -1116,6 +1407,33 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+    // setProductId > setProductId4
+    fun setProductId4(value: String) {
+        if ( 0 < value.length ) {
+            productId4.setText(value)
+        } else {
+            productId4.setText("-")
+        }
+    }
+
+    // setProductId > setProductId5
+    fun setProductId5(value: String) {
+        if ( 0 < value.length ) {
+            productId5.setText(value)
+        } else {
+            productId5.setText("-")
+        }
+    }
+
+    // setProductId > setProductId6
+    fun setProductId6(value: String) {
+        if ( 0 < value.length ) {
+            productId6.setText(value)
+        } else {
+            productId6.setText("-")
+        }
+    }
+
     // setPurchaseId
     // setPurchaseId > setPurchaseId1
     fun setPurchaseId1(value: String) {
@@ -1141,6 +1459,33 @@ class MainActivity: AppCompatActivity() {
             purchaseId3.setText(value)
         } else {
             purchaseId3.setText("-")
+        }
+    }
+
+    // setPurchaseId > setPurchaseId1
+    fun setPurchaseId4(value: String) {
+        if ( 0 < value.length ) {
+            purchaseId4.setText(value)
+        } else {
+            purchaseId4.setText("-")
+        }
+    }
+
+    // setPurchaseId > setPurchaseId1
+    fun setPurchaseId5(value: String) {
+        if ( 0 < value.length ) {
+            purchaseId5.setText(value)
+        } else {
+            purchaseId5.setText("-")
+        }
+    }
+
+    // setPurchaseId > setPurchaseId1
+    fun setPurchaseId6(value: String) {
+        if ( 0 < value.length ) {
+            purchaseId6.setText(value)
+        } else {
+            purchaseId6.setText("-")
         }
     }
 
@@ -1174,6 +1519,21 @@ class MainActivity: AppCompatActivity() {
         var productName3Value = ""
         var productId3Value = ""
         var purchaseId3Value = ""
+
+        // product 4
+        var productName4Value = ""
+        var productId4Value = ""
+        var purchaseId4Value = ""
+
+        // product 5
+        var productName5Value = ""
+        var productId5Value = ""
+        var purchaseId5Value = ""
+
+        // product 6
+        var productName6Value = ""
+        var productId6Value = ""
+        var purchaseId6Value = ""
 
         // executionCdoe
         var isExecutionCdoe = true;
@@ -1320,7 +1680,67 @@ class MainActivity: AppCompatActivity() {
             purchaseId3Value = purchaseId3.text.toString();
         }
 
-        if ( (isProduct1 || isProduct2 || isProduct3) && isSaveValidation && isExecutionCdoe ) {
+        // product 4
+        var isProduct4 = true;
+        if ( productName4.text.toString().length == 0 || productName4.text.toString() == "-" ) {
+            isProduct4 = false;
+        } else {
+            productName4Value = productName4.text.toString();
+        }
+
+        if ( productId4.text.toString().length == 0 || productId4.text.toString() == "-" ) {
+            isProduct4 = false;
+        } else {
+            productId4Value = productId4.text.toString();
+        }
+
+        if ( purchaseId4.text.toString().length == 0 || purchaseId4.text.toString() == "-" ) {
+            isProduct4 = false;
+        } else {
+            purchaseId4Value = purchaseId4.text.toString();
+        }
+
+        // product 5
+        var isProduct5 = true;
+        if ( productName5.text.toString().length == 0 || productName5.text.toString() == "-" ) {
+            isProduct5 = false;
+        } else {
+            productName5Value = productName5.text.toString();
+        }
+
+        if ( productId5.text.toString().length == 0 || productId5.text.toString() == "-" ) {
+            isProduct5 = false;
+        } else {
+            productId5Value = productId5.text.toString();
+        }
+
+        if ( purchaseId5.text.toString().length == 0 || purchaseId5.text.toString() == "-" ) {
+            isProduct5 = false;
+        } else {
+            purchaseId5Value = purchaseId5.text.toString();
+        }
+
+        // product 6
+        var isProduct6 = true;
+        if ( productName6.text.toString().length == 0 || productName6.text.toString() == "-" ) {
+            isProduct6 = false;
+        } else {
+            productName6Value = productName6.text.toString();
+        }
+
+        if ( productId6.text.toString().length == 0 || productId6.text.toString() == "-" ) {
+            isProduct6 = false;
+        } else {
+            productId6Value = productId6.text.toString();
+        }
+
+        if ( purchaseId6.text.toString().length == 0 || purchaseId6.text.toString() == "-" ) {
+            isProduct6 = false;
+        } else {
+            purchaseId6Value = purchaseId6.text.toString();
+        }
+
+        if ( (isProduct1 || isProduct2 || isProduct3 || isProduct4 || isProduct5 || isProduct6) && isSaveValidation && isExecutionCdoe ) {
             isSaveValidation = true;
         } else {
             Toast.makeText(
@@ -1397,6 +1817,48 @@ class MainActivity: AppCompatActivity() {
             }
             if ( 0 < purchaseId3Value.length ) {
                 App.prefs.purchaseId3 = purchaseId3Value
+            }
+
+            // product 4
+            App.prefs.productName4 = "";
+            App.prefs.productId4 = ""
+            App.prefs.purchaseId4 = ""
+            if ( 0 < productName4Value.length ) {
+                App.prefs.productName4 = productName4Value
+            }
+            if ( 0 < productId4Value.length ) {
+                App.prefs.productId4 = productId4Value
+            }
+            if ( 0 < purchaseId4Value.length ) {
+                App.prefs.purchaseId4 = purchaseId4Value
+            }
+
+            // product 5
+            App.prefs.productName5 = "";
+            App.prefs.productId5 = ""
+            App.prefs.purchaseId5 = ""
+            if ( 0 < productName5Value.length ) {
+                App.prefs.productName5 = productName5Value
+            }
+            if ( 0 < productId5Value.length ) {
+                App.prefs.productId5 = productId5Value
+            }
+            if ( 0 < purchaseId5Value.length ) {
+                App.prefs.purchaseId5 = purchaseId5Value
+            }
+
+            // product 6
+            App.prefs.productName6 = "";
+            App.prefs.productId6 = ""
+            App.prefs.purchaseId6 = ""
+            if ( 0 < productName6Value.length ) {
+                App.prefs.productName6 = productName6Value
+            }
+            if ( 0 < productId6Value.length ) {
+                App.prefs.productId6 = productId6Value
+            }
+            if ( 0 < purchaseId6Value.length ) {
+                App.prefs.purchaseId6 = purchaseId6Value
             }
 
             if ( nextAuto.isChecked ) {
