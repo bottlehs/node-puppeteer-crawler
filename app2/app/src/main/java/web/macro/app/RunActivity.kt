@@ -76,11 +76,13 @@ class RunActivity : AppCompatActivity() {
     var productId = "";
     var purchaseId = "";
     var productIdUrl = "";
+    var searchUrl = "";
 
     var productNames : ArrayList<String> = ArrayList();
     var productIds : ArrayList<String> = ArrayList();
     var purchaseIds : ArrayList<String> = ArrayList();
     val productIdUrls : ArrayList<String> = ArrayList();
+    val searchUrls : ArrayList<String> = ArrayList();
     val productAddress : ArrayList<JSONObject> = ArrayList();
     var productIdx = 0;
 
@@ -178,6 +180,7 @@ class RunActivity : AppCompatActivity() {
             productIds.add(App.prefs.productId1.toString())
             purchaseIds.add(App.prefs.purchaseId1.toString())
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId1.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
 
             if ( address1.length() == 0 ) {
                 Toast.makeText(
@@ -200,6 +203,7 @@ class RunActivity : AppCompatActivity() {
             productIds.add(App.prefs.productId2.toString())
             purchaseIds.add(App.prefs.purchaseId2.toString())
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId2.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
 
             if ( address2.length() == 0 ) {
                 Toast.makeText(
@@ -222,6 +226,7 @@ class RunActivity : AppCompatActivity() {
             productIds.add(App.prefs.productId3.toString())
             purchaseIds.add(App.prefs.purchaseId3.toString())
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId3.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
 
             if ( address3.length() == 0 ) {
                 Toast.makeText(
@@ -246,6 +251,7 @@ class RunActivity : AppCompatActivity() {
             productIds.add(App.prefs.productId4.toString())
             purchaseIds.add(App.prefs.purchaseId4.toString())
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId4.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
 
             if ( address4.length() == 0 ) {
                 Toast.makeText(
@@ -268,6 +274,7 @@ class RunActivity : AppCompatActivity() {
             productIds.add(App.prefs.productId5.toString())
             purchaseIds.add(App.prefs.purchaseId5.toString())
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId5.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
 
             if ( address5.length() == 0 ) {
                 Toast.makeText(
@@ -290,6 +297,7 @@ class RunActivity : AppCompatActivity() {
             productIds.add(App.prefs.productId6.toString())
             purchaseIds.add(App.prefs.purchaseId6.toString())
             productIdUrls.add("https://msearch.shopping.naver.com/catalog/"+App.prefs.productId6.toString()+"/products")
+            searchUrls.add("https://msearch.shopping.naver.com/search/all?query="+App.prefs.productName1.toString()+"&frm=NVSHSRC&vertical=home")
 
             if ( address6.length() == 0 ) {
                 Toast.makeText(
@@ -866,6 +874,7 @@ class RunActivity : AppCompatActivity() {
         productId = productIds.get(productIdx);
         purchaseId = purchaseIds.get(productIdx);
         productIdUrl = productIdUrls.get(productIdx);
+        searchUrl = searchUrls.get(productIdx);
         var temp = productAddress.get(productIdx).getJSONArray("value")
 
         Log.i(TAG,"========play========");
@@ -1239,6 +1248,14 @@ class RunActivity : AppCompatActivity() {
             action.put("function", "element")
             action.put("index", 0)
             action.put("next", false)
+            actions.put(action)
+
+            // 쇼핑 상세보기 에서 전체 판매처로 이동
+            action = JSONObject()
+            action.put("name", "검색결과 화면으로 이동")
+            action.put("action", "url")
+            action.put("function", "url")
+            action.put("url", searchUrl)
             actions.put(action)
 
             // 쇼핑 검색어 결과 상품 찾기후 클릭
